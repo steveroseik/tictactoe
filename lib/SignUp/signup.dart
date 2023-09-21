@@ -10,14 +10,12 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
-    child:
-    Scaffold(
+    return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[],
         ),
       ),
     );
-    throw UnimplementedError();
   }
 }
