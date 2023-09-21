@@ -28,7 +28,7 @@ class DataEngine extends ChangeNotifier{
         _isLoading = true;
         break;
       case ConnectionState.active:
-        _isLoading = true;
+        _isLoading = false;
         break;
       case ConnectionState.done:
         {
@@ -48,6 +48,7 @@ class DataEngine extends ChangeNotifier{
         break;
     }
 
+    // Future.microtask(() => notifyListeners());
     notifyListeners();
 
   }

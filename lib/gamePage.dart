@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -110,14 +111,15 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           }, child: Text('restart')),
           ElevatedButton(onPressed: (){
             setState(() {
-              setState(() {
-                // engine.winningPath = engine.winningPath.isNotEmpty ? [] : [3,4,5];
-              });
-              if (_animationController.isCompleted){
-                _animationController.reverse();
-              }else{
-                _animationController.forward();
-              }
+              FirebaseAuth.instance.signOut();
+              // setState(() {
+              //   // engine.winningPath = engine.winningPath.isNotEmpty ? [] : [3,4,5];
+              // });
+              // if (_animationController.isCompleted){
+              //   _animationController.reverse();
+              // }else{
+              //   _animationController.forward();
+              // }
             });
           }, child: Text('move'))
         ],

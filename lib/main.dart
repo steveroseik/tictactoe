@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/Controllers/dataEngine.dart';
+import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/gamePage.dart';
 import 'package:tictactoe/homeTrial.dart';
 import 'package:sizer/sizer.dart';
@@ -29,7 +30,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<DataEngine>(
-
       create: (context) => dataEngine,
       child: Sizer(
             builder: (context, orientation, deviceType) {
@@ -44,12 +44,23 @@ class _MyAppState extends State<MyApp> {
                   home: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.userChanges(),
                     builder: (context, snapshot){
-                      dataEng.modifyLoginState(state: snapshot.connectionState, userData: snapshot.data);
+                      print('stream: ${snapshot.connectionState}');
+                      return snapshot.connectionState == ConnectionState.waiting ?
+                      const Scaffold(body: Center(child: CircularProgressIndicator())) : FutureBuilder(
+                        future: Future.delayed(const Duration(milliseconds: 200)),
+                        builder: (context, futureSnap){
+                          print('future: ${futureSnap.connectionState}');
 
-                      return dataEngine.isLoading ? const Scaffold(body: Center(child: CircularProgressIndicator(),),)
-                          : dataEng.isSignedIn ? GamePage() :
-                      HomeScreen();
-
+                          //TODO:: RETURN THE PAGE YOU ARE TESTING
+                          return Container(child: Text('Check main.dart line 55'));
+                          return LoadingWidget(circular: false);
+                          return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 200),
+                              transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+                              child: futureSnap.connectionState == ConnectionState.done ? snapshot.hasData ? GamePage() : HomeScreen()
+                              :const Scaffold(backgroundColor: Colors.blue, body: Center(child: CircularProgressIndicator())));
+                        },
+                      );
                     },
                   ),
                 );

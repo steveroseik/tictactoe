@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:neopop/widgets/buttons/neopop_tilted_button/neopop_tilted_button.dart';
 import 'package:sizer/sizer.dart';
@@ -35,9 +36,13 @@ class _HomeScreenState extends State<HomeScreen>
   Widget rightPattern = Image.asset('assets/patternXO.png',
       scale: 6, repeat: ImageRepeat.repeat, color: colorLightYellow);
 
+  final emailField = TextEditingController();
+  final passField = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    print('HEREE');
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -59,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     _controller.dispose();
+    emailField.dispose();
+    passField.dispose();
     super.dispose();
   }
 
@@ -66,121 +73,97 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: colorBlue,
-      body: Stack(
-        children: [
-          Transform.scale(
-            scale: 1.3,
-            child: Transform.rotate(
-              angle: pi / -12.0,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height / 3,
-                child: ShaderMask(
-                  blendMode: BlendMode.xor,
-                  shaderCallback: (Rect bounds) => LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [colorBlue.withOpacity(0.5), colorBlue],
-                  ).createShader(bounds),
-                  child: Stack(
-                    children: [
-                      // Left pattern initially on the left side of the screen
-                      Positioned(
-                        left: 0,
-                        top: -_controller.value * 300,
-                        child: Container(
-                          width: 600,
-                          height: 600,
-                          child: leftPattern,
-                        ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+
+            Padding(
+              padding: EdgeInsets.all(10.w),
+              child: Column(
+                children: [
+                  SizedBox(height: 40.h),
+                  TextFormField(
+                    controller: emailField,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
+                    decoration: InputDecoration(
+                      hintText: 'Email',
+                      filled: true,
+                      fillColor: colorBlue.withBlue(180),
+                      hintStyle: TextStyle(color: colorLightGrey),
+                      labelStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Icon(Icons.person, color: colorLightYellow,),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4.w),
                       ),
-                      // Right pattern initially just to the right of the left pattern
-                      Positioned(
-                        left: 0,
-                        top:
-                        (1 - _controller.value) * 300,
-                        child: Container(
-                          width: 600,
-                          height: 600,
-                          child: rightPattern,
-                        ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.w),
+                        borderSide: BorderSide.none
                       ),
-                    ],
+                      focusedBorder:  OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.w),
+                          borderSide: BorderSide.none
+                      ),
+
+                    ),
                   ),
-                ),
+                  SizedBox(height: 2.h),
+                  TextFormField(
+                    controller: passField,
+                    style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      filled: true,
+                      fillColor: colorBlue.withBlue(180),
+                      hintStyle: TextStyle(color: colorLightGrey),
+                      labelStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Icon(Icons.person, color: colorLightYellow,),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4.w),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.w),
+                          borderSide: BorderSide.none
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.w),
+                          borderSide: BorderSide.none
+                      ),
+
+                    ),
+                  ),
+                  SizedBox(height: 3.h),
+                  Container(
+                    width: 80.w,
+                    height: 6.h,
+                    child: ElevatedButton(onPressed: (){
+                      emailSignIn();
+                    },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorDarkBlue,
+                          foregroundColor: colorLightYellow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.w)
+                          )
+                        ),
+                        child: Text('Login')),
+                  ),
+                ],
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.w),
-            child: Column(
-              children: [
-                SizedBox(height: 40.h),
-                TextFormField(
-                  style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                    filled: true,
-                    fillColor: colorBlue.withBlue(180),
-                    hintStyle: TextStyle(color: colorLightGrey),
-                    labelStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Icon(Icons.person, color: colorLightYellow,),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.w),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4.w),
-                      borderSide: BorderSide.none
-                    ),
-                    focusedBorder:  OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4.w),
-                        borderSide: BorderSide.none
-                    ),
-
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                TextFormField(
-                  style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
-                  decoration: InputDecoration(
-                    hintText: 'Password',
-                    filled: true,
-                    fillColor: colorBlue.withBlue(180),
-                    hintStyle: TextStyle(color: colorLightGrey),
-                    labelStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Icon(Icons.person, color: colorLightYellow,),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.w),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4.w),
-                        borderSide: BorderSide.none
-                    ),
-                    focusedBorder:  OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4.w),
-                        borderSide: BorderSide.none
-                    ),
-
-                  ),
-                ),
-                SizedBox(height: 3.h),
-                Container(
-                  width: 80.w,
-                  height: 6.h,
-                  child: ElevatedButton(onPressed: (){},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colorDarkBlue,
-                        foregroundColor: colorLightYellow,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.w)
-                        )
-                      ),
-                      child: Text('Login')),
-                ),
-              ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  emailSignIn() async{
+    try{
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailField.text, password: passField.text);
+    }on FirebaseAuthException catch (e){
+      print(e.message);
+    }
   }
 }
