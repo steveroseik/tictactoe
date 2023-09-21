@@ -46,7 +46,6 @@ class GameEngine extends ChangeNotifier{
 
           grid[i][j] = maximize ? 0 : 1;
           score += minimax(grid, 9, -999, 999, !maximize);
-          print('[$i][$j]: $score');
           grid[i][j] = -1;
           if ((maximize && score > bestScore) || (!maximize && score < bestScore)) {
             bestScore = score;
@@ -55,7 +54,6 @@ class GameEngine extends ChangeNotifier{
         }
       }
     }
-    print('==================');
     return move;
   }
 
@@ -83,19 +81,19 @@ class GameEngine extends ChangeNotifier{
           bestScore = maximize ? max(score, bestScore) : min(score, bestScore);
 
           // alpha beta pruning (optimization)
-          // if (maximize){
-          //   alpha = max(score, alpha);
-          //   if (beta <= alpha){
-          //     kill = true;
-          //     break;
-          //   }
-          // }else{
-          //   beta = min(score, beta);
-          //   if (beta <= alpha){
-          //     kill = true;
-          //     break;
-          //   }
-          // }
+          if (maximize){
+            alpha = max(score, alpha);
+            if (beta <= alpha){
+              kill = true;
+              break;
+            }
+          }else{
+            beta = min(score, beta);
+            if (beta <= alpha){
+              kill = true;
+              break;
+            }
+          }
         }
       }
       if (kill) break;

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:neopop/widgets/buttons/neopop_tilted_button/neopop_tilted_button.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tictactoe/UIUX/customWidgets.dart';
 
 import 'UIUX/themesAndStyles.dart';
 
@@ -22,8 +23,10 @@ class MyApp extends StatelessWidget {
 
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen>
@@ -42,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    print('HEREE');
+    print('here');
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -73,88 +76,141 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: colorBlue,
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-
-            Padding(
-              padding: EdgeInsets.all(10.w),
-              child: Column(
-                children: [
-                  SizedBox(height: 40.h),
-                  TextFormField(
-                    controller: emailField,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
-                    decoration: InputDecoration(
-                      hintText: 'Email',
-                      filled: true,
-                      fillColor: colorBlue.withBlue(180),
-                      hintStyle: TextStyle(color: colorLightGrey),
-                      labelStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(Icons.person, color: colorLightYellow,),
-                      border: OutlineInputBorder(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          const BackgroundScroller(),
+          Padding(
+            padding: EdgeInsets.all(10.w),
+            child: Column(
+              children: [
+                SizedBox(height: 27.h),
+                TextFormField(
+                  controller: emailField,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    filled: true,
+                    fillColor: colorBlue.withBlue(180),
+                    hintStyle: TextStyle(color: colorLightGrey),
+                    labelStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.person, color: colorLightYellow,),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4.w),
+                    ),
+                    enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4.w),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4.w),
+                      borderSide: BorderSide.none
+                    ),
+                    focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4.w),
                         borderSide: BorderSide.none
-                      ),
-                      focusedBorder:  OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4.w),
-                          borderSide: BorderSide.none
-                      ),
-
                     ),
+
                   ),
-                  SizedBox(height: 2.h),
-                  TextFormField(
-                    controller: passField,
-                    style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      filled: true,
-                      fillColor: colorBlue.withBlue(180),
-                      hintStyle: TextStyle(color: colorLightGrey),
-                      labelStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(Icons.person, color: colorLightYellow,),
-                      border: OutlineInputBorder(
+                ),
+                SizedBox(height: 2.h),
+                TextFormField(
+                  controller: passField,
+                  style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                    filled: true,
+                    fillColor: colorBlue.withBlue(180),
+                    hintStyle: TextStyle(color: colorLightGrey),
+                    labelStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.person, color: colorLightYellow,),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4.w),
+                    ),
+                    enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4.w),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4.w),
-                          borderSide: BorderSide.none
-                      ),
-                      focusedBorder:  OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4.w),
-                          borderSide: BorderSide.none
-                      ),
-
+                        borderSide: BorderSide.none
                     ),
+                    focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4.w),
+                        borderSide: BorderSide.none
+                    ),
+
                   ),
-                  SizedBox(height: 3.h),
-                  Container(
-                    width: 80.w,
-                    height: 6.h,
-                    child: ElevatedButton(onPressed: (){
-                      emailSignIn();
-                    },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colorDarkBlue,
-                          foregroundColor: colorLightYellow,
-                          shape: RoundedRectangleBorder(
+                ),
+                SizedBox(height: 1.h),
+                Align(alignment: Alignment.centerRight,child: Text("Forgot password")),
+                SizedBox(height: 2.h),
+                Container(
+                  width: 80.w,
+                  height: 6.h,
+                  child: ElevatedButton(onPressed: (){
+                    emailSignIn();
+                  },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorDarkBlue,
+                        foregroundColor: colorLightYellow,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.w)
+                        )
+                      ),
+                      child: Text('Login')),
+                ),
+                SizedBox(height: 2.h),
+                Text("Don't have an account? Sign up"),
+                SizedBox(height: 3.h),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text('OR'),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+                SizedBox(height: 5.h),
+                ElevatedButton(onPressed: (){},
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: colorLightYellow,
+                        foregroundColor: colorDarkBlue,
+                        shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w)
-                          )
-                        ),
-                        child: Text('Login')),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+                        )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Align(alignment: Alignment.centerLeft , child: Image.asset('assets/google_icon.png', height: 2.h,),),
+                        SizedBox(width: 2.w),
+                        Text('Sign in with google')
+                      ],
+
+                    )),
+                SizedBox(height: 0.5.h),
+                ElevatedButton(onPressed: (){},
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: colorLightYellow,
+                        foregroundColor: colorDarkBlue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.w)
+                        )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/apple_icon.png', height: 3.h,),
+                        SizedBox(width: 2.w),
+                        Center(child: Text('Sign in with apple'))
+                      ],
+
+                    )),
+                Spacer(),
+                Text("Continue as a guest"),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

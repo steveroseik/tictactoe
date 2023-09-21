@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +28,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final DataEngine dataEngine = DataEngine();
+  int pageState = 0;
+
+
+  Future debounceConnection() async{
+    await Future.delayed(const Duration(milliseconds: 200));
+  }
+
+  Widget loadingWidget = const LoadingWidget(key: Key('loadingWDISSD'), circular: true, single: true);
 
   @override
   Widget build(BuildContext context) {
@@ -44,22 +54,25 @@ class _MyAppState extends State<MyApp> {
                   home: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.userChanges(),
                     builder: (context, snapshot){
-                      print('stream: ${snapshot.connectionState}');
-                      return snapshot.connectionState == ConnectionState.waiting ?
-                      const Scaffold(body: Center(child: CircularProgressIndicator())) : FutureBuilder(
-                        future: Future.delayed(const Duration(milliseconds: 200)),
-                        builder: (context, futureSnap){
-                          print('future: ${futureSnap.connectionState}');
+                      if (snapshot.hasData){
+                        pageState = 1;
+                      }else{
+                        pageState = 0;
+                      }
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
+                        child: pageState == 1 ? const GamePage(key: Key('GAMEKE'),) : Stack(
+                          key: Key('STCKEY'),
+                          children: [
+                            HomeScreen(),
+                            AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 500),
+                                transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+                                child:(snapshot.connectionState == ConnectionState.active) ? Container() : loadingWidget)
 
-                          //TODO:: RETURN THE PAGE YOU ARE TESTING
-                          return Container(child: Text('Check main.dart line 55'));
-                          return LoadingWidget(circular: false);
-                          return AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 200),
-                              transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
-                              child: futureSnap.connectionState == ConnectionState.done ? snapshot.hasData ? GamePage() : HomeScreen()
-                              :const Scaffold(backgroundColor: Colors.blue, body: Center(child: CircularProgressIndicator())));
-                        },
+                          ],
+                        ),
                       );
                     },
                   ),
