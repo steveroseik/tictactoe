@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/gameEngine.dart';
+import 'package:tictactoe/UIUX/themesAndStyles.dart';
 
 import 'UIUX/customWidgets.dart';
 
@@ -50,6 +51,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+
           Center(
             child: SizedBox(
               width: 80.w,
@@ -58,7 +60,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     lines.clear();
-                    init(constraints.maxWidth, constraints.maxWidth, lines, _animationController);
+                    //Draw box lines
+                    init(constraints.maxWidth, constraints.maxWidth, lines, colorDarkBlue, _animationController);
                     final linearGrid = <int>[];
                     for (var i in engine.grid){
                       linearGrid.addAll(i);

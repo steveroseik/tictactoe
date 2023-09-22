@@ -187,21 +187,21 @@ class WinningLinePainter extends CustomPainter {
 
 double axisWidth = 5;
 
-void init(double width, double height, List<Widget> widgets, AnimationController controller) {
+void init(double width, double height, List<Widget> widgets, Color color, AnimationController controller) {
   var size = max(width, height);
   double h1 = (width / 3);
   double h2 = h1*2;
 
-  addLine(Offset(0, h1),  Offset(size, h1), size, widgets, controller);
-  addLine( Offset(0, h2),  Offset(size, h2), size, widgets, controller);
-  addLine( Offset(h1, 0),  Offset(h1, size), size, widgets, controller);
-  addLine( Offset(h2, 0),  Offset(h2, size), size, widgets, controller);
+  addLine(Offset(0, h1),  Offset(size, h1), size, widgets, controller, color);
+  addLine( Offset(0, h2),  Offset(size, h2), size, widgets, controller, color);
+  addLine( Offset(h1, 0),  Offset(h1, size), size, widgets, controller, color);
+  addLine( Offset(h2, 0),  Offset(h2, size), size, widgets, controller, color);
   controller.forward();
 }
 
-void addLine(final Offset start, final Offset end,  double size, List<Widget> widgets, AnimationController controller) {
+void addLine(final Offset start, final Offset end,  double size, List<Widget> widgets, AnimationController controller, Color color) {
   widgets.add(CustomPaint(
-      painter: LinePainter(start, end, axisWidth, size, colorBlue, controller),
+      painter: LinePainter(start, end, axisWidth, size, color, controller),
       child: Container()));
 }
 

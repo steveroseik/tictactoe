@@ -79,12 +79,14 @@ class _HomeScreenState extends State<HomeScreen>
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
+
           const BackgroundScroller(),
           Padding(
             padding: EdgeInsets.all(10.w),
             child: Column(
               children: [
-                SizedBox(height: 27.h),
+
+                SizedBox(height: 25.h),
                 TextFormField(
                   controller: emailField,
                   keyboardType: TextInputType.emailAddress,
@@ -93,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen>
                   decoration: InputDecoration(
                     hintText: 'Email',
                     filled: true,
-                    fillColor: colorBlue.withBlue(180),
+                    fillColor: colorMediumBlue,
                     hintStyle: TextStyle(color: colorLightGrey),
                     labelStyle: TextStyle(color: Colors.white),
                     prefixIcon: Icon(Icons.person, color: colorLightYellow,),
@@ -119,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen>
                   decoration: InputDecoration(
                     hintText: 'Password',
                     filled: true,
-                    fillColor: colorBlue.withBlue(180),
+                    fillColor: colorMediumBlue,
                     hintStyle: TextStyle(color: colorLightGrey),
                     labelStyle: TextStyle(color: Colors.white),
                     prefixIcon: Icon(Icons.person, color: colorLightYellow,),
@@ -187,6 +189,24 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
 
                     )),
+                SizedBox(height: 1.h),
+                ElevatedButton(onPressed: (){},
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: colorLightYellow,
+                        foregroundColor: colorDarkBlue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.w)
+                        )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/apple_icon.png', height: 3.h,),
+                        SizedBox(width: 2.w),
+                        Center(child: Text('Sign in with apple'))
+                      ],
+
+                    )),
                 SizedBox(height: 0.5.h),
                 ElevatedButton(onPressed: (){},
                     style: ElevatedButton.styleFrom(
@@ -205,7 +225,6 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
 
                     )),
-                Spacer(),
                 Text("Continue as a guest"),
               ],
             ),
