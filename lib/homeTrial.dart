@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:neopop/widgets/buttons/neopop_tilted_button/neopop_tilted_button.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
@@ -20,7 +17,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -79,44 +75,44 @@ class _HomeScreenState extends State<HomeScreen>
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-
           const BackgroundScroller(),
           Padding(
             padding: EdgeInsets.all(10.w),
             child: Column(
               children: [
-
                 SizedBox(height: 25.h),
                 TextFormField(
                   controller: emailField,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      color: colorLightYellow, fontWeight: FontWeight.w600),
                   decoration: InputDecoration(
                     hintText: 'Email',
                     filled: true,
                     fillColor: colorMediumBlue,
                     hintStyle: TextStyle(color: colorLightGrey),
                     labelStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Icon(Icons.person, color: colorLightYellow,),
+                    prefixIcon: Icon(
+                      Icons.person,
+                      color: colorLightYellow,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(4.w),
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4.w),
-                      borderSide: BorderSide.none
-                    ),
-                    focusedBorder:  OutlineInputBorder(
+                        borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4.w),
-                        borderSide: BorderSide.none
-                    ),
-
+                        borderSide: BorderSide.none),
                   ),
                 ),
                 SizedBox(height: 2.h),
                 TextFormField(
                   controller: passField,
-                  style: const TextStyle(color: colorLightYellow, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      color: colorLightYellow, fontWeight: FontWeight.w600),
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Password',
@@ -124,108 +120,131 @@ class _HomeScreenState extends State<HomeScreen>
                     fillColor: colorMediumBlue,
                     hintStyle: TextStyle(color: colorLightGrey),
                     labelStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Icon(Icons.person, color: colorLightYellow,),
+                    prefixIcon: Icon(
+                      Icons.key_rounded,
+                      color: colorLightYellow,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(4.w),
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4.w),
-                        borderSide: BorderSide.none
-                    ),
-                    focusedBorder:  OutlineInputBorder(
+                        borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4.w),
-                        borderSide: BorderSide.none
-                    ),
-
+                        borderSide: BorderSide.none),
                   ),
                 ),
                 SizedBox(height: 1.h),
-                Align(alignment: Alignment.centerRight,child: Text("Forgot password")),
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "Forgot password",
+                      style: TextStyle(color: colorLightYellow),
+                    )),
                 SizedBox(height: 2.h),
                 Container(
                   width: 80.w,
                   height: 6.h,
-                  child: ElevatedButton(onPressed: (){
-                    emailSignIn();
-                  },
+                  child: ElevatedButton(
+                      onPressed: () {
+                        emailSignIn();
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: colorDarkBlue,
-                        foregroundColor: colorLightYellow,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.w)
-                        )
-                      ),
-                      child: Text('Login')),
+                          backgroundColor: colorDarkBlue,
+                          foregroundColor: colorLightYellow,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.w))),
+                      child: Text(
+                        'Login',
+                        style: TextStyle(color: colorLightYellow, fontSize: 20),
+                      )),
                 ),
                 SizedBox(height: 2.h),
-                Text("Don't have an account? Sign up"),
-                SizedBox(height: 3.h),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Don't have an account? Sign up",
+                    style: TextStyle(color: colorLightYellow),
+                  ),
+                ),
+                SizedBox(height: 1.h),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(child: Divider()),
+                    Expanded(
+                        child: Divider(
+                      thickness: 2,
+                      color: colorLightYellow,
+                    )),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text('OR'),
+                      child: Text(
+                        'OR',
+                        style: TextStyle(color: colorLightYellow, fontSize: 16),
+                      ),
                     ),
-                    Expanded(child: Divider()),
+                    Expanded(
+                        child: Divider(
+                      thickness: 2,
+                      color: colorLightYellow,
+                    )),
                   ],
                 ),
-                SizedBox(height: 5.h),
-                ElevatedButton(onPressed: (){},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: colorLightYellow,
-                        foregroundColor: colorDarkBlue,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.w)
-                        )
+                SizedBox(height: 3.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: colorLightYellow),
+                      child: IconButton(
+                          onPressed: () {},
+                          icon: Image.asset(
+                            'assets/google_icon.png',
+                            height: 3.h,
+                          )),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Align(alignment: Alignment.centerLeft , child: Image.asset('assets/google_icon.png', height: 2.h,),),
-                        SizedBox(width: 2.w),
-                        Text('Sign in with google')
-                      ],
-
-                    )),
-                SizedBox(height: 1.h),
-                ElevatedButton(onPressed: (){},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: colorLightYellow,
-                        foregroundColor: colorDarkBlue,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.w)
-                        )
+                    SizedBox(
+                      width: 5.w,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/apple_icon.png', height: 3.h,),
-                        SizedBox(width: 2.w),
-                        Center(child: Text('Sign in with apple'))
-                      ],
-
-                    )),
-                SizedBox(height: 0.5.h),
-                ElevatedButton(onPressed: (){},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: colorLightYellow,
-                        foregroundColor: colorDarkBlue,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.w)
-                        )
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: colorLightYellow),
+                      child: IconButton(
+                          onPressed: () {},
+                          icon: Image.asset(
+                            'assets/apple_icon.png',
+                            height: 3.h,
+                          )),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/apple_icon.png', height: 3.h,),
-                        SizedBox(width: 2.w),
-                        Center(child: Text('Sign in with apple'))
-                      ],
-
-                    )),
-                Text("Continue as a guest"),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: colorLightYellow),
+                      child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.facebook_rounded,
+                            size: 3.h,
+                          )),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Continue as a guest',
+                      style: TextStyle(color: colorLightYellow, fontSize: 18),
+                    ))
               ],
             ),
           )
@@ -234,10 +253,11 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  emailSignIn() async{
-    try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailField.text, password: passField.text);
-    }on FirebaseAuthException catch (e){
+  emailSignIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailField.text, password: passField.text);
+    } on FirebaseAuthException catch (e) {
       print(e.message);
     }
   }
