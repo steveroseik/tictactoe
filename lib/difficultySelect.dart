@@ -4,14 +4,14 @@ import 'package:sizer/sizer.dart';
 import 'UIUX/customWidgets.dart';
 import 'UIUX/themesAndStyles.dart';
 
-class difficultySelect extends StatefulWidget {
-  const difficultySelect({Key? key}) : super(key: key);
+class DifficultySelectPage extends StatefulWidget {
+  const DifficultySelectPage({Key? key}) : super(key: key);
 
   @override
-  State<difficultySelect> createState() => _difficultySelectState();
+  State<DifficultySelectPage> createState() => _DifficultySelectPageState();
 }
 
-class _difficultySelectState extends State<difficultySelect> {
+class _DifficultySelectPageState extends State<DifficultySelectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,20 +37,29 @@ class _difficultySelectState extends State<difficultySelect> {
                 Container(
                   width: 80.w,
                   height: 6.h,
-                  child: ElevatedButton.icon(
+                  child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: colorLightYellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
-                    label: Text(
-                      'Easy',
-                      style: TextStyle(color: colorLightYellow, fontSize: 20),
-                    ),
-                    icon: Image.asset(
-                      'assets/characters/all-05.png',
-                      height: 1.h,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                            'assets/characters/all-05.png',
+                            height: 5.h,
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            'Easy',
+                            style: TextStyle(color: colorDarkBlue, fontSize: 20),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -60,20 +69,29 @@ class _difficultySelectState extends State<difficultySelect> {
                 Container(
                   width: 80.w,
                   height: 6.h,
-                  child: ElevatedButton.icon(
+                  child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow,
                         foregroundColor: colorLightYellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
-                    label: Text(
-                      'Medium',
-                      style: TextStyle(color: colorDarkBlue, fontSize: 20),
-                    ),
-                    icon: Image.asset(
-                      'assets/characters/all-08.png',
-                      height: 1.h,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                            'assets/characters/all-08.png',
+                            height: 5.h,
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            'Medium',
+                            style: TextStyle(color: colorDarkBlue, fontSize: 20),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -83,20 +101,29 @@ class _difficultySelectState extends State<difficultySelect> {
                 Container(
                   width: 80.w,
                   height: 6.h,
-                  child: ElevatedButton.icon(
+                  child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: colorLightYellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
-                    label: Text(
-                      'Hard',
-                      style: TextStyle(color: colorLightYellow, fontSize: 20),
-                    ),
-                    icon: Image.asset(
-                      'assets/characters/all-02.png',
-                      height: 1.h,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                            'assets/characters/all-02.png',
+                            height: 5.h,
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            'Hard',
+                            style: TextStyle(color: colorDarkBlue, fontSize: 20),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -106,20 +133,29 @@ class _difficultySelectState extends State<difficultySelect> {
                 Container(
                   width: 80.w,
                   height: 6.h,
-                  child: ElevatedButton.icon(
+                  child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                         backgroundColor: colorDarkBlue,
                         foregroundColor: colorLightYellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
-                    label: Text(
-                      'Extreme',
-                      style: TextStyle(color: colorLightYellow, fontSize: 20),
-                    ),
-                    icon: Image.asset(
-                      'assets/characters/all-01.png',
-                      height: 1.h,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                            'assets/characters/all-01.png',
+                            height: 5.h,
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            'Medium',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

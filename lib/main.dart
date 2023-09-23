@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/dataEngine.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
+import 'package:tictactoe/difficultySelect.dart';
 import 'package:tictactoe/gamePage.dart';
+import 'package:tictactoe/gameSelect.dart';
 import 'package:tictactoe/homeTrial.dart';
 
 import 'firebase_options.dart';
@@ -49,14 +51,14 @@ class _MyAppState extends State<MyApp> {
                 useMaterial3: true,
               ),
               home: StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.userChanges(),
+                stream: FirebaseAuth.instance.userChanges().distinct(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     pageState = 1;
                   } else {
                     pageState = 0;
                   }
-                  return HomeScreen();
+                  return GamePage();
                   return AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     transitionBuilder: (child, animation) => FadeTransition(

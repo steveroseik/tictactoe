@@ -7,7 +7,8 @@ import 'package:tictactoe/UIUX/themesAndStyles.dart';
 
 
 class BackgroundScroller extends StatefulWidget {
-  const BackgroundScroller({super.key});
+  final double? height;
+  const BackgroundScroller({super.key, this.height});
 
   @override
   State<BackgroundScroller> createState() => _BackgroundScrollerState();
@@ -57,7 +58,7 @@ class _BackgroundScrollerState extends State<BackgroundScroller> with SingleTick
       child: Transform.rotate(
         angle: pi / -12.0,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height / 3,
+          height: widget.height?? MediaQuery.of(context).size.height / 3,
           child: ShaderMask(
             blendMode: BlendMode.xor,
             shaderCallback: (Rect bounds) => LinearGradient(
@@ -185,7 +186,7 @@ class WinningLinePainter extends CustomPainter {
 }
 
 
-double axisWidth = 5;
+double axisWidth = 1;
 
 void init(double width, double height, List<Widget> widgets, Color color, AnimationController controller) {
   var size = max(width, height);

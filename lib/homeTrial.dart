@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
@@ -155,10 +156,7 @@ class _HomeScreenState extends State<HomeScreen>
                           foregroundColor: colorLightYellow,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4.w))),
-                      child: Text(
-                        'Login',
-                        style: TextStyle(color: colorLightYellow, fontSize: 20),
-                      )),
+                      child: Text('Login')),
                 ),
                 SizedBox(height: 2.h),
                 TextButton(
@@ -217,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen>
                           onPressed: () {},
                           icon: Image.asset(
                             'assets/apple_icon.png',
-                            height: 3.h,
+                            height: 3.5.h,
                           )),
                     ),
                     SizedBox(
@@ -231,7 +229,8 @@ class _HomeScreenState extends State<HomeScreen>
                           onPressed: () {},
                           icon: Icon(
                             Icons.facebook_rounded,
-                            size: 3.h,
+                            color: CupertinoColors.systemBlue,
+                            size: 3.5.h,
                           )),
                     ),
                   ],
