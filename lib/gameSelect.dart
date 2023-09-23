@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neumorphic_button/neumorphic_button.dart';
 import 'package:sizer/sizer.dart';
 
 import 'UIUX/customWidgets.dart';
@@ -24,7 +23,7 @@ class _GameSelectPageState extends State<GameSelectPage> {
             padding: EdgeInsets.all(10.w),
             child: Column(
               children: [
-                SizedBox(height: 25.h),
+                SizedBox(height: 16.h),
                 Text(
                   'Select Game Mode',
                   style: TextStyle(
@@ -33,30 +32,34 @@ class _GameSelectPageState extends State<GameSelectPage> {
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  height: 6.h,
+                  height: 3.h,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(3.w),
+                      height: 260,
+                      width: 250,
+                      padding: EdgeInsets.fromLTRB(8.w, 8.h, 8.w, 8.w),
                       decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [BoxShadow(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
                               color: colorDarkBlue.withOpacity(0.5),
                               offset: Offset(3, 3),
                               spreadRadius: 1,
-                              blurRadius: 3
-                            )],
-                            color: colorLightYellow,
-                          ),
+                              blurRadius: 3)
+                        ],
+                        color: colorDarkBlue,
+                      ),
                       child: Column(
                         children: [
-                          Image.asset('assets/characters/all-05.png', width: 20.w),
+                          Image.asset('assets/characters/all-05.png',
+                              width: 20.w),
                           Text(
                             'Single Player',
                             style: TextStyle(
-                                color: colorDarkBlue,
+                                color: colorLightYellow,
                                 fontSize: titleSize,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -66,36 +69,42 @@ class _GameSelectPageState extends State<GameSelectPage> {
                   ],
                 ),
                 SizedBox(
-                  width: 3.h,
+                  height: 3.h,
                 ),
-                // Container(
-                //   decoration: BoxDecoration(
-                //     // border: Border.all(
-                //     //     color: Colors.black,
-                //     //     width: 5.0,
-                //     //     style: BorderStyle.solid),
-                //     borderRadius: BorderRadius.circular(20),
-                //     color: Colors.yellowAccent,
-                //   ),
-                //   child: Column(
-                //     children: [
-                //       IconButton(
-                //           onPressed: () {},
-                //           icon: Icon(
-                //             Icons.group,
-                //             size: 45.w,
-                //             color: colorDarkBlue,
-                //           )),
-                //       Text(
-                //         'Multiplayer',
-                //         style: TextStyle(
-                //             color: colorDarkBlue,
-                //             fontSize: titleSize,
-                //             fontWeight: FontWeight.bold),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 260,
+                      width: 250,
+                      padding: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                              color: colorDarkBlue.withOpacity(0.5),
+                              offset: Offset(3, 3),
+                              spreadRadius: 1,
+                              blurRadius: 3)
+                        ],
+                        color: colorDarkBlue,
+                      ),
+                      child: Column(
+                        children: [
+                          Image.asset('assets/characters/all-10.png',
+                              width: 30.w),
+                          Text(
+                            ' Multiplayer ',
+                            style: TextStyle(
+                                color: colorLightYellow,
+                                fontSize: titleSize,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           )

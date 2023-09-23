@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:neumorphic_button/neumorphic_button.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/gameEngine.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
@@ -16,7 +14,6 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
-
   final GameEngine engine = GameEngine();
 
   late AnimationController _animationController;
@@ -26,8 +23,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   List<Widget> lines = [];
 
   double _progress = 0;
-  @override void initState() {
-    _animationController = AnimationController(duration: Duration(milliseconds: 3000), vsync: this);
+  @override
+  void initState() {
+    _animationController = AnimationController(
+        duration: Duration(milliseconds: 3000), vsync: this);
 
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController)
       ..addListener(() {
@@ -35,7 +34,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           _progress = _animation.value;
         });
       });
-    
+
     super.initState();
   }
 
@@ -53,12 +52,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
         children: [
           Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [colorBlue, colorBlue, Colors.blue]
-              )
-            ),
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [colorBlue, colorBlue, Colors.blue])),
           ),
           BackgroundScroller(height: 25.h),
           Center(
@@ -73,18 +70,15 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                     children: [
                       Expanded(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.w),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.w, vertical: 2.w),
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.lightBlueAccent
-                            ),
-                            borderRadius: BorderRadius.circular(15.sp),
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [colorBlue, colorMediumBlue]
-                            )
-                          ),
+                              border: Border.all(color: Colors.lightBlueAccent),
+                              borderRadius: BorderRadius.circular(15.sp),
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [colorBlue, colorMediumBlue])),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -95,12 +89,22 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                               SizedBox(width: 1.w),
                               Column(
                                 children: [
-                                  Text('You', style: TextStyle(color: colorLightYellow, fontWeight: FontWeight.w500),),
+                                  Text(
+                                    'You',
+                                    style: TextStyle(
+                                        color: colorLightYellow,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                   Icon(CupertinoIcons.circle)
                                 ],
                               ),
                               Spacer(),
-                              Text('0', style: TextStyle(color: colorLightYellow, fontWeight: FontWeight.w500),),
+                              Text(
+                                '0',
+                                style: TextStyle(
+                                    color: colorLightYellow,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ],
                           ),
                         ),
@@ -108,25 +112,34 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                       SizedBox(width: 3.w),
                       Expanded(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.w),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.w, vertical: 2.w),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15.sp),
                               gradient: LinearGradient(
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
-                                  colors: [colorBlue, colorMediumBlue]
-                              )
-                          ),
+                                  colors: [colorBlue, colorMediumBlue])),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text('0', style: TextStyle(color: colorLightYellow, fontWeight: FontWeight.w500),),
+                              Text(
+                                '0',
+                                style: TextStyle(
+                                    color: colorLightYellow,
+                                    fontWeight: FontWeight.w500),
+                              ),
                               Spacer(),
                               SizedBox(width: 1.w),
                               Column(
                                 children: [
-                                  Text('Ai', style: TextStyle(color: colorLightYellow, fontWeight: FontWeight.w500),),
+                                  Text(
+                                    'Ai',
+                                    style: TextStyle(
+                                        color: colorLightYellow,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                   Icon(CupertinoIcons.xmark)
                                 ],
                               ),
@@ -151,74 +164,132 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                   width: 80.w,
                   child: AspectRatio(
                     aspectRatio: 1,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        lines.clear();
-                        //Draw box lines
-                        init(constraints.maxWidth, constraints.maxWidth, lines, Colors.lightBlueAccent.withOpacity(0.5), _animationController);
-                        final linearGrid = <int>[];
-                        for (var i in engine.grid){
-                          linearGrid.addAll(i);
-                        }
-                        return Stack(
-                          children: lines..addAll([
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      lines.clear();
+                      //Draw box lines
+                      init(
+                          constraints.maxWidth,
+                          constraints.maxWidth,
+                          lines,
+                          Colors.lightBlueAccent.withOpacity(0.5),
+                          _animationController);
+                      final linearGrid = <int>[];
+                      for (var i in engine.grid) {
+                        linearGrid.addAll(i);
+                      }
+                      return Stack(
+                        children: lines
+                          ..addAll([
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 GridView.builder(
-                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
                                     ),
                                     padding: EdgeInsets.zero,
                                     shrinkWrap: true,
                                     itemCount: linearGrid.length,
-                                    itemBuilder: (context, index){
+                                    itemBuilder: (context, index) {
                                       return InkWell(
-                                        onTap: () async{
-                                          if (linearGrid[index] == -1){
-                                            engine.setManualMove(isO: false, ((index ~/ 3),(index % 3)));
+                                        onTap: () async {
+                                          if (linearGrid[index] == -1) {
+                                            engine.setManualMove(
+                                                isO: false,
+                                                ((index ~/ 3), (index % 3)));
                                             setState(() {});
-                                            await Future.delayed(const Duration(milliseconds: 500));
+                                            await Future.delayed(const Duration(
+                                                milliseconds: 500));
                                             engine.setAiMove(isO: true);
                                             setState(() {});
                                           }
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(5),
-                                          child: linearGrid[index] == -1 ? Container() :
-                                          Icon(linearGrid[index] == 0 ? CupertinoIcons.circle :  CupertinoIcons.xmark),
+                                          child: linearGrid[index] == -1
+                                              ? Container()
+                                              : Icon(
+                                                  linearGrid[index] == 0
+                                                      ? CupertinoIcons.circle
+                                                      : CupertinoIcons.xmark,
+                                                  size: 50,
+                                                  color: linearGrid[index] == 0
+                                                      ? Colors.lightBlueAccent
+                                                      : colorDarkBlue,
+                                                ),
                                         ),
                                       );
                                     }),
                               ],
                             ),
-
                             IgnorePointer(
                               child: AnimatedBuilder(
-                                animation: _animationController, // Your animation controller
+                                animation:
+                                    _animationController, // Your animation controller
                                 builder: (BuildContext context, Widget? child) {
                                   return CustomPaint(
                                     size: Size(90.w, 50.h),
-                                    painter: WinningLinePainter(engine.winningPath, _animation.value),
+                                    painter: WinningLinePainter(
+                                        engine.winningPath, _animation.value),
                                   );
                                 },
                               ),
                             )
                           ]),
-                        );
-                      }
-                    ),
+                      );
+                    }),
                   ),
                 ),
-                Spacer(),
+                SizedBox(
+                  height: 5.h,
+                ),
                 SafeArea(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10.w),
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.blue.shade600,
-                          child: Icon(CupertinoIcons.house_alt_fill, color: colorBlue,),)
+                          radius: 30,
+                          backgroundColor: colorLightGrey.withOpacity(0.3),
+                          child: IconButton(
+                            //backgroundColor: Colors.blue.shade600,
+                            onPressed: () {},
+                            icon: Icon(
+                              CupertinoIcons.house_alt_fill,
+                              color: colorBlue,
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: colorLightGrey.withOpacity(0.3),
+                          child: IconButton(
+                            //backgroundColor: Colors.blue.shade600,
+                            onPressed: () {},
+                            icon: Icon(
+                              CupertinoIcons.arrow_2_circlepath,
+                              color: colorBlue,
+                              size: 60,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: colorLightGrey.withOpacity(0.3),
+                          child: IconButton(
+                            //backgroundColor: Colors.blue.shade600,
+                            onPressed: () {},
+                            icon: Icon(
+                              CupertinoIcons.settings,
+                              color: colorBlue,
+                              size: 40,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

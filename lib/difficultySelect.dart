@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -12,6 +13,8 @@ class DifficultySelectPage extends StatefulWidget {
 }
 
 class _DifficultySelectPageState extends State<DifficultySelectPage> {
+  bool _hasBeenPressed = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +43,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.blue[100],
                         foregroundColor: colorLightYellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
@@ -56,7 +59,8 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                         Center(
                           child: Text(
                             'Easy',
-                            style: TextStyle(color: colorDarkBlue, fontSize: 20),
+                            style:
+                                TextStyle(color: colorDarkBlue, fontSize: 20),
                           ),
                         ),
                       ],
@@ -72,7 +76,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
+                        backgroundColor: Colors.blue[300],
                         foregroundColor: colorLightYellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
@@ -88,7 +92,8 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                         Center(
                           child: Text(
                             'Medium',
-                            style: TextStyle(color: colorDarkBlue, fontSize: 20),
+                            style:
+                                TextStyle(color: colorDarkBlue, fontSize: 20),
                           ),
                         ),
                       ],
@@ -104,7 +109,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor: Colors.blue[700],
                         foregroundColor: colorLightYellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
@@ -120,7 +125,8 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                         Center(
                           child: Text(
                             'Hard',
-                            style: TextStyle(color: colorDarkBlue, fontSize: 20),
+                            style:
+                                TextStyle(color: colorDarkBlue, fontSize: 20),
                           ),
                         ),
                       ],
@@ -136,7 +142,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: colorDarkBlue,
+                        backgroundColor: Colors.blue[900],
                         foregroundColor: colorLightYellow,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
@@ -151,7 +157,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                         ),
                         Center(
                           child: Text(
-                            'Medium',
+                            'Extreme',
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
@@ -168,22 +174,38 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                     Container(
                       width: 30.w,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: colorLightYellow,
-                            width: 3.0,
-                            style: BorderStyle.solid),
+                        border: _hasBeenPressed
+                            ? Border.all(
+                                color: colorLightYellow,
+                                width: 3.0,
+                                style: BorderStyle.solid)
+                            : null,
                         borderRadius: BorderRadius.circular(20),
-                        color: colorDarkBlue,
+                        color: _hasBeenPressed ? Colors.blue : Colors.black,
                       ),
                       child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'X',
-                          style: TextStyle(
-                              fontSize: 48,
-                              color: colorLightYellow,
-                              fontWeight: FontWeight.bold),
+                        onPressed: () => {
+                          setState(() {
+                            _hasBeenPressed = !_hasBeenPressed;
+                          })
+                        },
+                        child: Icon(
+                          CupertinoIcons.xmark,
+                          size: 70,
+                          color: _hasBeenPressed
+                              ? colorDarkBlue
+                              : colorLightYellow,
                         ),
+
+                        // Text(
+                        //   'X',
+                        //   style: TextStyle(
+                        //       fontSize: 48,
+                        //       color: _hasBeenPressed
+                        //           ? colorDarkBlue
+                        //           : colorLightYellow,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
                       ),
                     ),
                     SizedBox(
@@ -192,24 +214,29 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                     Container(
                       width: 30.w,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: colorDarkBlue,
-                            width: 2.0,
-                            style: BorderStyle.solid),
+                        border: !_hasBeenPressed
+                            ? Border.all(
+                                color: colorLightYellow,
+                                width: 3.0,
+                                style: BorderStyle.solid)
+                            : null,
                         borderRadius: BorderRadius.circular(20),
-                        color: colorDarkBlue,
+                        color: _hasBeenPressed ? Colors.black : Colors.blue,
                       ),
                       child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'O',
-                          style: TextStyle(
-                              fontSize: 48,
-                              color: colorLightYellow,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    )
+                          onPressed: () => {
+                                setState(() {
+                                  _hasBeenPressed = !_hasBeenPressed;
+                                })
+                              },
+                          child: Icon(
+                            CupertinoIcons.circle,
+                            size: 70,
+                            color: _hasBeenPressed
+                                ? colorLightYellow
+                                : colorDarkBlue,
+                          )),
+                    ),
                   ],
                 ),
                 SizedBox(
