@@ -2,11 +2,18 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+
+enum gameWinner {x, o, draw}
+
 class GameEngine extends ChangeNotifier{
 
   List<List<int>> grid = List.generate(3, (row) => List.filled(3, -1));
   
   List<int> winningPath = [];
+
+  bool _xTurn = true;
+
+  get xTurn => _xTurn;
   
   GameEngine();
 
@@ -180,7 +187,8 @@ class GameEngine extends ChangeNotifier{
     return false;
   }
 
-  setManualMove((int, int) loc, {required bool isO}){
+  gameWinner? setManualMove((int, int) loc, {required bool isO}){
+    gameWinner? g = gameWinner.draw;
     if (grid[loc.$1][loc.$2] == -1){
       grid[loc.$1][loc.$2] = isO ? 0 : 1;
       final response = checkWinner(grid, path: true);
@@ -191,18 +199,23 @@ class GameEngine extends ChangeNotifier{
           winningPath = response.$2!;
           print('WINNER! ${response.$1 == 0 ? 'O' : 'X'}!!');
           print(winningPath);
+          g = response.$1 == 0 ? gameWinner.o : gameWinner.x;
         }
+      }else{
+        _xTurn = isO;
       }
     }
     notifyListeners();
+    return g;
   }
 
-  setAiMove({required bool isO}){
+  gameWinner? setAiMove({required bool isO}){
 
     final pos = bestMove(isO);
     if (pos.$1 != -1){
-      setManualMove((pos.$1, pos.$2), isO: isO);
+      return setManualMove((pos.$1, pos.$2), isO: isO);
     }
+    return null;
 
   }
 
@@ -213,9 +226,18 @@ class GameEngine extends ChangeNotifier{
         grid[i][j] = -1;
       }
     }
+    _xTurn = true;
     winningPath = [];
+    notifyListeners();
   }
 
+  @override
+  void dispose() {
+    //ignore
+  }
 
+  void kill(){
+    super.dispose();
+  }
 
 }

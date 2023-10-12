@@ -15,6 +15,26 @@ class DataEngine extends ChangeNotifier{
 
   DataEngine();
 
+
+  setGuest() async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(hasGuest, true);
+    _isGuest = true;
+    notifyListeners();
+  }
+
+  signOut() async{
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(hasGuest)){
+      prefs.remove(hasGuest);
+    }
+    _isGuest = false;
+    notifyListeners();
+    FirebaseAuth.instance.signOut();
+  }
+
+
+
   modifyLoginState({
     required ConnectionState state,
     required User? userData}) async{

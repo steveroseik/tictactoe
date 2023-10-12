@@ -98,6 +98,89 @@ class _BackgroundScrollerState extends State<BackgroundScroller> with SingleTick
   }
 }
 
+class BackgroundAnimation extends StatefulWidget {
+  const BackgroundAnimation({super.key});
+
+  @override
+  State<BackgroundAnimation> createState() => _BackgroundAnimationState();
+}
+
+class _BackgroundAnimationState extends State<BackgroundAnimation> with SingleTickerProviderStateMixin{
+
+  late AnimationController _controller;
+
+  // Define two instances of your pattern image
+  Widget leftPattern = Image.asset('assets/images/greenSpace1.png',
+      scale: 0.5,
+      repeat: ImageRepeat.repeat);
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 25),
+    )..repeat();
+
+    _controller.addListener(() {
+      setState(() {
+        if (_controller.value == 1) {
+          _controller.reset();
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    leftPattern = Image.asset('assets/images/greenSpace1.png',
+        scale: 100.h / 101,
+        repeat: ImageRepeat.repeat);
+    return Transform.scale(
+      scale: 1.5,
+      child: Transform.rotate(
+        angle: pi / -12.0,
+        child: SizedBox(
+          height: 100.h,
+          width: 100.w,
+          child: Stack(
+            children: [
+              // Left pattern initially on the left side of the screen
+              Positioned(
+                left: 0,
+                top: ((-_controller.value) * 100.h),
+                child: Container(
+                  height: 100.h,
+                  width: 100.w,
+                  child: leftPattern,
+                ),
+              ),
+              // Right pattern initially just to the right of the left pattern
+              Positioned(
+                left: 0,
+                top:
+                ((1 - _controller.value) * 100.h),
+                child: Container(
+                  height: 100.h,
+                  width: 100.w,
+                  child: leftPattern,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 class LinePainter extends CustomPainter {
   final Offset start;
   final Offset end;
@@ -109,7 +192,7 @@ class LinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final newEnd = end.dx == maxWidth ? Offset(end.dx - (end.dx * (1 - controller.value)), end.dy) :
+    final newEnd = end.dx == maxWidth-2 ? Offset(end.dx - (end.dx * (1 - controller.value)), end.dy) :
         Offset(end.dx, end.dy - (end.dy * (1 - controller.value)));
     createPath(canvas, start, newEnd);
   }
@@ -123,7 +206,7 @@ class LinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
 
@@ -188,23 +271,40 @@ class WinningLinePainter extends CustomPainter {
 
 double axisWidth = 1;
 
-void init(double width, double height, List<Widget> widgets, Color color, AnimationController controller) {
-  var size = max(width, height);
-  double h1 = (width / 3);
-  double h2 = h1*2;
+void createGridLines(
+    double width, double height,
+    int rows, int columns,
+    List<Widget> widgets, Color color,
+    AnimationController controller,
+    {double? thickness}) {
+  double rowHeight = height / rows;
+  double columnWidth = width / columns;
 
-  addLine(Offset(0, h1),  Offset(size, h1), size, widgets, controller, color);
-  addLine( Offset(0, h2),  Offset(size, h2), size, widgets, controller, color);
-  addLine( Offset(h1, 0),  Offset(h1, size), size, widgets, controller, color);
-  addLine( Offset(h2, 0),  Offset(h2, size), size, widgets, controller, color);
+  // Draw horizontal lines
+  for (int i = 1; i < rows; i++) {
+    double y = (i * rowHeight);
+    addLine(Offset(0, y), Offset(width-2, y), width, widgets, controller, color, thickness);
+  }
+
+  // Draw vertical lines
+  for (int i = 1; i < columns; i++) {
+    double x = (i * columnWidth);
+    addLine(Offset(x, 0), Offset(x, height-2), height, widgets, controller, color, thickness);
+  }
+
   controller.forward();
 }
 
-void addLine(final Offset start, final Offset end,  double size, List<Widget> widgets, AnimationController controller, Color color) {
-  widgets.add(CustomPaint(
-      painter: LinePainter(start, end, axisWidth, size, color, controller),
-      child: Container()));
+void addLine(Offset p1, Offset p2, double size, List<Widget> widgets, AnimationController controller, Color color, double? thickness) {
+  widgets.add(
+    CustomPaint(
+      size: Size(size, size),
+      painter: LinePainter(p1, p2, thickness?? axisWidth, size, color, controller),
+    ),
+  );
 }
+
+
 
 class LoadingWidget extends StatefulWidget {
   final bool circular;
@@ -314,6 +414,37 @@ class _LoadingWidgetState extends State<LoadingWidget> with SingleTickerProvider
       ),
     );
   }
+}
+
+class ScaleRoute extends PageRouteBuilder {
+  final Widget page;
+  ScaleRoute({required this.page})
+      : super(
+    pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        ) =>
+    page,
+    transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+        ) =>
+        ScaleTransition(
+          scale: Tween<double>(
+            begin: 0.0,
+            end: 1.0,
+          ).animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: Curves.fastOutSlowIn,
+            ),
+          ),
+          child: child,
+        ),
+  );
 }
 
 

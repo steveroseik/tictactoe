@@ -5,9 +5,16 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/dataEngine.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
+import 'package:tictactoe/UIUX/themesAndStyles.dart';
+import 'package:tictactoe/difficultySelect.dart';
+import 'package:tictactoe/experimentalGame.dart';
 import 'package:tictactoe/gamePage.dart';
+import 'package:tictactoe/gameSelect.dart';
+import 'package:tictactoe/game_nav.dart';
 import 'package:tictactoe/homeTrial.dart';
+import 'package:tictactoe/login_nav.dart';
 
+import 'SignUp/signup.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -47,43 +54,46 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                 useMaterial3: true,
+                fontFamily: 'QUARTZO'
               ),
-              home: StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.userChanges().distinct(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    pageState = 1;
-                  } else {
-                    pageState = 0;
-                  }
-                  return GamePage();
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    transitionBuilder: (child, animation) => FadeTransition(
-                      opacity: animation,
-                      child: child,
-                    ),
-                    child: pageState == 1
-                        ? const GamePage(
-                            key: Key('GAMEKE'),
-                          )
-                        : Stack(
-                            key: Key('STCKEY'),
-                            children: [
-                              HomeScreen(),
-                              AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 500),
-                                  transitionBuilder: (child, animation) =>
-                                      FadeTransition(
-                                          opacity: animation, child: child),
-                                  child: (snapshot.connectionState ==
-                                          ConnectionState.active)
-                                      ? Container()
-                                      : loadingWidget)
-                            ],
-                          ),
-                  );
-                },
+              home: Stack(
+                children: [
+                  StreamBuilder<User?>(
+                    stream: FirebaseAuth.instance.userChanges().distinct(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        pageState = 1;
+                      } else {
+                        pageState = 0;
+                      }
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        transitionBuilder: (child, animation) => FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                        child: (pageState == 1 || dataEng.isSignedIn)
+                            ? const GameNav(
+                          key: Key('gameansds'),)
+                            : Stack(
+                                key: Key('STCKEY'),
+                                children: [
+                                  const LoginNav(),
+                                  AnimatedSwitcher(
+                                      duration: const Duration(milliseconds: 500),
+                                      transitionBuilder: (child, animation) =>
+                                          FadeTransition(
+                                              opacity: animation, child: child),
+                                      child: (snapshot.connectionState ==
+                                              ConnectionState.active)
+                                          ? Container()
+                                          : loadingWidget)
+                                ],
+                              ),
+                      );
+                    },
+                  ),
+                ],
               ),
             );
           });
