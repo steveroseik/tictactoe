@@ -53,6 +53,10 @@ class _BackgroundScrollerState extends State<BackgroundScroller> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    leftPattern = Image.asset('assets/patternXO.png',
+        scale: 6, repeat: ImageRepeat.repeat, color: Colors.black);
+    rightPattern = Image.asset('assets/patternXO.png',
+        scale: 6, repeat: ImageRepeat.repeat, color: colorBlue);
     return Transform.scale(
       scale: 1.3,
       child: Transform.rotate(
@@ -60,11 +64,11 @@ class _BackgroundScrollerState extends State<BackgroundScroller> with SingleTick
         child: SizedBox(
           height: widget.height?? MediaQuery.of(context).size.height / 3,
           child: ShaderMask(
-            blendMode: BlendMode.xor,
+            blendMode: BlendMode.srcIn,
             shaderCallback: (Rect bounds) => LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [colorBlue.withOpacity(0.5), colorBlue],
+              colors: [Colors.deepOrange.shade200, Colors.deepOrange],
             ).createShader(bounds),
             child: Stack(
               children: [

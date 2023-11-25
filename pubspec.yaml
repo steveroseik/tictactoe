@@ -44,11 +44,11 @@ dependencies:
   neumorphic_button: ^0.0.1+2
   cubixd: ^0.1.1
   flame: ^1.9.1
-  spritewidget: ^2.0.1
   flutter_cube: ^0.1.1
   animations: ^2.0.8
   glassmorphism_ui: ^0.3.0
   carousel_slider: ^4.2.1
+  motion: ^1.4.0
 
 dev_dependencies:
   flutter_test:

@@ -6,7 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/dataEngine.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
-import 'UIUX/themesAndStyles.dart';
+import '../UIUX/themesAndStyles.dart';
 
 void main() {
   runApp(MyApp());
@@ -78,21 +78,40 @@ class _LoginPageState extends State<LoginPage>
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
-        backgroundColor: colorBlue,
         resizeToAvoidBottomInset: false,
         body: Consumer<DataEngine>(
           builder: (BuildContext context, DataEngine engine, Widget? child) {
             return Stack(
               children: [
+                Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.deepOrange,
+                            Colors.deepOrange,
+                            Colors.deepPurple.shade800
+                          ])),
+                ),
                 const BackgroundScroller(),
                 AppBar(
                     excludeHeaderSemantics: true,
                     backgroundColor: Colors.transparent),
+                Positioned(
+                  top: 12.h,
+                  left: 10.w,
+                  child: SizedBox(
+                    height: 17.h,
+                    width: 80.w,
+                    child: Image.asset('assets/LOGO.png'),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.all(10.w),
                   child: Column(
                     children: [
-                      SizedBox(height: 25.h),
+                      SizedBox(height: 30.h),
                       TextFormField(
                         controller: emailField,
                         keyboardType: TextInputType.emailAddress,
@@ -102,7 +121,7 @@ class _LoginPageState extends State<LoginPage>
                         decoration: InputDecoration(
                           hintText: 'Email',
                           filled: true,
-                          fillColor: colorMediumBlue,
+                          fillColor: colorDarkBlue,
                           hintStyle: TextStyle(color: colorLightGrey),
                           labelStyle: TextStyle(color: Colors.white),
                           prefixIcon: Icon(
@@ -129,7 +148,7 @@ class _LoginPageState extends State<LoginPage>
                         decoration: InputDecoration(
                           hintText: 'Password',
                           filled: true,
-                          fillColor: colorMediumBlue,
+                          fillColor: colorDarkBlue,
                           hintStyle: TextStyle(color: colorLightGrey),
                           labelStyle: TextStyle(color: Colors.white),
                           prefixIcon: Icon(
@@ -163,7 +182,7 @@ class _LoginPageState extends State<LoginPage>
                               emailSignIn();
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: colorDarkBlue,
+                                backgroundColor: Colors.deepPurple.shade900,
                                 foregroundColor: colorLightYellow,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(4.w))),

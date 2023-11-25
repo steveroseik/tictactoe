@@ -11,10 +11,9 @@ import 'package:tictactoe/experimentalGame.dart';
 import 'package:tictactoe/gamePage.dart';
 import 'package:tictactoe/gameSelect.dart';
 import 'package:tictactoe/game_nav.dart';
-import 'package:tictactoe/homeTrial.dart';
+import 'package:motion/motion.dart';
 import 'package:tictactoe/login_nav.dart';
 
-import 'SignUp/signup.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -22,6 +21,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Motion.instance.initialize();
+
+  /// Globally set the sensors sampling rate to 60 frames per second.
+  Motion.instance.setUpdateInterval(60.fps);
   runApp(MyApp());
 }
 

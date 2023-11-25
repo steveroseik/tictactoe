@@ -1,16 +1,14 @@
 
 import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
-import 'package:tictactoe/LogIn/login.dart';
 import 'package:tictactoe/SignUp/signup.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/charactersPage.dart';
-import 'package:tictactoe/deleteLater.dart';
 import 'package:tictactoe/difficultySelect.dart';
 import 'package:tictactoe/experimentalGame.dart';
 import 'package:tictactoe/gamePage.dart';
 import 'package:tictactoe/gameSelect.dart';
-import 'package:tictactoe/homeTrial.dart';
+import 'package:tictactoe/LogIn/loginPage.dart';
 
 import 'cubeGame.dart';
 import 'experimentalGame2.dart';

@@ -15,9 +15,19 @@ class _ClassicGameSelectPageState extends State<ClassicGameSelectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: colorBlue,
         resizeToAvoidBottomInset: false,
         body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.deepOrange,
+                      Colors.deepOrange,
+                      Colors.deepPurple.shade800
+                    ])),
+          ),
           const BackgroundScroller(),
           Center(
             child: Padding(
