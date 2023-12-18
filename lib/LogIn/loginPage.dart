@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -74,7 +73,7 @@ class _LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
@@ -89,10 +88,10 @@ class _LoginPageState extends State<LoginPage>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Colors.deepOrange,
-                            Colors.deepOrange,
-                            Colors.deepPurple.shade800
-                          ])),
+                        Colors.deepOrange,
+                        Colors.deepOrange,
+                        Colors.deepPurple.shade800
+                      ])),
                 ),
                 const BackgroundScroller(),
                 AppBar(
@@ -117,7 +116,8 @@ class _LoginPageState extends State<LoginPage>
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         style: const TextStyle(
-                            color: colorLightYellow, fontWeight: FontWeight.w600),
+                            color: colorLightYellow,
+                            fontWeight: FontWeight.w600),
                         decoration: InputDecoration(
                           hintText: 'Email',
                           filled: true,
@@ -143,7 +143,8 @@ class _LoginPageState extends State<LoginPage>
                       TextFormField(
                         controller: passField,
                         style: const TextStyle(
-                            color: colorLightYellow, fontWeight: FontWeight.w600),
+                            color: colorLightYellow,
+                            fontWeight: FontWeight.w600),
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: 'Password',
@@ -204,69 +205,70 @@ class _LoginPageState extends State<LoginPage>
                         children: [
                           Expanded(
                               child: Divider(
-                                thickness: 2,
-                                color: colorLightYellow,
-                              )),
+                            thickness: 2,
+                            color: colorLightYellow,
+                          )),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
                               'OR',
-                              style: TextStyle(color: colorLightYellow, fontSize: 16),
+                              style: TextStyle(
+                                  color: colorLightYellow, fontSize: 16),
                             ),
                           ),
                           Expanded(
                               child: Divider(
-                                thickness: 2,
-                                color: colorLightYellow,
-                              )),
+                            thickness: 2,
+                            color: colorLightYellow,
+                          )),
                         ],
                       ),
-                      SizedBox(height: 3.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: colorLightYellow),
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Image.asset(
-                                  'assets/google_icon.png',
-                                  height: 3.h,
-                                )),
-                          ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: colorLightYellow),
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Image.asset(
-                                  'assets/apple_icon.png',
-                                  height: 3.5.h,
-                                )),
-                          ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: colorLightYellow),
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.facebook_rounded,
-                                  color: CupertinoColors.systemBlue,
-                                  size: 3.5.h,
-                                )),
-                          ),
-                        ],
-                      ),
+                      //SizedBox(height: 3.h),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     Container(
+                      //       decoration: BoxDecoration(
+                      //           borderRadius: BorderRadius.circular(50),
+                      //           color: colorLightYellow),
+                      //       child: IconButton(
+                      //           onPressed: () {},
+                      //           icon: Image.asset(
+                      //             'assets/google_icon.png',
+                      //             height: 3.h,
+                      //           )),
+                      //     ),
+                      //     SizedBox(
+                      //       width: 5.w,
+                      //     ),
+                      //     Container(
+                      //       decoration: BoxDecoration(
+                      //           borderRadius: BorderRadius.circular(50),
+                      //           color: colorLightYellow),
+                      //       child: IconButton(
+                      //           onPressed: () {},
+                      //           icon: Image.asset(
+                      //             'assets/apple_icon.png',
+                      //             height: 3.5.h,
+                      //           )),
+                      //     ),
+                      //     SizedBox(
+                      //       width: 5.w,
+                      //     ),
+                      //     Container(
+                      //       decoration: BoxDecoration(
+                      //           borderRadius: BorderRadius.circular(50),
+                      //           color: colorLightYellow),
+                      //       child: IconButton(
+                      //           onPressed: () {},
+                      //           icon: Icon(
+                      //             Icons.facebook_rounded,
+                      //             color: CupertinoColors.systemBlue,
+                      //             size: 3.5.h,
+                      //           )),
+                      //     ),
+                      //   ],
+                      // ),
                       SizedBox(
                         height: 5.h,
                       ),

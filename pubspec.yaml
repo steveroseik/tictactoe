@@ -49,6 +49,8 @@ dependencies:
   glassmorphism_ui: ^0.3.0
   carousel_slider: ^4.2.1
   motion: ^1.4.0
+  circle_wheel_scroll: ^0.0.3
+  button_animations: ^2.0.0+3
 
 dev_dependencies:
   flutter_test:

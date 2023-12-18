@@ -12,7 +12,7 @@ class DifficultySelectPage extends StatefulWidget {
   State<DifficultySelectPage> createState() => _DifficultySelectPageState();
 }
 
-enum lvl {easy, medium, hard, extreme, none}
+enum lvl { easy, medium, hard, extreme, none }
 
 class _DifficultySelectPageState extends State<DifficultySelectPage> {
   bool _hasBeenPressed = false;
@@ -25,8 +25,19 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
         backgroundColor: colorBlue,
         resizeToAvoidBottomInset: false,
         body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                  Colors.deepOrange,
+                  Colors.deepOrange,
+                  Colors.deepPurple.shade800
+                ])),
+          ),
           const BackgroundScroller(),
-          AppBar(backgroundColor: Colors.transparent),
+          //AppBar(backgroundColor: Colors.transparent),
           Padding(
             padding: EdgeInsets.all(10.w),
             child: Column(
@@ -36,7 +47,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                   'Select Difficulty',
                   style: TextStyle(
                       fontSize: titleSize,
-                      color: colorLightYellow,
+                      color: Colors.deepPurple.shade800,
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -52,8 +63,12 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: difficulty == lvl.easy ? colorDarkBlue : Colors.blue[100],
-                        foregroundColor: difficulty == lvl.easy ? Colors.blue[100] : colorDarkBlue,
+                        backgroundColor: difficulty == lvl.easy
+                            ? colorDarkBlue
+                            : Colors.blue[100],
+                        foregroundColor: difficulty == lvl.easy
+                            ? Colors.blue[100]
+                            : colorDarkBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
                     child: Stack(
@@ -68,8 +83,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                         Center(
                           child: Text(
                             'Easy',
-                            style:
-                                TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 20),
                           ),
                         ),
                       ],
@@ -89,8 +103,12 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: difficulty == lvl.medium ? colorDarkBlue : Colors.blue[300],
-                        foregroundColor: difficulty == lvl.medium ? Colors.blue[300] : colorDarkBlue,
+                        backgroundColor: difficulty == lvl.medium
+                            ? colorDarkBlue
+                            : Colors.blue[300],
+                        foregroundColor: difficulty == lvl.medium
+                            ? Colors.blue[300]
+                            : colorDarkBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
                     child: Stack(
@@ -105,8 +123,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                         Center(
                           child: Text(
                             'Medium',
-                            style:
-                                TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 20),
                           ),
                         ),
                       ],
@@ -126,8 +143,12 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: difficulty == lvl.hard ? colorDarkBlue : Colors.blue[700],
-                        foregroundColor: difficulty == lvl.hard ? Colors.blue[700] : colorDarkBlue,
+                        backgroundColor: difficulty == lvl.hard
+                            ? colorDarkBlue
+                            : Colors.blue[700],
+                        foregroundColor: difficulty == lvl.hard
+                            ? Colors.blue[700]
+                            : colorDarkBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
                     child: Stack(
@@ -142,8 +163,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                         Center(
                           child: Text(
                             'Hard',
-                            style:
-                                TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 20),
                           ),
                         ),
                       ],
@@ -163,8 +183,12 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: difficulty == lvl.extreme ? colorDarkBlue : Colors.blue[900],
-                        foregroundColor: difficulty == lvl.extreme ? Colors.blue[900] : colorDarkBlue,
+                        backgroundColor: difficulty == lvl.extreme
+                            ? colorDarkBlue
+                            : Colors.blue[900],
+                        foregroundColor: difficulty == lvl.extreme
+                            ? Colors.blue[900]
+                            : colorDarkBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.w))),
                     child: Stack(
@@ -198,8 +222,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                       decoration: BoxDecoration(
                         border: _hasBeenPressed
                             ? Border.all(
-                                color: Colors.blue,
-                                style: BorderStyle.solid)
+                                color: Colors.blue, style: BorderStyle.solid)
                             : null,
                         borderRadius: BorderRadius.circular(20),
                         color: _hasBeenPressed ? Colors.blue : Colors.black,
@@ -217,8 +240,6 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                               ? colorDarkBlue
                               : colorLightYellow,
                         ),
-
-
                       ),
                     ),
                     SizedBox(
@@ -230,8 +251,7 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                       decoration: BoxDecoration(
                         border: !_hasBeenPressed
                             ? Border.all(
-                                color: Colors.blue,
-                                style: BorderStyle.solid)
+                                color: Colors.blue, style: BorderStyle.solid)
                             : null,
                         borderRadius: BorderRadius.circular(20),
                         color: _hasBeenPressed ? Colors.black : Colors.blue,
@@ -276,7 +296,9 @@ class _DifficultySelectPageState extends State<DifficultySelectPage> {
                                   color: colorLightYellow, fontSize: 15.sp),
                             ),
                           ),
-                          Align(alignment: Alignment.centerRight, child: Icon(CupertinoIcons.right_chevron))
+                          Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(CupertinoIcons.right_chevron))
                         ],
                       )),
                 ),

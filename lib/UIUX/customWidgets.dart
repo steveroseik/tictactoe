@@ -1,10 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
-
 
 class BackgroundScroller extends StatefulWidget {
   final double? height;
@@ -14,8 +12,8 @@ class BackgroundScroller extends StatefulWidget {
   State<BackgroundScroller> createState() => _BackgroundScrollerState();
 }
 
-class _BackgroundScrollerState extends State<BackgroundScroller> with SingleTickerProviderStateMixin{
-
+class _BackgroundScrollerState extends State<BackgroundScroller>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   // Define two instances of your pattern image
@@ -62,7 +60,7 @@ class _BackgroundScrollerState extends State<BackgroundScroller> with SingleTick
       child: Transform.rotate(
         angle: pi / -12.0,
         child: SizedBox(
-          height: widget.height?? MediaQuery.of(context).size.height / 3,
+          height: widget.height ?? MediaQuery.of(context).size.height / 3,
           child: ShaderMask(
             blendMode: BlendMode.srcIn,
             shaderCallback: (Rect bounds) => LinearGradient(
@@ -85,8 +83,7 @@ class _BackgroundScrollerState extends State<BackgroundScroller> with SingleTick
                 // Right pattern initially just to the right of the left pattern
                 Positioned(
                   left: 0,
-                  top:
-                  (1 - _controller.value) * 300,
+                  top: (1 - _controller.value) * 300,
                   child: Container(
                     width: 600,
                     height: 600,
@@ -109,14 +106,13 @@ class BackgroundAnimation extends StatefulWidget {
   State<BackgroundAnimation> createState() => _BackgroundAnimationState();
 }
 
-class _BackgroundAnimationState extends State<BackgroundAnimation> with SingleTickerProviderStateMixin{
-
+class _BackgroundAnimationState extends State<BackgroundAnimation>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   // Define two instances of your pattern image
   Widget leftPattern = Image.asset('assets/images/greenSpace1.png',
-      scale: 0.5,
-      repeat: ImageRepeat.repeat);
+      scale: 0.5, repeat: ImageRepeat.repeat);
 
   @override
   void initState() {
@@ -144,8 +140,7 @@ class _BackgroundAnimationState extends State<BackgroundAnimation> with SingleTi
   @override
   Widget build(BuildContext context) {
     leftPattern = Image.asset('assets/images/greenSpace1.png',
-        scale: 100.h / 101,
-        repeat: ImageRepeat.repeat);
+        scale: 100.h / 101, repeat: ImageRepeat.repeat);
     return Transform.scale(
       scale: 1.5,
       child: Transform.rotate(
@@ -168,8 +163,7 @@ class _BackgroundAnimationState extends State<BackgroundAnimation> with SingleTi
               // Right pattern initially just to the right of the left pattern
               Positioned(
                 left: 0,
-                top:
-                ((1 - _controller.value) * 100.h),
+                top: ((1 - _controller.value) * 100.h),
                 child: Container(
                   height: 100.h,
                   width: 100.w,
@@ -184,7 +178,6 @@ class _BackgroundAnimationState extends State<BackgroundAnimation> with SingleTi
   }
 }
 
-
 class LinePainter extends CustomPainter {
   final Offset start;
   final Offset end;
@@ -192,12 +185,14 @@ class LinePainter extends CustomPainter {
   final double maxWidth;
   final Color color;
   final AnimationController controller;
-  LinePainter(this.start, this.end, this.axisWidth, this.maxWidth, this.color, this.controller);
+  LinePainter(this.start, this.end, this.axisWidth, this.maxWidth, this.color,
+      this.controller);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final newEnd = end.dx == maxWidth-2 ? Offset(end.dx - (end.dx * (1 - controller.value)), end.dy) :
-        Offset(end.dx, end.dy - (end.dy * (1 - controller.value)));
+    final newEnd = end.dx == maxWidth - 2
+        ? Offset(end.dx - (end.dx * (1 - controller.value)), end.dy)
+        : Offset(end.dx, end.dy - (end.dy * (1 - controller.value)));
     createPath(canvas, start, newEnd);
   }
 
@@ -212,8 +207,6 @@ class LinePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
-
-
 
 class WinningLinePainter extends CustomPainter {
   final List<int> winningPath;
@@ -269,17 +262,12 @@ class WinningLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(WinningLinePainter oldDelegate) => true;
-
 }
-
 
 double axisWidth = 1;
 
-void createGridLines(
-    double width, double height,
-    int rows, int columns,
-    List<Widget> widgets, Color color,
-    AnimationController controller,
+void createGridLines(double width, double height, int rows, int columns,
+    List<Widget> widgets, Color color, AnimationController controller,
     {double? thickness}) {
   double rowHeight = height / rows;
   double columnWidth = width / columns;
@@ -287,28 +275,30 @@ void createGridLines(
   // Draw horizontal lines
   for (int i = 1; i < rows; i++) {
     double y = (i * rowHeight);
-    addLine(Offset(0, y), Offset(width-2, y), width, widgets, controller, color, thickness);
+    addLine(Offset(0, y), Offset(width - 2, y), width, widgets, controller,
+        color, thickness);
   }
 
   // Draw vertical lines
   for (int i = 1; i < columns; i++) {
     double x = (i * columnWidth);
-    addLine(Offset(x, 0), Offset(x, height-2), height, widgets, controller, color, thickness);
+    addLine(Offset(x, 0), Offset(x, height - 2), height, widgets, controller,
+        color, thickness);
   }
 
   controller.forward();
 }
 
-void addLine(Offset p1, Offset p2, double size, List<Widget> widgets, AnimationController controller, Color color, double? thickness) {
+void addLine(Offset p1, Offset p2, double size, List<Widget> widgets,
+    AnimationController controller, Color color, double? thickness) {
   widgets.add(
     CustomPaint(
       size: Size(size, size),
-      painter: LinePainter(p1, p2, thickness?? axisWidth, size, color, controller),
+      painter:
+          LinePainter(p1, p2, thickness ?? axisWidth, size, color, controller),
     ),
   );
 }
-
-
 
 class LoadingWidget extends StatefulWidget {
   final bool circular;
@@ -319,8 +309,8 @@ class LoadingWidget extends StatefulWidget {
   State<LoadingWidget> createState() => _LoadingWidgetState();
 }
 
-class _LoadingWidgetState extends State<LoadingWidget> with SingleTickerProviderStateMixin{
-
+class _LoadingWidgetState extends State<LoadingWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   // Define two instances of your pattern image
@@ -328,7 +318,6 @@ class _LoadingWidgetState extends State<LoadingWidget> with SingleTickerProvider
       scale: 6, repeat: ImageRepeat.repeat, color: colorLightYellow);
   Widget rightPattern = Image.asset('assets/patternXO.png',
       scale: 6, repeat: ImageRepeat.repeat, color: colorLightYellow);
-
 
   double value = 0;
   @override
@@ -339,17 +328,19 @@ class _LoadingWidgetState extends State<LoadingWidget> with SingleTickerProvider
       duration: const Duration(seconds: 5),
     )..repeat();
 
-    widget.circular ? null : _controller.addListener(() {
-      setState(() {
-        if (_controller.value == 1) {
-          // Swap the patterns when animation completes
-          final temp = leftPattern;
-          leftPattern = rightPattern;
-          rightPattern = temp;
-          _controller.reset();
-        }
-      });
-    });
+    widget.circular
+        ? null
+        : _controller.addListener(() {
+            setState(() {
+              if (_controller.value == 1) {
+                // Swap the patterns when animation completes
+                final temp = leftPattern;
+                leftPattern = rightPattern;
+                rightPattern = temp;
+                _controller.reset();
+              }
+            });
+          });
   }
 
   @override
@@ -364,56 +355,61 @@ class _LoadingWidgetState extends State<LoadingWidget> with SingleTickerProvider
       backgroundColor: colorBlue,
       body: Center(
         child: SizedBox(
-          child: widget.circular ? ShaderMask(
-            blendMode: BlendMode.xor,
-            shaderCallback: (Rect bounds) => RadialGradient(
-              center: Alignment.center,
-              colors: [colorBlue.withOpacity(0.3), colorBlue.withOpacity(0.97), colorBlue],
-            ).createShader(bounds),
-            child: Stack(
-              children: [
-                Center(
-                  child: RotationTransition(
-                    turns: Tween<double>(begin: 0, end: 1).animate(_controller),
-                    child: Container(
-                      width: widget.single?? false ? null : 600,
-                      child: leftPattern
-                    ),
+          child: widget.circular
+              ? ShaderMask(
+                  blendMode: BlendMode.xor,
+                  shaderCallback: (Rect bounds) => RadialGradient(
+                    center: Alignment.center,
+                    colors: [
+                      colorBlue.withOpacity(0.3),
+                      colorBlue.withOpacity(0.97),
+                      colorBlue
+                    ],
+                  ).createShader(bounds),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: RotationTransition(
+                          turns: Tween<double>(begin: 0, end: 1)
+                              .animate(_controller),
+                          child: Container(
+                              width: widget.single ?? false ? null : 600,
+                              child: leftPattern),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : ShaderMask(
+                  blendMode: BlendMode.xor,
+                  shaderCallback: (Rect bounds) => RadialGradient(
+                    center: Alignment.center,
+                    colors: [colorBlue.withOpacity(0.5), colorBlue],
+                  ).createShader(bounds),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        top: -_controller.value * 600,
+                        child: Container(
+                          width: 600,
+                          height: 600,
+                          child: leftPattern,
+                        ),
+                      ),
+                      // Right pattern initially just to the right of the left pattern
+                      Positioned(
+                        left: 0,
+                        top: (1 - _controller.value) * 600,
+                        child: Container(
+                          width: 600,
+                          height: 600,
+                          child: rightPattern,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ) : ShaderMask(
-            blendMode: BlendMode.xor,
-            shaderCallback: (Rect bounds) => RadialGradient(
-              center: Alignment.center,
-              colors: [colorBlue.withOpacity(0.5), colorBlue],
-            ).createShader(bounds),
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 0,
-                  top: -_controller.value * 600,
-                  child: Container(
-                    width: 600,
-                    height: 600,
-                    child: leftPattern,
-                  ),
-                ),
-                // Right pattern initially just to the right of the left pattern
-                Positioned(
-                  left: 0,
-                  top:
-                  (1 - _controller.value) * 600,
-                  child: Container(
-                    width: 600,
-                    height: 600,
-                    child: rightPattern,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -424,31 +420,29 @@ class ScaleRoute extends PageRouteBuilder {
   final Widget page;
   ScaleRoute({required this.page})
       : super(
-    pageBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        ) =>
-    page,
-    transitionsBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        Widget child,
-        ) =>
-        ScaleTransition(
-          scale: Tween<double>(
-            begin: 0.0,
-            end: 1.0,
-          ).animate(
-            CurvedAnimation(
-              parent: animation,
-              curve: Curves.fastOutSlowIn,
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              ScaleTransition(
+            scale: Tween<double>(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.fastOutSlowIn,
+              ),
             ),
+            child: child,
           ),
-          child: child,
-        ),
-  );
+        );
 }
-
-

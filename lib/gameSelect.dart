@@ -23,10 +23,10 @@ class _ClassicGameSelectPageState extends State<ClassicGameSelectPage> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.deepOrange,
-                      Colors.deepOrange,
-                      Colors.deepPurple.shade800
-                    ])),
+                  Colors.deepOrange,
+                  Colors.deepOrange,
+                  Colors.deepPurple.shade800
+                ])),
           ),
           const BackgroundScroller(),
           Center(
@@ -43,11 +43,11 @@ class _ClassicGameSelectPageState extends State<ClassicGameSelectPage> {
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 15.h,
+                    height: 5.h,
                   ),
                   InkWell(
                     borderRadius: BorderRadius.circular(20),
-                    onTap: (){
+                    onTap: () {
                       Navigator.of(context).pushNamed('/diff');
                     },
                     child: Container(
