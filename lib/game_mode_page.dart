@@ -6,6 +6,7 @@ import 'package:motion/motion.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/dataEngine.dart';
+import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/routesGenerator.dart';
 
 class GameModeSelectPage extends StatefulWidget {
@@ -263,6 +264,9 @@ class _GameModeSelectPageState extends State<GameModeSelectPage> {
                       borderWidth: 2,
                       onTap: () {},
                     ),
+                    WinButton(disconnected: true),
+                    LoseButton(),
+                    DrawButton(),
                   ],
                 ),
 

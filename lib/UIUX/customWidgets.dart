@@ -1,6 +1,9 @@
 import 'dart:math';
 
+import 'package:button_animations/button_animations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:material_dialogs/dialogs.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 
@@ -445,4 +448,178 @@ class ScaleRoute extends PageRouteBuilder {
             child: child,
           ),
         );
+}
+
+class WinButton extends StatelessWidget {
+  final bool? disconnected;
+  WinButton({this.disconnected});
+
+  @override
+  Widget build(BuildContext context) {
+    String text = '';
+    if (disconnected != null) {
+      text = 'Your opponent has disconnected';
+    } else {
+      text = 'You beat your opponent'; //return value if str is null
+    }
+    return MaterialButton(
+      color: Colors.grey[300],
+      minWidth: 300,
+      onPressed: () => Dialogs.materialDialog(
+          msg: text,
+          title: "You Win!",
+          color: Colors.deepPurple,
+          context: context,
+          titleStyle: TextStyle(
+              color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+          msgStyle: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w100),
+          msgAlign: TextAlign.center,
+          dialogWidth: kIsWeb ? 0.3 : null,
+          onClose: (value) => print("returned value is '$value'"),
+          actions: [
+            AnimatedButton(
+              child: Text(
+                'Home', // add your text here
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                ),
+              ),
+              darkShadow: false,
+              type: null,
+              isOutline: true,
+              borderWidth: 2,
+              onTap: () {},
+              width: 120,
+              color: Colors.white,
+            ),
+            AnimatedButton(
+              child: Text(
+                'Play', // add your text here
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              darkShadow: false,
+              isOutline: true,
+              borderWidth: 2,
+              onTap: () {},
+              width: 120,
+              color: Colors.green,
+              type: null,
+            ),
+          ]),
+      child: Text("Win Button"),
+    );
+  }
+}
+
+class LoseButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      color: Colors.grey[300],
+      minWidth: 300,
+      onPressed: () => Dialogs.materialDialog(
+          msg: 'Tough Luck! Try Again?',
+          title: "You Lose!",
+          color: Colors.deepPurple,
+          context: context,
+          titleStyle: TextStyle(
+              color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+          msgStyle: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w100),
+          msgAlign: TextAlign.center,
+          dialogWidth: kIsWeb ? 0.3 : null,
+          onClose: (value) => print("returned value is '$value'"),
+          actions: [
+            AnimatedButton(
+              child: Text(
+                'Home', // add your text here
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                ),
+              ),
+              darkShadow: false,
+              type: null,
+              isOutline: true,
+              borderWidth: 2,
+              onTap: () {},
+              width: 120,
+              color: Colors.white,
+            ),
+            AnimatedButton(
+              child: Text(
+                'Play', // add your text here
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              darkShadow: false,
+              isOutline: true,
+              borderWidth: 2,
+              onTap: () {},
+              width: 120,
+              color: Colors.green,
+              type: null,
+            ),
+          ]),
+      child: Text("Lose Button"),
+    );
+  }
+}
+
+class DrawButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      color: Colors.grey[300],
+      minWidth: 300,
+      onPressed: () => Dialogs.materialDialog(
+          msg: 'Close Match! Try Again?',
+          title: "Draw!",
+          color: Colors.deepPurple,
+          context: context,
+          titleStyle: TextStyle(
+              color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+          msgStyle: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w100),
+          msgAlign: TextAlign.center,
+          dialogWidth: kIsWeb ? 0.3 : null,
+          onClose: (value) => print("returned value is '$value'"),
+          actions: [
+            AnimatedButton(
+              child: Text(
+                'Home', // add your text here
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                ),
+              ),
+              darkShadow: false,
+              type: null,
+              isOutline: true,
+              borderWidth: 2,
+              onTap: () {},
+              width: 120,
+              color: Colors.white,
+            ),
+            AnimatedButton(
+              child: Text(
+                'Play', // add your text here
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              darkShadow: false,
+              isOutline: true,
+              borderWidth: 2,
+              onTap: () {},
+              width: 120,
+              color: Colors.green,
+              type: null,
+            ),
+          ]),
+      child: Text("Draw Button"),
+    );
+  }
 }
