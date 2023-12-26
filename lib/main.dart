@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tictactoe/Controllers/constants.dart';
+import 'package:tictactoe/SignUp/signupCompletion.dart';
+import 'package:tictactoe/SignUp/verification.dart';
 import 'package:tictactoe/Controllers/mainController.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
@@ -36,8 +42,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final MainController dataEngine = MainController();
+  final MainController mainController = MainController();
   int pageState = 0;
+
+  late StreamController<User?> firebaseStream;
 
   Future debounceConnection() async {
     await Future.delayed(const Duration(milliseconds: 200));
@@ -47,11 +55,27 @@ class _MyAppState extends State<MyApp> {
       key: Key('loadingWDISSD'), circular: true, single: true);
 
   @override
+  void initState() {
+    firebaseStream = StreamController<User?>.broadcast();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      initFirebaseStream();
+    });
+    super.initState();
+  }
+
+  initFirebaseStream(){
+    firebaseStream.addStream(FirebaseAuth.instance.authStateChanges());
+    firebaseStream.stream.listen((userData) {
+      mainController.updateFirebaseAuth(userData: userData);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MainController>(
-        create: (context) => dataEngine,
+        create: (context) => mainController,
         child: Sizer(builder: (context, orientation, deviceType) {
-          return Consumer<MainController>(builder: (context, dataEng, child) {
+          return Consumer<MainController>(builder: (context, mainControl, child) {
             return MaterialApp(
               title: 'Flutter Demo',
               theme: ThemeData(
@@ -61,42 +85,25 @@ class _MyAppState extends State<MyApp> {
               ),
               home: Stack(
                 children: [
-                  StreamBuilder<User?>(
-                    stream: FirebaseAuth.instance.userChanges().distinct(),
+                  StreamBuilder<UserSession?>(
+                    stream: mainControl.authController.stream,
                     builder: (context, snapshot) {
 
-                      if (snapshot.hasData) {
-                        pageState = 1;
-                      } else {
-                        pageState = 0;
+                      if (snapshot.data == UserSession.noUser){
+                        return LoginNav();
+                      }else if (snapshot.data == UserSession.unverifiedUser){
+                        return VerificationPage();
+                      }else if (snapshot.data == UserSession.incompleteUser){
+                        return SignupCompletionPage();
+                      }else if (snapshot.data == UserSession.completeUser
+                          || snapshot.data == UserSession.guest){
+
+                        return GameNav();
+                      }else{
+                        return loadingWidget;
                       }
-                      return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 200),
-                        transitionBuilder: (child, animation) => FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        ),
-                        child: (pageState == 1 || dataEng.isSignedIn)
-                            ? const GameNav(
-                          key: Key('gameansds'),)
-                            : Stack(
-                                key: Key('STCKEY'),
-                                children: [
-                                  const LoginNav(),
-                                  AnimatedSwitcher(
-                                      duration: const Duration(milliseconds: 500),
-                                      transitionBuilder: (child, animation) =>
-                                          FadeTransition(
-                                              opacity: animation, child: child),
-                                      child: (snapshot.connectionState ==
-                                              ConnectionState.active)
-                                          ? Container()
-                                          : loadingWidget)
-                                ],
-                              ),
-                      );
                     },
-                  ),
+                ),
                 ],
               ),
             );

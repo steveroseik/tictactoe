@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tictactoe</string>
+    <string name="facebook_app_id">2771663110347888</string>
+    <string name="fb_login_protocol_scheme">fbc62ce3dd71e12e5b831b515ba65b7a15</string>
+</resources>

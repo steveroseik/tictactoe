@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tictactoe/Authentication/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../UIUX/customWidgets.dart';
 import '../UIUX/themesAndStyles.dart';
+
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -13,6 +16,19 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final Authentication _authenticator = Authentication();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _reenterPasswordController = TextEditingController();
+
+  String? email;
+  String? username;
+  bool? isMale;
+  DateTime? birthdate;
+  String? country;
+  String? city;
+  String? provider;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +58,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 2.h),
                   TextFormField(
-                    // controller: emailField,
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     style: const TextStyle(
@@ -70,7 +86,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 2.h),
                   TextFormField(
-                    // controller: emailField,
+                    controller: _passwordController,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     style: const TextStyle(
@@ -98,7 +114,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 2.h),
                   TextFormField(
-                    // controller: emailField,
+                    controller: _reenterPasswordController,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     style: const TextStyle(
@@ -131,7 +147,30 @@ class _SignupPageState extends State<SignupPage> {
                     width: 80.w,
                     height: 6.h,
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: ()  async {
+                        if (_passwordController.text != _reenterPasswordController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Passwords do not match')),
+                          );
+                          return;
+                        }
+
+                        try {
+                          // Calling the signUpWithEmailAndPassword method
+                           await _authenticator.signUpWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                            context: context,
+                          );
+                          provider= "Email/Password";
+
+                        } catch (e) {
+                          // Handle other exceptions
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Signup failed: $e')),
+                          );
+                        }
+                      },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: colorDarkBlue,
                             foregroundColor: colorLightYellow,
@@ -174,7 +213,14 @@ class _SignupPageState extends State<SignupPage> {
                             borderRadius: BorderRadius.circular(50),
                             color: colorLightYellow),
                         child: IconButton(
-                            onPressed: () {},
+                            onPressed: ()async {
+                              User? user = await _authenticator.signInWithGoogle();
+                              if (user != null) {
+                                print('User signed in: ${user.displayName}');
+                              } else {
+                                print('Failed to sign in with Google.');
+                              }
+                            },
                             icon: Image.asset(
                               'assets/google_icon.png',
                               height: 3.h,
@@ -202,7 +248,14 @@ class _SignupPageState extends State<SignupPage> {
                             borderRadius: BorderRadius.circular(50),
                             color: colorLightYellow),
                         child: IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              User? user = await _authenticator.signInWithFacebook();
+                              if (user != null) {
+                                print('User signed in: ${user.displayName}');
+                              } else {
+                                print('Failed to sign in with Facebook.');
+                              }
+                            },
                             icon: Icon(
                               Icons.facebook_rounded,
                               color: CupertinoColors.systemBlue,

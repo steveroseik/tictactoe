@@ -43,7 +43,6 @@ class _LoginPageState extends State<LoginPage>
   @override
   void initState() {
     super.initState();
-    print('here');
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),

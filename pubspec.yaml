@@ -48,6 +48,12 @@ dependencies:
   animations: ^2.0.8
   carousel_slider: ^4.2.1
   motion: ^1.4.0
+  circle_wheel_scroll: ^0.0.3
+  button_animations: ^2.0.0+3
+  flutter_dotenv: ^5.1.0
+  google_sign_in: ^6.2.1
+  sign_in_with_apple: ^5.0.0
+  flutter_login_facebook: ^1.9.0
   socket_io_client: ^2.0.3+1
   crypto: ^3.0.3
   percent_indicator: ^4.2.3
