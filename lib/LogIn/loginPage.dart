@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/Controllers/dataEngine.dart';
+import 'package:tictactoe/Controllers/mainController.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
 import '../UIUX/themesAndStyles.dart';
@@ -78,8 +78,8 @@ class _LoginPageState extends State<LoginPage>
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Consumer<DataEngine>(
-          builder: (BuildContext context, DataEngine engine, Widget? child) {
+        body: Consumer<MainController>(
+          builder: (BuildContext context, MainController engine, Widget? child) {
             return Stack(
               children: [
                 Container(

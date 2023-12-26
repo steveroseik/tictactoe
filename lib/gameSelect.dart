@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tictactoe/routesGenerator.dart';
 
 import 'UIUX/customWidgets.dart';
 import 'UIUX/themesAndStyles.dart';
@@ -39,20 +41,18 @@ class _ClassicGameSelectPageState extends State<ClassicGameSelectPage> {
                     'Select Game Mode',
                     style: TextStyle(
                         fontSize: titleSize,
-                        color: colorLightYellow,
+                        color: colorDarkBlue,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 5.h,
                   ),
                   InkWell(
-                    borderRadius: BorderRadius.circular(20),
                     onTap: () {
-                      Navigator.of(context).pushNamed('/diff');
+                      Navigator.of(context).pushNamed(Routes.classicGameMain);
                     },
                     child: Container(
-                      height: 50.w,
-                      width: 50.w,
+                      width: 70.w,
                       padding: EdgeInsets.all(6.w),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -65,19 +65,21 @@ class _ClassicGameSelectPageState extends State<ClassicGameSelectPage> {
                         ],
                         color: colorDarkBlue,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Image.asset('assets/characters/all-05.png',
-                              width: 20.w),
-                          Text(
-                            'Single Player',
-                            style: TextStyle(
-                                color: colorLightYellow,
-                                fontSize: 15.sp,
-                                fontWeight: FontWeight.bold),
+                          Icon(
+                            CupertinoIcons.shuffle_medium,
+                            color: Colors.white,
+                            size: 70,
                           ),
+                          Text(
+                            "Random",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 26.0,
+                            ),
+                          )
                         ],
                       ),
                     ),

@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/Controllers/gameEngine.dart';
+import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
 import 'UIUX/customWidgets.dart';
 
@@ -25,11 +25,6 @@ class _CubeGame3State extends State<CubeGame3> with TickerProviderStateMixin{
   double _ry = 0.0;
   double _rz = 0.0;
   List<Widget> children = [];
-
-  GameEngine frontGame = GameEngine();
-  GameEngine backGame = GameEngine();
-  GameEngine rightGame = GameEngine();
-  GameEngine leftGame = GameEngine();
 
   late AnimationController _animationController;
   late AnimationController _smoothController;
@@ -274,11 +269,6 @@ class _CubeState extends State<Cube> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   late Animation animation;
 
-
-  GameEngine engine = GameEngine();
-  GameEngine engine1 = GameEngine();
-  GameEngine engine2 = GameEngine();
-
   List<Widget> children = [];
 
   double _rx = 0.0;
@@ -405,7 +395,7 @@ class _CubeState extends State<Cube> with SingleTickerProviderStateMixin {
   buildBoardFace({
     required faces face,
     required double size,
-    GameEngine? customEngine}){
+    ClassicGameController? customEngine}){
 
 
     late double rotateX;

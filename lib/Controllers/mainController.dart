@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe/Controllers/constants.dart';
 
-class DataEngine extends ChangeNotifier{
+class MainController extends ChangeNotifier{
 
   bool _hasData = false;
   bool _isGuest = false;
@@ -13,7 +13,7 @@ class DataEngine extends ChangeNotifier{
   get isSignedIn => (_isGuest || _hasData);
   get isLoading => _isLoading;
 
-  DataEngine();
+  MainController();
 
 
   setGuest() async{

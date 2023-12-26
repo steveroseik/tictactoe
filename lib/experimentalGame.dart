@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/Controllers/gameEngine.dart';
+import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'UIUX/customWidgets.dart';
-import 'gamePage.dart';
+import 'ClassicGame/gamePage.dart';
 
 
 
@@ -27,7 +27,7 @@ class _CubeGameState extends State<CubeGame> with TickerProviderStateMixin{
   late Animation focusAnimation;
 
   List<Widget> nineGames = [];
-  List<GameEngine> nineEngines = [];
+  List<ClassicGameController> nineEngines = [];
   double gridSize = 90.w;
 
   List<int> focusedGrid = [];
@@ -67,8 +67,6 @@ class _CubeGameState extends State<CubeGame> with TickerProviderStateMixin{
 
     focusController = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
     focusAnimation = CurvedAnimation(parent: focusController, curve: Curves.easeInOut);
-
-    nineEngines = List<GameEngine>.generate(9, (index) => GameEngine());
     nineGames = List<Widget>.generate(9, (index) => NineGrid(size: gridSize/3, engine: nineEngines[index]));
     super.initState();
   }
@@ -78,7 +76,7 @@ class _CubeGameState extends State<CubeGame> with TickerProviderStateMixin{
     animationController.dispose();
     focusController.dispose();
     for (var e in nineEngines){
-      e.kill();
+      e.dispose();
     }
     super.dispose();
   }
@@ -177,7 +175,7 @@ class _CubeGameState extends State<CubeGame> with TickerProviderStateMixin{
                                                   onTap: () async{
                                                    if (selectedIndex != -1){
                                                      nineEngines[selectedIndex]
-                                                         .setManualMove((index~/3, index%3), isO: isO);
+                                                         .setManualMove((index~/3, index%3), myPlay: true);
                                                      isO = !isO;
                                                      setState(() {
                                                        focusedGrid[index] = !isO ? 0 : 1;
@@ -216,7 +214,7 @@ class _CubeGameState extends State<CubeGame> with TickerProviderStateMixin{
                       onPressed: (){
                         setState(() {
                           for (var engine in nineEngines){
-                            engine.resetGame();
+
                           }
                         });
                       },
@@ -292,7 +290,7 @@ class NineGrid extends StatefulWidget {
   const NineGrid({super.key, required this.size, required this.engine});
 
   final double size;
-  final GameEngine engine;
+  final ClassicGameController engine;
 
   @override
   State<NineGrid> createState() => _NineGridState();
@@ -302,7 +300,7 @@ class _NineGridState extends State<NineGrid> with TickerProviderStateMixin {
 
 
 
-  late GameEngine gameEngine;
+  late ClassicGameController gameEngine;
   late AnimationController animationController;
   late Animation animation;
 
@@ -328,7 +326,7 @@ class _NineGridState extends State<NineGrid> with TickerProviderStateMixin {
     gameEngine = widget.engine;
     return ChangeNotifierProvider(
       create: (context) => gameEngine,
-      child: Consumer<GameEngine>(
+      child: Consumer<ClassicGameController>(
         builder: (context, engine, child) {
           return AnimatedBuilder(
             animation: animationController,
@@ -357,7 +355,7 @@ class _NineGridState extends State<NineGrid> with TickerProviderStateMixin {
                             onTap: (){
                               int row = (index ~/ 3);
                               int column = index % 3;
-                              gameEngine.setManualMove((row, column), isO: false);
+                              gameEngine.setManualMove((row, column), myPlay: true);
                               setState(() {});
                             },
                             child: Container(

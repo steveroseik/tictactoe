@@ -7,12 +7,11 @@ import 'package:flame/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cube/flutter_cube.dart';
-import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
 
-import 'Controllers/gameEngine.dart';
+import 'Controllers/classicGameController.dart';
 import 'UIUX/customWidgets.dart';
 
 class SpellNotifier extends ChangeNotifier{
@@ -207,11 +206,9 @@ class _CubeGame2State extends State<CubeGame2> with TickerProviderStateMixin{
                     ..scale(scale)
                     ..translate(_x/scale, _y/scale, 0.0),
                     alignment: Alignment.center,
-                    child: GlassContainer(
+                    child: Container(
                       width: 50.w,
                       height: 50.w,
-                      shadowStrength: 0,
-                      blur: 3,
                       color: Colors.deepPurpleAccent.withOpacity(0.1),
                       child: Consumer<SpellNotifier>(
                         builder: (context, value, child) {

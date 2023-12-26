@@ -1,9 +1,9 @@
 import 'dart:math';
-
-import 'package:button_animations/button_animations.dart';
+import 'package:animated_button/animated_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_dialogs/dialogs.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 
@@ -303,16 +303,16 @@ void addLine(Offset p1, Offset p2, double size, List<Widget> widgets,
   );
 }
 
-class LoadingWidget extends StatefulWidget {
+class LoadingPage extends StatefulWidget {
   final bool circular;
   final bool? single;
-  const LoadingWidget({super.key, required this.circular, this.single});
+  const LoadingPage({super.key, required this.circular, this.single});
 
   @override
-  State<LoadingWidget> createState() => _LoadingWidgetState();
+  State<LoadingPage> createState() => _LoadingPageState();
 }
 
-class _LoadingWidgetState extends State<LoadingWidget>
+class _LoadingPageState extends State<LoadingPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -419,6 +419,128 @@ class _LoadingWidgetState extends State<LoadingWidget>
   }
 }
 
+class LoadingWidget extends StatefulWidget {
+  final bool circular;
+  final bool? single;
+  double scaleFactor = 1;
+  late Color color;
+  LoadingWidget({super.key, required this.circular, this.single, double? scaleFactor, Color? color}){
+    this.scaleFactor = scaleFactor?? this.scaleFactor;
+    this.color = color?? colorPurple;
+  }
+
+  @override
+  State<LoadingWidget> createState() => _LoadingWidgetState();
+}
+
+class _LoadingWidgetState extends State<LoadingWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  // Define two instances of your pattern image
+  late Widget leftPattern;
+  late Widget rightPattern;
+
+  double value = 0;
+  @override
+  void initState() {
+    super.initState();
+    leftPattern = Image.asset('assets/patternXO.png',
+        scale: widget.scaleFactor, repeat: ImageRepeat.repeat, color: colorLightYellow);
+    rightPattern = Image.asset('assets/patternXO.png',
+        scale: widget.scaleFactor, repeat: ImageRepeat.repeat, color: colorLightYellow);
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..repeat();
+
+    widget.circular
+        ? null
+        : _controller.addListener(() {
+      setState(() {
+        if (_controller.value == 1) {
+          // Swap the patterns when animation completes
+          final temp = leftPattern;
+          leftPattern = rightPattern;
+          rightPattern = temp;
+          _controller.reset();
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipOval(
+      child: Center(
+        child: SizedBox(
+          child: widget.circular
+              ? ShaderMask(
+            blendMode: BlendMode.srcIn,
+            shaderCallback: (Rect bounds) => RadialGradient(
+              center: Alignment.center,
+              colors: [
+                widget.color,
+                widget.color.withOpacity(0.97),
+                widget.color.withOpacity(0.0),
+              ],
+            ).createShader(bounds),
+            child: Stack(
+              children: [
+                Center(
+                  child: RotationTransition(
+                    turns: Tween<double>(begin: 0, end: 1)
+                        .animate(_controller),
+                    child: Container(
+                        width: widget.single ?? false ? null : 600,
+                        child: leftPattern),
+                  ),
+                ),
+              ],
+            ),
+          )
+              : ShaderMask(
+            blendMode: BlendMode.xor,
+            shaderCallback: (Rect bounds) => RadialGradient(
+              center: Alignment.center,
+              colors: [colorBlue.withOpacity(0.5), colorBlue],
+            ).createShader(bounds),
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 0,
+                  top: -_controller.value * 600,
+                  child: Container(
+                    width: 600,
+                    height: 600,
+                    child: leftPattern,
+                  ),
+                ),
+                // Right pattern initially just to the right of the left pattern
+                Positioned(
+                  left: 0,
+                  top: (1 - _controller.value) * 600,
+                  child: Container(
+                    width: 600,
+                    height: 600,
+                    child: rightPattern,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class ScaleRoute extends PageRouteBuilder {
   final Widget page;
   ScaleRoute({required this.page})
@@ -451,13 +573,13 @@ class ScaleRoute extends PageRouteBuilder {
 }
 
 class WinButton extends StatelessWidget {
-  final bool? disconnected;
-  WinButton({this.disconnected});
+  final bool disconnected;
+  const WinButton({super.key, this.disconnected = false});
 
   @override
   Widget build(BuildContext context) {
     String text = '';
-    if (disconnected != null) {
+    if (disconnected) {
       text = 'Your opponent has disconnected';
     } else {
       text = 'You beat your opponent'; //return value if str is null
@@ -485,11 +607,7 @@ class WinButton extends StatelessWidget {
                   color: Colors.deepPurple,
                 ),
               ),
-              darkShadow: false,
-              type: null,
-              isOutline: true,
-              borderWidth: 2,
-              onTap: () {},
+              onPressed: () {},
               width: 120,
               color: Colors.white,
             ),
@@ -500,13 +618,9 @@ class WinButton extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              darkShadow: false,
-              isOutline: true,
-              borderWidth: 2,
-              onTap: () {},
+              onPressed: () {},
               width: 120,
               color: Colors.green,
-              type: null,
             ),
           ]),
       child: Text("Win Button"),
@@ -540,11 +654,7 @@ class LoseButton extends StatelessWidget {
                   color: Colors.deepPurple,
                 ),
               ),
-              darkShadow: false,
-              type: null,
-              isOutline: true,
-              borderWidth: 2,
-              onTap: () {},
+              onPressed: () {},
               width: 120,
               color: Colors.white,
             ),
@@ -555,13 +665,9 @@ class LoseButton extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              darkShadow: false,
-              isOutline: true,
-              borderWidth: 2,
-              onTap: () {},
+              onPressed: () {},
               width: 120,
               color: Colors.green,
-              type: null,
             ),
           ]),
       child: Text("Lose Button"),
@@ -595,11 +701,7 @@ class DrawButton extends StatelessWidget {
                   color: Colors.deepPurple,
                 ),
               ),
-              darkShadow: false,
-              type: null,
-              isOutline: true,
-              borderWidth: 2,
-              onTap: () {},
+              onPressed: () {},
               width: 120,
               color: Colors.white,
             ),
@@ -610,13 +712,9 @@ class DrawButton extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              darkShadow: false,
-              isOutline: true,
-              borderWidth: 2,
-              onTap: () {},
+              onPressed: () {},
               width: 120,
               color: Colors.green,
-              type: null,
             ),
           ]),
       child: Text("Draw Button"),
