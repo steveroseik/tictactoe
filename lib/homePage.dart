@@ -281,9 +281,16 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 2.h,
                   ),
-                  ElevatedLayerButton(
+
+                  GameButton(
+                    onPressed: () {
+                      print('tapped');
+                    },
+                    borderRadius: BorderRadius.circular(15),
+                    aspectRatio: 4/1,
+                    width: 70.w,
                     baseDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -291,51 +298,26 @@ class _HomePageState extends State<HomePage> {
                         )
                     ),
                     topDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Colors.green, colorDarkBlue]
-                      )
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Colors.green, colorDarkBlue]
+                        )
                     ),
-                    buttonHeight: 15.w,
-                    buttonWidth: 80.w,
-                    animationDuration: const Duration(milliseconds: 100),
-                    animationCurve: Curves.easeIn,
-                    onClick: () {  },
-                    topLayerChild: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          height: 15.w,
-                          width: 80.w,
-                          child: const Center(
-                            child: Text(
-                              'Challenges', // add your text here
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                    child: const Center(
+                      child: Text(
+                        'sdsds', // add your text here
+                        style: TextStyle(
+                          color: Colors.white,
                         ),
-                        Positioned.fill(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: NeoPopShimmer(
-                                shimmerColor: colorYellow.withOpacity(0.8),
-                                duration: const Duration(milliseconds: 1500),
-                                delay: const Duration(milliseconds: 2000),
-                                child:Container()
-                            ),
-                          ),
-                        ),
-                      ],
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                   WinButton(disconnected: false),
-                  LoseButton(),
-                  DrawButton(),
+                  // LoseButton(),
+                  // DrawButton(),
                 ],
               ),
 

@@ -3,7 +3,9 @@ import 'package:animated_button/animated_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_dialogs/dialogs.dart';
+import 'package:neopop/widgets/shimmer/neopop_shimmer.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:simple_animated_button/elevated_layer_button.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 
@@ -721,3 +723,73 @@ class DrawButton extends StatelessWidget {
     );
   }
 }
+
+class GameButton extends StatelessWidget {
+  final BoxDecoration? baseDecoration;
+  final BoxDecoration? topDecoration;
+  late BorderRadius borderRadius;
+  late Color color;
+  late Color shimmerColor;
+  final Gradient? gradient;
+  final Widget? child;
+  Function()? onPressed;
+  final Duration? animationDuration;
+  final Duration? shimmerAnimationDuration;
+  final Duration? shimmerDelayDuration;
+  final double? height;
+  final double? width;
+  final double? aspectRatio;
+
+  GameButton({super.key, this.baseDecoration, this.topDecoration,
+    BorderRadius? borderRadius,
+    Color? color, Color? shimmerColor,
+    this.gradient,
+    this.child, this.onPressed,
+    this.animationDuration, this.shimmerDelayDuration,
+    this.shimmerAnimationDuration,
+    this.height, this.width, this.aspectRatio}){
+
+
+    this.borderRadius = borderRadius?? BorderRadius.circular(0);
+    this.color = color?? Colors.black;
+    this.shimmerColor = shimmerColor?? colorYellow.withOpacity(0.8);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedLayerButton(
+      baseDecoration: baseDecoration?? BoxDecoration(
+          borderRadius: borderRadius,
+          color: color
+      ),
+      topDecoration: topDecoration?? BoxDecoration(
+          borderRadius: borderRadius,
+          color: color
+      ),
+      buttonHeight: height,
+      buttonWidth: width,
+      aspectRatio: aspectRatio,
+      animationDuration: animationDuration?? const Duration(milliseconds: 100),
+      animationCurve: Curves.easeIn,
+      onClick: onPressed,
+      topLayerChild: Stack(
+        alignment: Alignment.center,
+        children: [
+          child?? Container(),
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: borderRadius,
+              child: NeoPopShimmer(
+                  shimmerColor: shimmerColor,
+                  duration: shimmerAnimationDuration?? const Duration(milliseconds: 1500),
+                  delay: shimmerDelayDuration?? const Duration(milliseconds: 2000),
+                  child:Container()
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

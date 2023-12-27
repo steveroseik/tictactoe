@@ -701,10 +701,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: c5f8c8e03529226b7139b83b95a121b890931609
+      resolved-ref: "06f365dcf176e4c170ddbf12bf220c9459ca7d8e"
       url: "https://github.com/steveroseik/simple_animated_button"
     source: git
-    version: "0.0.8"
+    version: "0.1.1"
   sizer:
     dependency: "direct main"
     description:
