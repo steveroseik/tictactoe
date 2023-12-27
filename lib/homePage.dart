@@ -307,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: const Center(
                       child: Text(
-                        'sdsds', // add your text here
+                        'Challenges', // add your text here
                         style: TextStyle(
                           color: Colors.white,
                         ),
