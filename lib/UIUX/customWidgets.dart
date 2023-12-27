@@ -729,6 +729,7 @@ class GameButton extends StatelessWidget {
   final BoxDecoration? topDecoration;
   late BorderRadius borderRadius;
   late Color color;
+  final bool enableShimmer;
   late Color shimmerColor;
   final Gradient? gradient;
   final Widget? child;
@@ -743,6 +744,7 @@ class GameButton extends StatelessWidget {
   GameButton({super.key, this.baseDecoration, this.topDecoration,
     BorderRadius? borderRadius,
     Color? color, Color? shimmerColor,
+    this.enableShimmer = true,
     this.gradient,
     this.child, this.onPressed,
     this.animationDuration, this.shimmerDelayDuration,
@@ -776,7 +778,7 @@ class GameButton extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           child?? Container(),
-          Positioned.fill(
+          if (enableShimmer) Positioned.fill(
             child: ClipRRect(
               borderRadius: borderRadius,
               child: NeoPopShimmer(

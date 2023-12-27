@@ -299,7 +299,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     topDecoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [Colors.green, colorDarkBlue]
