@@ -3,12 +3,14 @@ import 'package:crypto/crypto.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:motion/motion.dart';
 import 'package:neopop/neopop.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:simple_animated_button/elevated_layer_button.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tictactoe/Authentication/authentication.dart';
 import 'package:tictactoe/Controllers/mainController.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
@@ -163,7 +165,13 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white,
                               size: 25,
                             ),
-                            onPressed: () {},
+                            onPressed: () async{
+
+                              final token = await Authentication().getFacebookAccessToken();
+                              print(token?.token);
+                              final friends = await Authentication().getFacebookFriends(token: token!.token);
+                              print(friends[0]);
+                            },
                             height: 50,
                             width: 50,
                             color: Colors.orangeAccent,
