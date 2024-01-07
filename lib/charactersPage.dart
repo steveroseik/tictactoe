@@ -40,7 +40,7 @@ class _CharactersPageState extends State<CharactersPage> {
                               children: [
                                 AspectRatio(
                                     aspectRatio: 1,
-                                    child: Sprites().characterOf[characters.values[index]])
+                                    child: Sprites.characterOf[characters.values[index]])
                               ])),
                     ),
                   );
@@ -69,7 +69,7 @@ class _CharactersPageState extends State<CharactersPage> {
                                 children: [
                                   AspectRatio(
                                       aspectRatio: 1,
-                                      child: Sprites().characterOf[characters.values[index+diff]])
+                                      child: Sprites.characterOf[characters.values[index+diff]])
                                 ])),
                       ),
                     );

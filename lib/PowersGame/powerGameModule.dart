@@ -9,14 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cube/flutter_cube.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:socket_io_client/socket_io_client.dart';
+import 'package:tictactoe/Controllers/powersGameController.dart';
+import 'package:tictactoe/PowersGame/cellBarrier.dart';
+import 'package:tictactoe/PowersGame/core.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
 
-import 'Controllers/classicGameController.dart';
-import 'UIUX/customWidgets.dart';
+import '../Controllers/classicGameController.dart';
+import '../UIUX/customWidgets.dart';
 
 class SpellNotifier extends ChangeNotifier{
   List<int> spells = [];
   int length = 0;
+
+  Power power = CellBarrier(playerState: -1);
+
 
   SpellNotifier({required this.length}){
     spells = List<int>.generate(length, (index) => -1);
@@ -37,14 +44,16 @@ class SpellNotifier extends ChangeNotifier{
   }
 }
 
-class CubeGame2 extends StatefulWidget {
-  const CubeGame2({super.key});
+class PowersGameModule extends StatefulWidget {
+  final PowersGameController gameController;
+  final Socket socket;
+  const PowersGameModule({super.key, required this.gameController, required this.socket});
 
   @override
-  State<CubeGame2> createState() => _CubeGame2State();
+  State<PowersGameModule> createState() => _PowersGameModuleState();
 }
 
-class _CubeGame2State extends State<CubeGame2> with TickerProviderStateMixin{
+class _PowersGameModuleState extends State<PowersGameModule> with TickerProviderStateMixin{
 
   double scale = 1.5;
   double _x = 0.0;
@@ -67,17 +76,18 @@ class _CubeGame2State extends State<CubeGame2> with TickerProviderStateMixin{
   List<Widget> animatedSprites = [];
   bool cellDefender = false;
 
-  Widget enemy = Sprites().characterOf[characters.reaper1]!;
-  Widget myself = Sprites().characterOf[characters.maskDude]!;
+  Widget enemy = Sprites.characterOf[characters.reaper1]!;
+  Widget myself = Sprites.characterOf[characters.maskDude]!;
 
   ValueNotifier<characters> en = ValueNotifier(characters.reaper1);
 
   late SpellNotifier spellNotifier;
+  late PowersGameController gameController;
 
   @override
   void initState() {
     animationController = AnimationController(duration: Duration(milliseconds: 3000), vsync: this);
-
+    gameController = widget.gameController;
     animation = Tween(begin: 0.0, end: 1.0).animate(animationController);
     cells = List<int>.generate(rows*columns, (index) => -1);
     spells = List<int>.generate(rows*columns, (index) => -1);
@@ -97,8 +107,11 @@ class _CubeGame2State extends State<CubeGame2> with TickerProviderStateMixin{
   }
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => spellNotifier,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => spellNotifier),
+        ChangeNotifierProvider(create: (context) => gameController),
+      ],
       builder: (context, child) {
         return GestureDetector(
           onScaleUpdate: (scaleDet){
@@ -210,8 +223,8 @@ class _CubeGame2State extends State<CubeGame2> with TickerProviderStateMixin{
                       width: 50.w,
                       height: 50.w,
                       color: Colors.deepPurpleAccent.withOpacity(0.1),
-                      child: Consumer<SpellNotifier>(
-                        builder: (context, value, child) {
+                      child: Consumer<PowersGameController>(
+                        builder: (context, gameController, child) {
                           return AnimatedBuilder(
                             animation: animationController,
                             builder: (context, child) {
@@ -223,26 +236,27 @@ class _CubeGame2State extends State<CubeGame2> with TickerProviderStateMixin{
                                   GridView.builder(
                                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: rows),
                                       padding: EdgeInsets.zero,
-                                      itemCount: rows*columns,
+                                      itemCount: powersGridLength,
                                       shrinkWrap: true,
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index){
-                                        final row = index ~/ 10;
-                                    return InkWell(
-                                      onTap: (){
-                                        setState(() {
-                                          if (cellDefender){
-                                            cellDefender = false;
-                                            spellNotifier.setCell(index, value:  Random().nextInt(9));
-                                          }else{
-                                            if (cells[index] == -1 && spellNotifier.cell(index) == -1){
-                                              cells[index] = isO ? 0 : 1;
-                                              isO = !isO;
-                                            }
-                                          }
 
-                                        });
-                                      },
+                                    return InkWell(
+                                      // // onTap: (gameController.isMyTurn &&
+                                      // //     gameController.state == gameController.started) ? () async {
+                                      // //
+                                      // //   if (gameController.grid[index] == -1) {
+                                      // //     final affirm = gameController.setManualMove(((index ~/ 3),
+                                      // //     (index % 3)));
+                                      // //     if (affirm != null){
+                                      // //
+                                      // //       widget.socket.emitWithAck('gameListener', affirm, ack: (data) {
+                                      // //         print(data);
+                                      // //       });
+                                      // //     }
+                                      // //   }
+                                      // //   setState(() {});
+                                      // } : null,
                                       child: Stack(
                                         children: [
                                           cells[index] != -1 ?
@@ -331,25 +345,3 @@ class _AnimatedSpriteWidgetState extends State<AnimatedSpriteWidget> {
     );
   }
 }
-
-class trialWidget extends StatefulWidget {
-  trialWidget({super.key});
-
-  @override
-  State<trialWidget> createState() => _trialWidgetState();
-
-}
-
-class _trialWidgetState extends State<trialWidget> with AutomaticKeepAliveClientMixin{
-
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return Sprites().characterOf[characters.maskDude]!;
-  }
-}
-

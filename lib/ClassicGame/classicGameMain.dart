@@ -5,15 +5,25 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
-import 'package:tictactoe/ClassicGame/gamePage.dart';
+import 'package:tictactoe/ClassicGame/classicGameModule.dart';
 
 import '../Controllers/constants.dart';
 import '../UIUX/customWidgets.dart';
 
 class ClassicGamePage extends StatefulWidget {
-  const ClassicGamePage({super.key});
+  final Socket? socket;
+  final Function(GameWinner, bool)? gameStateChange;
+  final bool inTournament;
+
+
+  const ClassicGamePage({super.key,
+    this.socket,
+    this.gameStateChange,
+    this.inTournament = false
+  });
 
   @override
   State<ClassicGamePage> createState() => _ClassicGamePageState();
@@ -118,11 +128,12 @@ class _ClassicGamePageState extends State<ClassicGamePage> {
                               width: 50.w,
                               child: LoadingWidget(circular: true, scaleFactor: 12))
                         ],
-                      ) : GamePage(
+                      ) : ClassicGameModule(
                           key: const Key('classicGamePageKey'),
                           controller: gameController!,
-                          setMove: setMove,
-                          confirmMove: confirmMove,
+                          gameStateChanged: (winner, iWon){
+
+                          },
                           socket: socket),),
                   ],
                 ),
@@ -135,17 +146,22 @@ class _ClassicGamePageState extends State<ClassicGamePage> {
   }
 
   initSocket(){
-    socket = io("ws://192.168.1.57:3000",
-        OptionBuilder()
-            .setTransports(['websocket'])
-            .disableAutoConnect()
-            .enableForceNewConnection()
-            .build());
+    if (widget.socket != null){
+      socket = widget.socket!;
 
-    socket.connect();
+    }else{
+      socket = io(Const.gameServerUrl,
+          OptionBuilder()
+              .setTransports(['websocket'])
+              .disableAutoConnect()
+              .enableForceNewConnection()
+              .build());
+
+      socket.connect();
+    }
+
 
     socket.onConnect((_) async{
-      await Future.delayed(const Duration(milliseconds: 3000));
       print("Connection established : ${socket.id}");
       if (gotDisconnected){
         gotDisconnected = false;
@@ -160,10 +176,10 @@ class _ClassicGamePageState extends State<ClassicGamePage> {
             }
           });
         }else{
-          requestJoin();
+          if (!widget.inTournament) requestJoin();
         }
       }else{
-        requestJoin();
+        if (!widget.inTournament) requestJoin();
       }
     });
 
@@ -178,13 +194,15 @@ class _ClassicGamePageState extends State<ClassicGamePage> {
         setState(() {
           oppConnected = true;
         });
-        gameController!.setOppConnection(GameConn.online);
+        gameController!.setOppConnection(GameConn.online, clientId: data['clientId']);
       }
     });
 
+
     socket.on('gameListener', (data) {
 
-      print(jsonEncode(data));
+      print('got data: ${jsonEncode(data)}');
+
       switch(data['type']){
 
         case 'gameInit': gameInitAction(data);
@@ -218,7 +236,7 @@ class _ClassicGamePageState extends State<ClassicGamePage> {
         }catch (e){
           print(e);
         }
-        Navigator.of(context).pop();
+        if (!widget.inTournament) Navigator.of(context).pop();
       }else{
         errorCounter++;
       }
@@ -229,18 +247,6 @@ class _ClassicGamePageState extends State<ClassicGamePage> {
 
   calculateGameStartTime(DateTime endTime){
     return endTime.subtract(const Duration(minutes: 5));
-  }
-
-  // send move request
-  setMove(Map<String, dynamic> request){
-
-    socket.emitWithAck('gameListener', request, ack: (data) {
-      print(data);
-    });
-  }
-
-  confirmMove(Map<String, dynamic> response){
-
   }
 
   gameInitAction(Map<String, dynamic> data){
@@ -279,9 +285,11 @@ class _ClassicGamePageState extends State<ClassicGamePage> {
 
   gameClassicAction(Map<String, dynamic> data){
     int? move = data['move'];
+    int? grid = data['grid'];
     String? hash = data['hash'];
-    if (move != null && hash != null){
-      final resp = gameController!.validateMove(move, hash);
+
+    if (move != null && hash != null && grid != null){
+      final resp = gameController!.validateMove(move, hash, grid: grid);
       socket.emitWithAck('gameListener', resp, ack: (data){
         gameController!.moveValidated();
       });
@@ -304,8 +312,7 @@ class _ClassicGamePageState extends State<ClassicGamePage> {
       'token': 'classic.1.$uid'
     }, ack:  (response) {
       if (response['success'] == true){
-        currentState.value = GameState.waiting;
-        print('waitingggg');
+        if (currentState.value == GameState.connecting) currentState.value = GameState.waiting;
       }else{
         print('failed');
         Navigator.of(context).pop();

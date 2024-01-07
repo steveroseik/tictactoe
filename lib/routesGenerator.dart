@@ -5,15 +5,15 @@ import 'package:tictactoe/Tournaments/classicTournamentSelection.dart';
 import 'package:tictactoe/Tournaments/tournamentHome.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/charactersPage.dart';
-import 'package:tictactoe/ClassicGame/classicGame.dart';
+import 'package:tictactoe/ClassicGame/classicGameMain.dart';
 import 'package:tictactoe/difficultySelect.dart';
-import 'package:tictactoe/experimentalGame.dart';
-import 'package:tictactoe/ClassicGame/gamePage.dart';
+import 'package:tictactoe/nineGame/nineGameMain.dart';
+import 'package:tictactoe/ClassicGame/classicGameModule.dart';
 import 'package:tictactoe/gameSelect.dart';
 import 'package:tictactoe/LogIn/loginPage.dart';
 
 import 'cubeGame.dart';
-import 'experimentalGame2.dart';
+import 'PowersGame/powerGameModule.dart';
 import 'homePage.dart';
 
 
@@ -77,8 +77,8 @@ class RoutesGen{
 
       case Routes.gameRoot : return GamePageRoute(builder: (_) => HomePage());
       case Routes.classicGameModeSelect : return GamePageRoute(builder: (_) => ClassicGameSelectPage());
-      case Routes.experimentalGameMain : return GamePageRoute(builder: (_) => CubeGame());
-      case Routes.experimentalGameMain2 : return GamePageRoute(builder: (_) => CubeGame2());
+      case Routes.experimentalGameMain : return GamePageRoute(builder: (_) => NineGameMain());
+      // case Routes.experimentalGameMain2 : return GamePageRoute(builder: (_) => PowersGameModule());
       case Routes.experimentalGameMain3 : return GamePageRoute(builder: (_) => CubeGame3());
       case Routes.classicGameDifficultySelect : return GamePageRoute(builder: (_) => DifficultySelectPage());
       case Routes.classicGameMain: return GamePageRoute(builder: (_) => ClassicGamePage());
@@ -86,9 +86,6 @@ class RoutesGen{
       case Routes.classicTournamentSelection: return GamePageRoute(builder: (_) => ClassicTournamentSelection());
       case Routes.classicTournamentRoom: return GamePageRoute(builder: (_) => ClassicTournamentRoom());
       case '/characters': return GamePageRoute(builder: (_) => CharactersPage());
-      case '/boardOfNine':
-        if (args is List) return GamePageRoute(builder: (context) => NinesBoardPage(child: args[0], tag: args[1]));
-        return _errorRoute();
 
       default: return GamePageRoute(builder: (_) => Scaffold(body: Text('ERROR')));
     }

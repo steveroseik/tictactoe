@@ -289,12 +289,13 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(15),
                     aspectRatio: 4/1,
                     width: 70.w,
+                    enableShimmer: true,
                     baseDecoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [Colors.green.shade800, colorDarkBlue]
+                            colors: [Colors.green.shade800, Colors.green.shade800]
                         )
                     ),
                     topDecoration: BoxDecoration(
@@ -302,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                         gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [Colors.green, colorDarkBlue]
+                            colors: [Colors.green, Colors.green]
                         )
                     ),
                     child: const Center(
@@ -334,7 +335,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         width: 100,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Routes.experimentalGameMain);
+                        },
                       ),
                       const Spacer(),
                       Padding(

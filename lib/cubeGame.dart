@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
+import 'PowersGame/cellSwapper.dart';
+import 'PowersGame/core.dart';
 import 'UIUX/customWidgets.dart';
 
 
@@ -314,6 +316,7 @@ class _CubeState extends State<Cube> with SingleTickerProviderStateMixin {
   }
 
   updateFaces(){
+
     if ((_rx <= (pi/2) && _rx >= 0) || _rx >= (pi*1.5)){
       if (_ry < pi / 4) {
         children = [buildBoardFace(face: faces.right, size: widget.size),
@@ -389,8 +392,10 @@ class _CubeState extends State<Cube> with SingleTickerProviderStateMixin {
     }
   }
 
-  final reaper = Sprites().characterOf[characters.reaper1]!;
-  final notReaper =  Sprites().characterOf[characters.virtualGuy]!;
+  final reaper = Sprites.characterOf[characters.reaper1]!;
+  final notReaper =  Sprites.characterOf[characters.virtualGuy]!;
+
+
 
   buildBoardFace({
     required faces face,

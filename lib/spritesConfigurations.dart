@@ -70,7 +70,7 @@ enum explosions {
 }
 
 class Sprites{
-  Map<characters, SpriteAnimationWidget> characterOf = {
+  static Map<characters, SpriteAnimationWidget> characterOf = {
     characters.angryPig : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/angryPig.png', data: SpriteAnimationData.sequenced(
