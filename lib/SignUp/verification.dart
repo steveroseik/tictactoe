@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/Controllers/constants.dart';
+import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/mainController.dart';
 import 'package:tictactoe/SignUp/signupCompletion.dart';
 

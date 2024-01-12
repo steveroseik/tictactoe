@@ -10,7 +10,7 @@ import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
 import 'package:tictactoe/ClassicGame/classicGameModule.dart';
 
-import '../Controllers/constants.dart';
+import '../Configurations/constants.dart';
 import '../UIUX/customWidgets.dart';
 
 class ClassicGamePage extends StatefulWidget {

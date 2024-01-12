@@ -2,6 +2,7 @@ import 'package:tictactoe/PowersGame/core.dart';
 
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/PowersGame/core.dart';
+import 'package:tictactoe/PowersGame/powerCell.dart';
 
 class CellBarrier extends Power{
   @override

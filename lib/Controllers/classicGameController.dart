@@ -5,7 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tictactoe/Configurations/constants.dart';
-import 'package:tictactoe/Controllers/constants.dart';
+import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
 
 class ClassicGameController extends ChangeNotifier{

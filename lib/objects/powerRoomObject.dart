@@ -1,44 +1,51 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../PowersGame/Characters/core.dart';
+import 'classicObjects.dart';
 
+List<PowerClient> powerClientsFromJson(List<dynamic> data) => data.map((e) => PowerClient.fromJson(e)).toList();
 
-
-List<ClientObject> clientsFromJson(List<dynamic> data) => data.map((e) => ClientObject.fromJson(e)).toList();
-
-class ClientObject{
+class PowerClient{
   String userId;
   String clientId;
+  Character character;
 
-  ClientObject({required this.clientId, required this.userId});
+  PowerClient({required this.clientId, required this.userId, required this.character});
 
-  factory ClientObject.fromJson(Map<String, dynamic> json) =>
-      ClientObject(
-          clientId: json['clientId'], userId: json['userId']);
+  factory PowerClient.fromJson(Map<String, dynamic> json) =>
+      PowerClient(
+        clientId: json['clientId'],
+        userId: json['userId'],
+        character: Character.fromJson(json['character'])
+      );
 
-  Map<String, dynamic> toJson() => {
+  toJson() => {
     'clientId': clientId,
-    'userId': userId
+    'userId': userId,
+    'character': character.toJson()
   };
 }
 
-class ClassicRoom {
+class PowersRoom {
   String id;
   String lastHash;
   String userTurn;
-  List<ClientObject> users;
+  List<PowerClient> users;
   DateTime sessionEnd;
   DateTime? reconnectEnd;
   String? tournamentId;
 
-  ClassicRoom({required this.id,
+  PowersRoom({required this.id,
     required this.users,
     required this.lastHash, required this.sessionEnd,
     required this.userTurn, this.tournamentId, this.reconnectEnd});
 
-  factory ClassicRoom.fromResponse(Map<String, dynamic> resp) => ClassicRoom(
+  /// TODO: Characters are not fully initialized
+  factory PowersRoom.fromResponse(Map<String, dynamic> resp) => PowersRoom(
       id: resp['id'],
-      users: clientsFromJson(resp['users']),
+      users: powerClientsFromJson(resp['users']),
       lastHash: resp['lastHash'],
       sessionEnd: DateTime.fromMillisecondsSinceEpoch(resp['sessionEnd']),
       userTurn: resp['turn'],
@@ -47,7 +54,7 @@ class ClassicRoom {
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "users": List<dynamic>.from(users.map((e) => e)),
+    "users": List<dynamic>.from(users.map((e) => e.toJson())),
     "lastHash": lastHash,
     "sessionEnd": sessionEnd.millisecondsSinceEpoch,
     "turn": userTurn,

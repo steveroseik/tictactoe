@@ -10,7 +10,7 @@ import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
-import 'package:tictactoe/Controllers/constants.dart';
+import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
 import '../UIUX/customWidgets.dart';
@@ -375,6 +375,12 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
                       ),
                     ))
                   ,
+                ),
+                SafeArea(
+                  child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Icon(CupertinoIcons.left_chevron)
+                  ),
                 ),
               ],
             ),

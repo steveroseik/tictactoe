@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe/Authentication/authentication.dart';
-import 'package:tictactoe/Controllers/constants.dart';
+import 'package:tictactoe/Configurations/constants.dart';
 
 
 

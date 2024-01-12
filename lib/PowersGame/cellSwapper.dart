@@ -1,5 +1,6 @@
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/PowersGame/core.dart';
+import 'package:tictactoe/PowersGame/powerCell.dart';
 
 class CellSwapper extends Power{
   @override
@@ -12,8 +13,12 @@ class CellSwapper extends Power{
   int get duration => 1;
 
 
+
   CellSwapper({required super.playerState});
 
+
+  @override
+  int requires() => 2;
 
   @override
   Map<int, Spell>? setSpell({required List<int> cells, required List<PowerCell> grid}) {
@@ -38,6 +43,7 @@ class CellSwapper extends Power{
       case CellOut.trapped: print('swapper:: should not happen');
     }
     return null;
+
   }
 
   CellOut canPlay(int cellOne, cellTwo, List<PowerCell> grid) {
@@ -45,7 +51,7 @@ class CellSwapper extends Power{
     final cell2 = grid[cellTwo];
 
     if (!areSwappable(cell, cell2)) return CellOut.blocked;
-
+    print('are swappable but');
     return combinedSpellEffects([cell, cell2], playerState);
   }
 

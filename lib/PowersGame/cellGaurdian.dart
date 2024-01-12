@@ -1,5 +1,6 @@
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/PowersGame/core.dart';
+import 'package:tictactoe/PowersGame/powerCell.dart';
 
 
 
@@ -14,9 +15,16 @@ class CellGaurdian extends Power{
   String get description => 'Protect one cells for one round';
   @override
   int get duration => 1;
+  @override
+  powerActionType get actionType => powerActionType.beforeAndAfter;
 
   CellGaurdian({required super.playerState});
 
+
+  @override
+  int requires() => 1;
+
+  @override
   Map<int, Spell>? setSpell({required List<int> cells, required List<PowerCell> grid}){
     switch(canPlay(cells.first, grid)){
       case CellOut.passed:
@@ -43,12 +51,17 @@ class CellGaurdian extends Power{
 
   CellOut canPlay(int cellAt, List<PowerCell> grid) {
     final cell = grid[cellAt];
+
+    print('finding for: ${cell.value}');
+    print('and I am: ${playerState}');
     /// each power has two types of validations
     /// first if the cell chosen is correct in terms if its value [x, o, empty, both]
     if (cell.value != playerState) return CellOut.blocked;
 
     /// then in terms of spells
-    return (spellEffect(cell, playerState));
+    final resp = spellEffect(cell, playerState);
+    print('resulted: $resp');
+    return resp;
   }
 
 }
@@ -66,6 +79,12 @@ class CellGaurdianSecond extends Power {
 
   CellGaurdianSecond({required super.playerState});
 
+  @override
+  int requires() {
+    return 2;
+  }
+
+  @override
   Map<int, Spell>? setSpell(
       {required List<int> cells, required List<PowerCell> grid}) {
     switch(canPlay(cells.first, cells.last, grid)){

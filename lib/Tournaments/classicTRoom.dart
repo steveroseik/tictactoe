@@ -12,7 +12,7 @@ import 'package:tictactoe/objects/tournamentObject.dart';
 import '../objects/classicObjects.dart';
 import '../ClassicGame/classicGameModule.dart';
 import '../Controllers/classicGameController.dart';
-import '../Controllers/constants.dart';
+import '../Configurations/constants.dart';
 import '../UIUX/customWidgets.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 

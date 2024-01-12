@@ -1,5 +1,6 @@
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/PowersGame/core.dart';
+import 'package:tictactoe/PowersGame/powerCell.dart';
 
 class StealthCell extends Power{
   @override
@@ -13,6 +14,7 @@ class StealthCell extends Power{
 
   StealthCell({required super.playerState});
 
+  @override
   Map<int, Spell>? setSpell({required List<int> cells, required List<PowerCell> grid}){
     switch(canPlay(cells.first, grid)){
       case CellOut.passed:

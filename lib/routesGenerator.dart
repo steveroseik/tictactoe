@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tictactoe/PowersGame/Characters/core.dart';
+import 'package:tictactoe/PowersGame/powersGameMain.dart';
 import 'package:tictactoe/SignUp/signup.dart';
 import 'package:tictactoe/Tournaments/classicTRoom.dart';
 import 'package:tictactoe/Tournaments/classicTournamentSelection.dart';
@@ -9,12 +11,12 @@ import 'package:tictactoe/ClassicGame/classicGameMain.dart';
 import 'package:tictactoe/difficultySelect.dart';
 import 'package:tictactoe/nineGame/nineGameMain.dart';
 import 'package:tictactoe/ClassicGame/classicGameModule.dart';
-import 'package:tictactoe/gameSelect.dart';
+import 'package:tictactoe/Main%20Screens/multiplayerSingleSelectPage.dart';
 import 'package:tictactoe/LogIn/loginPage.dart';
 
+import 'Main Screens/homePage.dart';
 import 'cubeGame.dart';
-import 'PowersGame/powerGameModule.dart';
-import 'homePage.dart';
+import 'PowersGame/powersGameModule.dart';
 
 
 class GamePageRoute<T> extends MaterialPageRoute<T> {
@@ -49,9 +51,11 @@ class Routes{
   static const tournamentsHome = '/tournaments';
   static const classicTournamentRoom = '/classicTournamentRoom';
   static const classicTournamentSelection = '/classicTournaments';
-  static const experimentalGameMain = '/experimentalGameMain';
+  static const ninesGameMain = '/nineGameMain';
+  static const powersGameMain = '/powersGameMain';
   static const experimentalGameMain2 = '/experimentalGameMain2';
   static const experimentalGameMain3 = '/experimentalGameMain3';
+  static const gameModeSelection = '/gameModeSelection';
 
 
 }
@@ -76,8 +80,12 @@ class RoutesGen{
     switch(settings.name){
 
       case Routes.gameRoot : return GamePageRoute(builder: (_) => HomePage());
-      case Routes.classicGameModeSelect : return GamePageRoute(builder: (_) => ClassicGameSelectPage());
-      case Routes.experimentalGameMain : return GamePageRoute(builder: (_) => NineGameMain());
+      case Routes.gameModeSelection: return GamePageRoute(builder: (_) => MultiplayerSingleSelectPage());
+      case Routes.classicGameModeSelect : return GamePageRoute(builder: (_) => MultiplayerSingleSelectPage());
+      case Routes.ninesGameMain : return GamePageRoute(builder: (_) => NineGameMain());
+      case Routes.powersGameMain :
+        if (args is Character) return GamePageRoute(builder: (_) => PowersGameMain(character: args));
+        return _errorRoute();
       // case Routes.experimentalGameMain2 : return GamePageRoute(builder: (_) => PowersGameModule());
       case Routes.experimentalGameMain3 : return GamePageRoute(builder: (_) => CubeGame3());
       case Routes.classicGameDifficultySelect : return GamePageRoute(builder: (_) => DifficultySelectPage());
@@ -91,10 +99,19 @@ class RoutesGen{
     }
   }
   static Route<dynamic> _errorRoute() {
-    return GamePageRoute(builder: (_) {
-      return const Scaffold( // AppBar
+    return GamePageRoute(builder: (context) {
+      return Scaffold( // AppBar
         body: Center(
-          child: Text('ERROR'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('ERROR'),
+              ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text("Go Back"))
+            ],
+          ),
         ), // Center
       ); // Scaffold
     }); // Material PageRoute

@@ -16,7 +16,7 @@ import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/routesGenerator.dart';
 
-import 'UIUX/customWidgets.dart';
+import '../UIUX/customWidgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
 
 List<(String, String)> routes = [
   (Routes.classicGameModeSelect, 'CLASSIC GAME'),
-  (Routes.experimentalGameMain, 'NINE X NINE'),
+  (Routes.ninesGameMain, 'NINE X NINE'),
   (Routes.experimentalGameMain2, 'BIG GRID'),
   (Routes.experimentalGameMain3, 'FOURTH DIMENSION')
 ];
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     InkWell(
                       onTap: (){
-                        Navigator.of(context).pushNamed(Routes.classicGameMain);
+                        Navigator.of(context).pushNamed(Routes.gameModeSelection);
                       },
                       child: Card(
                         elevation: 10,
@@ -336,7 +336,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         width: 100,
                         onPressed: () {
-                          Navigator.of(context).pushNamed(Routes.experimentalGameMain);
+                          Navigator.of(context).pushNamed(Routes.ninesGameMain);
                         },
                       ),
                       const Spacer(),

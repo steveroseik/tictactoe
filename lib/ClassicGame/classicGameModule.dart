@@ -6,7 +6,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:tictactoe/Controllers/constants.dart';
+import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/mainController.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';

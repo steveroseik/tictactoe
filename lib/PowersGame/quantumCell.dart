@@ -1,4 +1,5 @@
 import 'package:tictactoe/PowersGame/core.dart';
+import 'package:tictactoe/PowersGame/powerCell.dart';
 
 import '../Configurations/constants.dart';
 
@@ -41,7 +42,7 @@ class QuantumCell extends Power{
   CellOut canPlay(int cellAt, List<PowerCell> grid) {
     final cell = grid[cellAt];
 
-    if (cell.value != opponent(playerState)) return CellOut.blocked;
+    if (cell.value != opponentState(playerState)) return CellOut.blocked;
 
     /// then in terms of spells
     return (spellEffect(cell, playerState));
@@ -60,6 +61,7 @@ class QuantumCellSilver extends Power{
 
   QuantumCellSilver({required super.playerState});
 
+  @override
   Map<int, Spell>? setSpell(
       {required List<int> cells, required List<PowerCell> grid}) {
 
@@ -88,7 +90,7 @@ class QuantumCellSilver extends Power{
   CellOut canPlay(int cellOne, cellTwo, List<PowerCell> grid) {
     final cell = grid[cellOne];
     final cell2 = grid[cellTwo];
-    final theOpponent = opponent(playerState);
+    final theOpponent = opponentState(playerState);
 
     if (cell.value != theOpponent || cell2.value != theOpponent) return CellOut.blocked;
 
