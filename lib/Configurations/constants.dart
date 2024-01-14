@@ -9,11 +9,19 @@ class Const{
 
   static const gameServerUrl = 'ws://192.168.1.47:3000';
 
-  static const double classicGameDurationInSeconds = 5 * 60;
+  static const int speedRoundDuration = 3;
 
-  static const double ninesGameDurationInSeconds = 27 * 60;
+  static const int classicRoundDuration = 7;
 
-  static const double powersGameDurationInSeconds = 16 * 60;
+  static const int nineRoundDuration = 10;
+
+  static const int powersRoundDuration = 8;
+
+  static const Duration classicGameDuration = Duration(seconds: classicRoundDuration * (9));
+
+  static const Duration nineGameDuration = Duration(seconds: nineRoundDuration * (81));
+
+  static const Duration powersGameDuration = Duration(seconds: powersRoundDuration * (49));
 }
 
 

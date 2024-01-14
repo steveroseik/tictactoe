@@ -19,10 +19,12 @@ class ClassicGameModule extends StatefulWidget {
   final Function(GameWinner, bool)? gameStateChanged;
   final Socket socket;
   final bool isNine;
+  final bool speedMatch;
   final int? smallIndex;
   const ClassicGameModule({super.key,
     required this.controller,
     required this.socket,
+    this.speedMatch = false,
     required this.gameStateChanged,
     this.isNine = false,
     this.smallIndex
@@ -190,7 +192,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
                                             progressColor: Colors.deepOrange,
                                             backgroundColor: Colors.purple,
                                             animation: true,
-                                            animationDuration: 700,
+                                            animationDuration: 200,
                                             animateFromLastPercent: true,
                                             percent: _progress,
                                             radius: 5.h/2),
@@ -256,7 +258,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
                                               circularStrokeCap: CircularStrokeCap.round,
                                               progressColor: Colors.deepOrange,
                                               backgroundColor: Colors.purple,
-                                              animationDuration: 700,
+                                              animationDuration: 200,
                                               animation: true,
                                               animateFromLastPercent: true,
                                               percent: _progress,
@@ -463,7 +465,8 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
         if (controller.timeout!.isAfter(now)){
           setState(() {
 
-            final perc = controller.timeout!.difference(now).inSeconds / 30;
+            final perc = controller.timeout!.difference(now).inSeconds /
+                (widget.speedMatch ? Const.speedRoundDuration : Const.classicRoundDuration);
             _progress = perc > 1 ? 1 : perc < 0 ? 0 : perc;
           });
         }else{

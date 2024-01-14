@@ -69,6 +69,12 @@ enum explosions {
   smoke
 }
 
+enum spellEffects {
+  gaurdianPower1,
+  gaurdianPower2,
+  gaurdianPower3
+}
+
 class Sprites{
   static Map<characters, SpriteAnimationWidget> characterOf = {
     characters.angryPig : SpriteAnimationWidget.asset(
@@ -425,7 +431,7 @@ class Sprites{
     )),
   };
   
-  Map<explosions, SpriteAnimationWidget> explosionOf = {
+  static Map<explosions, SpriteAnimationWidget> explosionOf = {
     explosions.circle :  SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'hdExplosions1.png', data: SpriteAnimationData.range(
@@ -507,5 +513,39 @@ class Sprites{
       stepTimes: List<double>.generate(6, (index) => 0.1),
     )),
   };
+
+  static Map<spellEffects, SpriteAnimationWidget> spellOf = {
+    spellEffects.gaurdianPower1 : SpriteAnimationWidget.asset(
+        anchor: Anchor.center,
+        path: 'gaurdPower1.png', data: SpriteAnimationData.range(
+      start: 0,
+      end: 29,
+      amount: 30,
+      amountPerRow: 5,
+      textureSize: Vector2(480,480),
+      stepTimes: List<double>.generate(30, (index) => 0.07),
+    )),
+    spellEffects.gaurdianPower2 : SpriteAnimationWidget.asset(
+        anchor: Anchor.center,
+        path: 'gaurdPower2.png', data: SpriteAnimationData.range(
+      start: 0,
+      end: 29,
+      amount: 30,
+      amountPerRow: 5,
+      textureSize: Vector2(480,480),
+      stepTimes: List<double>.generate(30, (index) => 0.07),
+    )),
+    spellEffects.gaurdianPower3 : SpriteAnimationWidget.asset(
+        anchor: Anchor.center,
+        path: 'gaurdPower3.png', data: SpriteAnimationData.range(
+      start: 0,
+      end: 29,
+      amount: 30,
+      amountPerRow: 5,
+      textureSize: Vector2(480,480),
+      stepTimes: List<double>.generate(30, (index) => 0.07),
+    ))
+  };
+
 }
 

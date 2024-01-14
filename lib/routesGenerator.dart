@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe/PowersGame/Characters/core.dart';
+import 'package:tictactoe/PowersGame/Pages/characterSelectPage.dart';
 import 'package:tictactoe/PowersGame/powersGameMain.dart';
 import 'package:tictactoe/SignUp/signup.dart';
 import 'package:tictactoe/Tournaments/classicTRoom.dart';
@@ -56,6 +57,7 @@ class Routes{
   static const experimentalGameMain2 = '/experimentalGameMain2';
   static const experimentalGameMain3 = '/experimentalGameMain3';
   static const gameModeSelection = '/gameModeSelection';
+  static const powersCharacterSelect = '/powersCharacterSelect';
 
 
 }
@@ -89,10 +91,11 @@ class RoutesGen{
       // case Routes.experimentalGameMain2 : return GamePageRoute(builder: (_) => PowersGameModule());
       case Routes.experimentalGameMain3 : return GamePageRoute(builder: (_) => CubeGame3());
       case Routes.classicGameDifficultySelect : return GamePageRoute(builder: (_) => DifficultySelectPage());
-      case Routes.classicGameMain: return GamePageRoute(builder: (_) => ClassicGamePage());
+      case Routes.classicGameMain: return GamePageRoute(builder: (_) => ClassicGameMain());
       case Routes.tournamentsHome: return GamePageRoute(builder: (_) => TournamentsHomePage());
       case Routes.classicTournamentSelection: return GamePageRoute(builder: (_) => ClassicTournamentSelection());
       case Routes.classicTournamentRoom: return GamePageRoute(builder: (_) => ClassicTournamentRoom());
+      case Routes.powersCharacterSelect: return GamePageRoute(builder: (_) => CharacterSelectPage());
       case '/characters': return GamePageRoute(builder: (_) => CharactersPage());
 
       default: return GamePageRoute(builder: (_) => Scaffold(body: Text('ERROR')));

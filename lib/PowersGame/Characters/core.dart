@@ -1,8 +1,14 @@
+import 'dart:math';
+
 import 'package:flame/widgets.dart';
-import 'package:tictactoe/PowersGame/cellBarrier.dart';
-import 'package:tictactoe/PowersGame/cellGaurdian.dart';
-import 'package:tictactoe/PowersGame/cellSwapper.dart';
-import 'package:tictactoe/PowersGame/extraCell.dart';
+import 'package:tictactoe/PowersGame/Powers/cellBarrier.dart';
+import 'package:tictactoe/PowersGame/Powers/cellGaurdian.dart';
+import 'package:tictactoe/PowersGame/Powers/cellRewinder.dart';
+import 'package:tictactoe/PowersGame/Powers/cellShift.dart';
+import 'package:tictactoe/PowersGame/Powers/cellSwapper.dart';
+import 'package:tictactoe/PowersGame/Powers/extraCell.dart';
+import 'package:tictactoe/PowersGame/Powers/quantumCell.dart';
+import 'package:tictactoe/PowersGame/Powers/stealthCell.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
 
 import '../core.dart';
@@ -17,9 +23,13 @@ abstract class Character{
   late final Power firstPower;
   late final Power secondPower;
 
+  late final String name;
+
   late final characterType type;
 
   late final SpriteAnimationWidget avatar;
+
+  int get level => min(power2Level, power1Level);
 
   Character({
     required this.power1Level,
@@ -36,9 +46,9 @@ abstract class Character{
      case characterType.golem:
        return Golem(power1Level: level1, power2Level: level2, playerState: playerState);
      case characterType.orc:
-       // TODO: Handle this case.
+       return Orc(power1Level: level1, power2Level: level2, playerState: playerState);
      case characterType.wraith:
-       // TODO: Handle this case.
+       return Wraith(power1Level: level1, power2Level: level2, playerState: playerState);
      case characterType.reaper:
        // TODO: Handle this case.
      case characterType.fallenAngel:
@@ -62,6 +72,9 @@ class Minotaur extends Character{
 
   Power get swapperCell => firstPower;
   Power get gaurdianCell => secondPower;
+
+  @override
+  get name => "Minotaur";
 
 
   Minotaur({required super.power1Level, required super.power2Level, required super.playerState}) {
@@ -93,27 +106,22 @@ class Minotaur extends Character{
         break;
       case 2:
         {
-          firstPower = CellGaurdianSecond(playerState: playerState);
+          secondPower = CellGaurdianSecond(playerState: playerState);
         }
         break;
       case 3: {
-        firstPower = CellGaurdianFinale(playerState: playerState);
+        secondPower = CellGaurdianFinale(playerState: playerState);
       }
       break;
     }
 
     /// determine character avatar level
-    int avatarLevel = 1;
-    if (power2Level < power1Level){
-      avatarLevel = power2Level;
-    }else if (power1Level <= power2Level){
-      avatarLevel = power1Level;
-    }
+    int avatarLevel = min(power1Level, power2Level);
 
     switch(avatarLevel){
-      case 3: avatar = Sprites.characterOf[characters.minotaur3]!;
-      case 2: avatar = Sprites.characterOf[characters.minotaur2]!;
-      default: avatar = Sprites.characterOf[characters.minotaur1]!;
+      case 3: avatar = Sprites.characterOf[characters.minotaur2]!;
+      case 2: avatar = Sprites.characterOf[characters.minotaur1]!;
+      default: avatar = Sprites.characterOf[characters.minotaur3]!;
     }
   }
 }
@@ -123,6 +131,8 @@ class Golem extends Character{
 
   Power get extraCell => firstPower;
   Power get barrierCell => secondPower;
+  @override
+  get name => "Golem";
 
   Golem({
     required super.power1Level,
@@ -155,11 +165,11 @@ class Golem extends Character{
         break;
       case 2:
         {
-          firstPower = CellBarrierSilver(playerState: playerState);
+          secondPower = CellBarrierSilver(playerState: playerState);
         }
         break;
       case 3: {
-        firstPower = CellBarrierFinale(playerState: playerState);
+        secondPower = CellBarrierFinale(playerState: playerState);
       }
       break;
     }
@@ -168,14 +178,130 @@ class Golem extends Character{
     int avatarLevel = 1;
     if (power2Level < power1Level){
       avatarLevel = power2Level;
-    }else if (power1Level <= power2Level){
+    }else{
       avatarLevel = power1Level;
     }
 
     switch(avatarLevel){
       case 3: avatar = Sprites.characterOf[characters.golem3]!;
-      case 2: avatar = Sprites.characterOf[characters.golem2]!;
-      default: avatar = Sprites.characterOf[characters.golem1]!;
+      case 2: avatar = Sprites.characterOf[characters.golem1]!;
+      default: avatar = Sprites.characterOf[characters.golem2]!;
+    }
+  }
+}
+
+class Wraith extends Character{
+
+  Power get stealthCell => firstPower;
+  Power get quantumCell => secondPower;
+  @override
+  get name => "Wraith";
+
+  Wraith({
+    required super.power1Level,
+    required super.playerState, required super.power2Level}){
+
+    super.type = characterType.wraith;
+    /// determine first power level
+    switch(power1Level){
+      case 1: {
+        firstPower = StealthCell(playerState: playerState);
+      }
+      break;
+      case 2:
+        {
+          firstPower = StealthCellSilver(playerState: playerState);
+        }
+        break;
+      case 3: {
+        firstPower = StealthCellFinale(playerState: playerState);
+      }
+      break;
+    }
+
+    /// determine second power level
+    switch(power2Level){
+      case 1:
+        {
+          secondPower = QuantumCell(playerState: playerState);
+        }
+        break;
+      case 2:
+        {
+          secondPower = QuantumCellSilver(playerState: playerState);
+        }
+        break;
+      case 3: {
+        secondPower = QuantumCellFinale(playerState: playerState);
+      }
+      break;
+    }
+
+    /// determine character avatar level
+    int avatarLevel = min(power1Level, power2Level);
+
+    switch(avatarLevel){
+      case 3: avatar = Sprites.characterOf[characters.wraith3]!;
+      case 2: avatar = Sprites.characterOf[characters.wraith1]!;
+      default: avatar = Sprites.characterOf[characters.wraith2]!;
+    }
+  }
+}
+
+class Orc extends Character{
+
+  Power get cellShift => firstPower;
+  Power get cellRewind => secondPower;
+  @override
+  get name => "Orc";
+
+  Orc({
+    required super.power1Level,
+    required super.playerState, required super.power2Level}){
+
+    super.type = characterType.orc;
+    /// determine first power level
+    switch(power1Level){
+      case 1: {
+        firstPower = CellShift(playerState: playerState);
+      }
+      break;
+      case 2:
+        {
+          firstPower = CellShiftSilver(playerState: playerState);
+        }
+        break;
+      case 3: {
+        firstPower = CellShiftFinale(playerState: playerState);
+      }
+      break;
+    }
+
+    /// determine second power level
+    switch(power2Level){
+      case 1:
+        {
+          secondPower = RewindControl(playerState: playerState);
+        }
+        break;
+      case 2:
+        {
+          secondPower = RewindControlSilver(playerState: playerState);
+        }
+        break;
+      case 3: {
+        secondPower = RewindControlFinale(playerState: playerState);
+      }
+      break;
+    }
+
+    /// determine character avatar level
+    int avatarLevel = min(power1Level, power2Level);
+
+    switch(avatarLevel){
+      case 3: avatar = Sprites.characterOf[characters.orc]!;
+      case 2: avatar = Sprites.characterOf[characters.ogre]!;
+      default: avatar = Sprites.characterOf[characters.goblin]!;
     }
   }
 }

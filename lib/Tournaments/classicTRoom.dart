@@ -5,14 +5,13 @@ import 'dart:math';
 import 'package:flame/geometry.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/ClassicGame/classicGameMain.dart';
+import 'package:tictactoe/ClassicGame/classicGameModule.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/objects/tournamentObject.dart';
 
-import '../objects/classicObjects.dart';
-import '../ClassicGame/classicGameModule.dart';
-import '../Controllers/classicGameController.dart';
 import '../Configurations/constants.dart';
+import '../objects/classicObjects.dart';
+import '../Controllers/classicGameController.dart';
 import '../UIUX/customWidgets.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -67,87 +66,80 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
 
   @override
   Widget build(BuildContext context) {
-  return ValueListenableBuilder<TState>(
-      valueListenable: tourState,
-      builder: (context, tourValue, child) {
-        return tourValue == TState.started ? gameWidget()
-        : Scaffold(
-          body: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.deepOrange,
-                          Colors.deepOrange,
-                          Colors.deepPurple.shade800
-                        ])),
-              ),
-              const BackgroundScroller(),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Row(
+    return Scaffold(
+      body: ValueListenableBuilder<TState>(
+          valueListenable: tourState,
+          builder: (context, tourValue, child) {
+            return ValueListenableBuilder<GameState>(
+                valueListenable: currentState,
+                builder: (context, gameValue, child) {
+                  return Stack(
                     children: [
-                      ElevatedButton(
-                        onPressed: () async{
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Leave \n $uid'),
+                      Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.deepOrange,
+                                  Colors.deepOrange,
+                                  Colors.deepPurple.shade800
+                                ])),
                       ),
-                      ElevatedButton(
-                        onPressed: () async{
-                          // Navigator.of(context).pop();
-                          socket.disconnect();
-                          await Future.delayed(Duration(milliseconds: 5000));
-                          socket.connect();
-                        },
-                        child: Text('Disconnect'),
+                      const BackgroundScroller(),
+                      if (gameValue != GameState.starting && gameValue != GameState.started) SafeArea(
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: ElevatedButton(
+                            onPressed: (){
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Leave \n $uid'),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: tourValue == TState.starting &&
-                            tournamentInfo?.users != null ?
-                        participantsWidget()
-                            : tourValue == TState.ended ?
-                        wonTournament ? Container(child: Text('You Won The Tournament'),) :
-                        Container(child: Text('You Lost The Tournament')) : Column(
-                          key: Key('Classdj2!###kjds'),
+                      Center(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            tourValue == TState.connecting ? const Text("Connecting...")
-                                : tourValue == TState.waiting ? const Text("Finding a tournament...")
-                                : Text("Game Starting in $gameStartsIn..."),
-                            SizedBox(height: 30),
-                            SizedBox(
-                                width: 50.w,
-                                child: LoadingWidget(circular: true, scaleFactor: 12))
+                            AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                child: tourValue == TState.started ?
+                                gameWidget(gameValue)
+                                    : tourValue == TState.starting &&
+                                    tournamentInfo?.users != null ?
+                                participantsWidget()
+                                    : tourValue == TState.ended ?
+                                wonTournament ? Container(child: Text('You Won The Tournament'),) :
+                                Container(child: Text('You Lost The Tournament')) : Column(
+                                  key: Key('Classdj2!###kjds'),
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    tourValue == TState.connecting ? const Text("Connecting...")
+                                        : tourValue == TState.waiting ? const Text("Finding a tournament...")
+                                        : Text("Game Starting in $gameStartsIn..."),
+                                    SizedBox(height: 30),
+                                    SizedBox(
+                                        width: 50.w,
+                                        child: LoadingWidget(circular: true, scaleFactor: 12))
+                                  ],
+                                )),
                           ],
-                        )),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      }
+                        ),
+                      ),
+                    ],
+                  );
+                }
+            );
+          }
+      ),
     );
   }
 
   initSocket(){
-    socket = io("ws://192.168.1.57:3000",
+    socket = io(Const.gameServerUrl,
         OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
@@ -158,45 +150,86 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
 
     socket.onConnect((_) async{
       print("Connection established : ${socket.id}");
-      if (!gotDisconnected || gameController == null){
+      if (gotDisconnected){
+        gotDisconnected = false;
+        if (gameController != null){
+          socket.emitWithAck('reJoin', gameController!.rejoin(), ack: (data){
+            print(data);
+            if (data['success'] == true){
+              setState(() {
+                if (data['other'] == true) oppConnected = true;
+              });
+              gameController!.getBackOnline(data['other']);
+            }
+          });
+        }else{
+          requestJoin();
+        }
+      }else{
         requestJoin();
       }
-      gotDisconnected = false;
     });
+
+    socket.on('gameConnection', (data) {
+      if (data['type'] == 'disconnect'){
+        setState(() {
+          oppConnected = false;
+        });
+        gameController!.setOppConnection(GameConn.offline);
+
+      }else if(data['type'] == 'connect'){
+        setState(() {
+          oppConnected = true;
+        });
+        gameController!.setOppConnection(GameConn.online);
+      }
+
+    });
+
+    socket.on('gameListener', (data) {
+
+      print(jsonEncode(data));
+      switch(data['type']){
+
+        case 'gameInit': gameInitAction(data);
+        break;
+        case 'classicAction': gameClassicAction(data);
+        break;
+        case 'classicValidation': gameClassicValidation(data);
+        break;
+        case 'gameConnectionOff': gameEndedWithDisconnect(data);
+        break;
+        default: print('lel asaf ${jsonEncode(data)}');
+      }
+
+    });
+
     socket.on('tournamentListener', (data){
 
-
-      switch (data['type']){
-        case 'roundInit':
-          if (tourState.value != TState.started) tourState.value = TState.started;
-          print('roud: ${tourState.value}');
-          break;
-        case 'participantsUpdate':
-
-          if (tournamentInfo == null){
-            tournamentInfo = TournamentRoom.fromJson(data);
-            tourState.value = TState.starting;
-          }else{
-            tournamentInfo!.updateUsers(data['users']);
-            setState(() {});
-          }
-          break;
-        case 'tournamentEnded':
-          if (data['code'] == 'you_won'){
-            wonTournament = true;
-            tourState.value = TState.ended;
-          }
-          break;
-
-        default: print('TournamentListener: Unimplemented $data');
+      if (data['type'] == 'participantsUpdate'){
+        if (tournamentInfo == null){
+          tournamentInfo = TournamentRoom.fromJson(data);
+          tourState.value = TState.starting;
+        }else{
+          tournamentInfo!.updateUsers(data['users']);
+          setState(() {});
+        }
+      }else if (data['type'] == 'tournamentEnded'){
+        if (data['code'] == 'you_won'){
+          wonTournament = true;
+          tourState.value = TState.ended;
+        }
       }
     });
 
     socket.onDisconnect((_){
       print("Disconnected");
-      tournamentInfo = null;
-      tourState.value = TState.connecting;
-      gotDisconnected = true;
+      // currentState.value = GameState.paused;
+      if (mounted){
+        gotDisconnected = true;
+        if (gameController != null &&
+            gameController!.hasListeners) gameController!.gotOffline();
+      }
     });
 
     int errorCounter = 0;
@@ -218,6 +251,32 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
 
   calculateGameStartTime(DateTime endTime){
     return endTime.subtract(const Duration(minutes: 5));
+  }
+
+  gameInitAction(Map<String, dynamic> data){
+
+    setState(() {
+      canLeave = false;
+    });
+
+    roomInfo = ClassicRoom.fromResponse(data['roomInfo']);
+
+    gameStartTime = calculateGameStartTime(roomInfo!.sessionEnd);
+
+
+    gameStartsIn = gameStartTime!.difference(DateTime.now()).inSeconds;
+
+
+    tourState.value = TState.started;
+    currentState.value = GameState.starting;
+
+
+    Timer.periodic(gameStartTime!.difference(DateTime.now()), (timer){
+      gameController = ClassicGameController(
+          roomInfo: roomInfo!,
+          currentState: currentState, uid: uid);
+      currentState.value = gameController!.setState(GameState.started);
+      timer.cancel();});
   }
 
   gameClassicValidation(data){
@@ -247,7 +306,7 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
         gameController!.moveValidated();
         if (gameController?.winner != GameWinner.none){
           if (!gameController?.iWon){
-           tourState.value = TState.ended;
+            tourState.value = TState.ended;
           }
         }
       });
@@ -287,7 +346,6 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
     socket.emitWithAck('joinTournament',  {
       'token': 'classicTournament.1.$uid'
     }, ack:  (response) {
-      print(response);
       if (response['success'] == true){
         if(tourState.value == TState.connecting) tourState.value = TState.waiting;
       }else{
@@ -396,8 +454,31 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
     );
   }
 
-  Widget gameWidget(){
-    return ClassicGamePage(socket: socket, inTournament: true);
+  Widget gameWidget(GameState gValue){
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
+      child: gValue != GameState.started && gValue != GameState.paused
+          && gValue != GameState.ended ?
+      Column(
+        key: const Key('2ndSSClass23..ds'),
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          gValue == GameState.waiting ? const Text("Waiting for next round...") : Text("Game Starting in $gameStartsIn..."),
+          const SizedBox(height: 30),
+          SizedBox(
+              width: 50.w,
+              child: LoadingWidget(circular: true, scaleFactor: 12))
+        ],
+      )
+          : gValue == GameState.ended ? gameController!.iWon ?
+      Container(child: Text(' You won tournament'),)
+          : Container(child: Text('${gameController!.winner}'),) : ClassicGameModule(
+          key: const Key('classicGamePageKey'),
+          controller: gameController!,
+          socket: socket,
+        gameStateChanged: (GameWinner , bool ) {  },),);
   }
 
   wonARound(){

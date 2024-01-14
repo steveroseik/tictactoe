@@ -14,6 +14,8 @@ class CellBarrier extends Power{
   @override
   int get duration => 1;
 
+  @override
+  int requires() => 1;
 
   CellBarrier({required super.playerState});
 
@@ -79,7 +81,8 @@ class CellBarrierFinale extends Power{
   String get description => 'Block two empty cells from all for one round';
   @override
   int get duration => 1;
-
+  @override
+  int requires() => 2;
 
   CellBarrierFinale({required super.playerState});
 

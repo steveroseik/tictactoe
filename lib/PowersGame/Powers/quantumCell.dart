@@ -1,7 +1,7 @@
 import 'package:tictactoe/PowersGame/core.dart';
 import 'package:tictactoe/PowersGame/powerCell.dart';
 
-import '../Configurations/constants.dart';
+import '../../Configurations/constants.dart';
 
 class QuantumCell extends Power{
   @override
@@ -12,9 +12,12 @@ class QuantumCell extends Power{
   String get description => 'Make enemy cell in quantum state for one round';
   @override
   int get duration => 1;
+  @override
+  int requires() => 1;
 
   QuantumCell({required super.playerState});
 
+  @override
   Map<int, Spell>? setSpell({required List<int> cells, required List<PowerCell> grid}){
     switch(canPlay(cells.first, grid)){
       case CellOut.passed:
@@ -58,6 +61,8 @@ class QuantumCellSilver extends Power{
   String get description => 'Make two enemy cells in quantum state for two round';
   @override
   int get duration => 2;
+  @override
+  int requires() => 2;
 
   QuantumCellSilver({required super.playerState});
 
@@ -107,6 +112,8 @@ class QuantumCellFinale extends QuantumCellSilver{
   String get description => 'Make two enemy cells in quantum state permanently';
   @override
   int get duration => 100;
+  @override
+  int requires() => 2;
 
   QuantumCellFinale({required super.playerState});
 

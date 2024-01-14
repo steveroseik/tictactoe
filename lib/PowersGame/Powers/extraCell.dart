@@ -12,9 +12,12 @@ class ExtraCell extends Power{
   @override
   int get duration => 1;
 
+  @override
+  int requires() => 1;
 
   ExtraCell({required super.playerState});
 
+  @override
   Map<int, Spell>? setSpell({required List<int> cells, required List<PowerCell> grid}){
     switch(canPlay(cells.first, grid)){
       case CellOut.passed:
@@ -77,6 +80,9 @@ class ExtraCellFinale extends Power{
   String get description => 'Play in an extra two cells for one round';
   @override
   int get duration => 1;
+
+  @override
+  int requires() => 2;
 
 
   ExtraCellFinale({required super.playerState});

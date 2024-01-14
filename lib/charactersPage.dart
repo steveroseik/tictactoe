@@ -97,7 +97,7 @@ class _CharactersPageState extends State<CharactersPage> {
                                 children: [
                                   AspectRatio(
                                       aspectRatio: 1,
-                                      child: Sprites().explosionOf[explosions.values[index]])
+                                      child: Sprites.explosionOf[explosions.values[index]])
                                 ])),
                       ),
                     );

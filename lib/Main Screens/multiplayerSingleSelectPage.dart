@@ -131,8 +131,7 @@ class _MultiplayerSingleSelectPageState extends State<MultiplayerSingleSelectPag
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed(Routes.powersGameMain,
-                      arguments: Minotaur(power1Level: 1, power2Level: 1, playerState: -1));
+                      Navigator.of(context).pushNamed(Routes.powersCharacterSelect);
                     },
                     child: Container(
                       width: 70.w,

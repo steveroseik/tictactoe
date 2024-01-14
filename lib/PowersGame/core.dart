@@ -109,12 +109,17 @@ abstract class Power{
 /// *protections and other effects cannot be pressed and have no consequences
 CellOut spellEffect (PowerCell cell, int playerState){
   if (cell.spell == null) return CellOut.passed;
-  if (cell.spell!.from == playerState) return CellOut.blocked;
+  if (cell.spell!.from == playerState) {
+
+    if (cell.spell!.effect == CellEffect.hidden
+        || cell.spell!.effect == CellEffect.hiddenTrap){
+      return CellOut.passed;
+    }
+    return CellOut.blocked;
+  }
 
   switch(cell.spell!.effect){
     case CellEffect.decoy:
-      return CellOut.passed;
-
     case CellEffect.hiddenTrap:
     case CellEffect.trap:
       return CellOut.trapped;

@@ -11,6 +11,8 @@ class StealthCell extends Power{
   String get description => 'hide your play for one round';
   @override
   int get duration => 1;
+  @override
+  int requires() => 1;
 
   StealthCell({required super.playerState});
 
@@ -60,10 +62,12 @@ class StealthCellSilver extends Power{
   String get description => 'hide your play and set a decoy for one round';
   @override
   int get duration => 1;
+  @override
+  int requires() => 2;
 
   StealthCellSilver({required super.playerState});
 
-  /// First cell must be playCell, Second Must be Decoy
+  @override
   Map<int, Spell>? setSpell({required List<int> cells,  required List<PowerCell> grid}){
     switch(canPlay(cells.first, cells.last, grid)){
       case CellOut.passed:
@@ -90,6 +94,14 @@ class StealthCellSilver extends Power{
               duration: -1,
               from: playerState)
         };
+    }
+  }
+
+  getCell(List<int> cells, List<PowerCell> grid, {empty = false}){
+    if (grid[cells.first].value == playerState){
+      return empty ? cells.last : cells.first;
+    }else{
+      return empty ? cells.first : cells.last;
     }
   }
 

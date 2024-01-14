@@ -34,6 +34,8 @@ class ClassicGameController extends ChangeNotifier{
 
   bool _iWon = false;
 
+  final bool speedMatch;
+
   (int, int)? _lastMove;
 
   String uid;
@@ -56,6 +58,7 @@ class ClassicGameController extends ChangeNotifier{
   ClassicGameController({
     required this.roomInfo,
     this.gridLength = 3,
+    this.speedMatch = false,
     required ValueNotifier<GameState> currentState,
     required this.uid}){
     if (isNine){
@@ -400,7 +403,6 @@ class ClassicGameController extends ChangeNotifier{
     late dynamic resp;
     if (grid != null && isNine){
       resp = setManualMove((grid, moveIndex), myPlay: false);
-
     }else{
       resp = setManualMove((moveIndex ~/ 3, moveIndex % 3), myPlay: false);
     }
@@ -467,9 +469,12 @@ class ClassicGameController extends ChangeNotifier{
 
   setOppConnection(GameConn conn, {String? clientId}){
     _oppConnection = conn;
-    _currentState.value = conn == GameConn.offline ? GameState.paused : GameState.started;
     if (conn == GameConn.online && clientId != null) opponent.clientId = clientId;
-    notifyListeners();
+    if (_currentState.value == GameState.started) {
+      _currentState.value =
+          conn == GameConn.offline ? GameState.paused : GameState.started;
+      notifyListeners();
+    }
   }
 
   GameState setState(GameState state){
@@ -505,9 +510,11 @@ class ClassicGameController extends ChangeNotifier{
       }else{
         if (spotsRemaining() > 0){
           Map<String, dynamic>? ret;
+          List<int> full = List<int>.generate(9, (index) => index);
           do{
-            int r = Random().nextInt(8);
-            ret = setManualMove((r ~/ 3, r % 3));
+            int move = Random().nextInt(full.length);
+            ret = setManualMove((full[move] ~/ 3, full[move] % 3));
+            if (ret == null) full.removeAt(move);
           }while(ret == null);
           notifyListeners();
           return ret;
@@ -529,9 +536,14 @@ class ClassicGameController extends ChangeNotifier{
 
   setTimeout(){
     if (isNine){
-      _roundTimeout = DateTime.now().add(const Duration(seconds: 20));
+      _roundTimeout = DateTime.now().add(const Duration(seconds: Const.nineRoundDuration));
     }else{
-      _roundTimeout = DateTime.now().add(const Duration(seconds: 15));
+      if (speedMatch){
+        _roundTimeout = DateTime.now().add(const Duration(seconds: 3));
+      }else{
+        _roundTimeout = DateTime.now().add(const Duration(seconds: Const.classicRoundDuration));
+      }
+
     }
 
     notifyListeners();

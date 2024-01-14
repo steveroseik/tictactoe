@@ -42,7 +42,8 @@ class PowersGameController extends ChangeNotifier{
 
   bool _iWon = false;
 
-  (int, int)? _lastMove;
+  (int, int)? _myLastMove;
+  (int, int)? _oppLastMove;
 
   String uid;
 
@@ -92,7 +93,7 @@ class PowersGameController extends ChangeNotifier{
       }
     }
     _currentState = currentState;
-    _roundTimeout = DateTime.now().add(const Duration(seconds: 32));
+    _roundTimeout = DateTime.now().add(const Duration(seconds: Const.powersRoundDuration));
     if (roomInfo.userTurn == opponent.userId){
       _myIndex = Const.oCell;
       _myTurn = false;
@@ -136,8 +137,6 @@ class PowersGameController extends ChangeNotifier{
     if (_gameWinner != GameWinner.none) {
       _roundTimeout = null;
       _currentState.value = GameState.ended;
-    }else{
-      setTimeout();
     }
 
     if (notify) notifyListeners();
@@ -205,9 +204,8 @@ class PowersGameController extends ChangeNotifier{
   bool? setManualMove((int, int) loc, {bool myPlay = true}){
 
     if (grid[loc.$1][loc.$2].value == -1){
-      print('${grid[loc.$1][loc.$2].value} :{}');
       final response = spellEffect(grid[loc.$1][loc.$2], myPlay ? _myIndex : (1-_myIndex));
-      print('response: $response');
+      print('manual response: $response');
       if ( response == CellOut.trapped){
         return false;
 
@@ -218,6 +216,12 @@ class PowersGameController extends ChangeNotifier{
 
         grid[loc.$1][loc.$2].value = myPlay ? _myIndex : (1-_myIndex);
 
+        if (myPlay){
+          _myLastMove = loc;
+        }else{
+          _oppLastMove = loc;
+        }
+
         if (myPlay) notifyListeners();
         return true;
       }
@@ -225,7 +229,7 @@ class PowersGameController extends ChangeNotifier{
     return null;
   }
 
-  dynamic setSpellMove({required bool firstPower, required List<int> cells, bool myPlay = true}){
+  Map<int, Spell>? setSpellMove({required bool firstPower, required List<int> cells, bool myPlay = true}){
 
     print('the cells: $cells');
     Map<int, Spell>? newSpells = firstPower ?
@@ -238,7 +242,7 @@ class PowersGameController extends ChangeNotifier{
       grid[i ~/ gridLen][i % gridLen].spell = entry.value;
     }
     notifyListeners();
-    return myPlay ? requestSpellConfirmation(newSpells, firstPower) : newSpells;
+    return newSpells;
 
   }
 
@@ -310,9 +314,25 @@ class PowersGameController extends ChangeNotifier{
     return true;
   }
 
-  Map<String, dynamic> validateSpell(Map<int, Spell> spells, bool firstPower, String hash){
+  List<int> organizeCells(Map<int, Spell> spells){
+    List<int> keys = spells.keys.toList();
+    List<int> cells = [];
+    for (int i = 0; i < keys.length ; i++){
+      if (spells[keys[i]]!.effect == CellEffect.hidden ||
+          spells[keys[i]]!.effect == CellEffect.hiddenTrap){
+        cells.add(keys[i]);
+        break;
+      }
+    }
 
-    final resp = setSpellMove(cells: spells.keys.toList(), myPlay: false, firstPower: firstPower);
+    cells.addAll(keys.where((e) => !cells.contains(e)));
+    return cells;
+  }
+
+
+  Map<String, dynamic> validateSpell(Map<int, Spell> spells, bool firstPower, String hash){
+    final keys = organizeCells(spells);
+    final resp = setSpellMove(cells: keys, myPlay: false, firstPower: firstPower);
 
     if (resp == null ) {
       return {
@@ -400,24 +420,37 @@ class PowersGameController extends ChangeNotifier{
     return state;
   }
 
+  List<(int, int)> remainingRandoms(){
+    List<(int, int)> remaining = [];
+    for (int i = 0; i < gridLen ; i++){
+      for ( int j = 0; j < gridLen; j++){
+       if (grid[i][j].value == -1 && grid[i][j].spell == null){
+         remaining.add((i, j));
+       }
+      }
+    }
+    return remaining;
+  }
+
   Map<String, dynamic>? playRandom(){
-    // if (isMyTurn){
-    //   if (spotsRemaining() > 0){
-    //     Map<String, dynamic>? ret;
-    //     do{
-    //       int r = Random().nextInt(8);
-    //       ret = setManualMove((r ~/ 3, r % 3));
-    //     }while(ret == null);
-    //     notifyListeners();
-    //     return ret;
-    //   }
-    // }
+    if (isMyTurn){
+      final rem = remainingRandoms();
+      if (rem.isNotEmpty){
+        bool? ret;
+        do{
+          int random = Random().nextInt(rem.length);
+          ret = setManualMove(rem[random]);
+          if (ret == null) rem.removeAt(random);
+        }while(ret == null);
+        return requestMoveConfirmation((gridLen * _myLastMove!.$1) + _myLastMove!.$2);
+      }
+    }
     return null;
   }
 
   setTimeout(){
-    _roundTimeout = DateTime.now().add(const Duration(seconds: 30));
-    notifyListeners();
+    _roundTimeout = DateTime.now().add(const Duration(seconds: Const.powersRoundDuration));
+    // notifyListeners();
   }
 
 
@@ -450,7 +483,9 @@ class PowersGameController extends ChangeNotifier{
 
     if (!_myTurn) return null;
     _myTurn = false;
+    decrementPowers(myPowers: false);
     notifyListeners();
+    setTimeout();
     return {
       'type': 'powersEndRound',
       'roomId': roomInfo.id,
@@ -461,13 +496,27 @@ class PowersGameController extends ChangeNotifier{
   bool setMyRound(Map<String, dynamic> data){
     final userId = data['userId'];
     if (userId != null && userId == opponent.userId){
+      decrementPowers();
       _myTurn = true;
       _roundSpellPlayed = false;
       _roundSinglePlayed = false;
+
+      setTimeout();
       notifyListeners();
       return true;
     }
     return false;
+  }
+
+  decrementPowers({bool myPowers = true}){
+    for (int i = 0; i < gridLen; i++){
+      for (int j = 0; j < gridLen; j++){
+        final cell = grid[i][j];
+        if (cell.spell != null){
+          cell.decrementSpell(myPowers ? _myIndex : (1-_myIndex));
+        }
+      }
+    }
   }
 
   playedSpell(){

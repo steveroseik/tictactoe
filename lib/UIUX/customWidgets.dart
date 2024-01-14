@@ -777,7 +777,7 @@ class GameButton extends StatelessWidget {
       topLayerChild: Stack(
         alignment: Alignment.center,
         children: [
-          child?? Container(),
+          Positioned.fill(child: child?? Container()),
           if (enableShimmer) Positioned.fill(
             child: ClipRRect(
               borderRadius: borderRadius,

@@ -493,7 +493,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
   }
 
   calculateGameStartTime(DateTime endTime){
-    return endTime.subtract(const Duration(minutes: 5));
+    return endTime.subtract(Const.nineGameDuration);
   }
 
   gameInitAction(Map<String, dynamic> data){
@@ -599,11 +599,11 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
           if (gameController!.timeout!.isAfter(now)){
             setState(() {
 
-              final perc = gameController!.timeout!.difference(now).inSeconds / 30;
+              final perc = gameController!.timeout!.difference(now).inSeconds / Const.nineRoundDuration;
               _progress = perc > 1 ? 1 : perc < 0 ? 0 : perc;
             });
           }else{
-            if (gameController!.isMyTurn){
+            if (gameController!.isMyTurn && mounted){
               final req = gameController!.playRandom(nextGrid: nextGridPlay);
               if (req != null){
                 print('played Random');

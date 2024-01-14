@@ -258,7 +258,7 @@ class _PowersGameMainState extends State<PowersGameMain> {
   }
 
   calculateGameStartTime(DateTime endTime){
-    return endTime.subtract( const Duration(minutes: Const.powersGameDurationInSeconds ~/ 60));
+    return endTime.subtract(Const.powersGameDuration);
   }
 
   myRoundStarted(Map<String, dynamic> data){
@@ -345,10 +345,8 @@ class _PowersGameMainState extends State<PowersGameMain> {
     Map<String, dynamic>? spells = data['spells'];
     bool? firstPower = data['firstPower'];
     String? hash = data['hash'];
-
     if (spells != null && hash != null && firstPower != null){
       final map = spells.map((key, value) => MapEntry(int.parse(key), Spell.fromJson(value)));
-      print(map);
       final resp = gameController!.validateSpell(map, firstPower, hash);
       print('validation: ${resp['hash']}');
       socket.emitWithAck('gameListener', resp, ack: (data){
