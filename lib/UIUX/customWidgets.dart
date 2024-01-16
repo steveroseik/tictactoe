@@ -760,11 +760,17 @@ class GameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedLayerButton(
-      baseDecoration: baseDecoration?? BoxDecoration(
+      baseDecoration: baseDecoration?.copyWith(
+          borderRadius: borderRadius,
+          color: color
+      ) ?? BoxDecoration(
           borderRadius: borderRadius,
           color: color
       ),
-      topDecoration: topDecoration?? BoxDecoration(
+      topDecoration: topDecoration?.copyWith(
+          borderRadius: borderRadius,
+          color: color
+      ) ?? BoxDecoration(
           borderRadius: borderRadius,
           color: color
       ),

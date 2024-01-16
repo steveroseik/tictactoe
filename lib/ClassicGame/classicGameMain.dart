@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
+import 'package:tictactoe/coinToss.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
 import 'package:tictactoe/ClassicGame/classicGameModule.dart';
 
@@ -59,6 +60,10 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
   bool speedMatch = false;
 
+  int theLuckyWinner = -1;
+
+  int speedCount = 0;
+
   @override
   void initState() {
     speedMatch = widget.speedMatch;
@@ -70,6 +75,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
   @override
   void dispose() {
+    print('canceled');
     super.dispose();
     socket.disconnect();
   }
@@ -93,7 +99,22 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
                           Colors.deepPurple.shade800
                         ])),
               ),
-              const BackgroundScroller(),
+              AnimatedOpacity(
+                  opacity: (speedMatch &&
+                      (value == GameState.started || value == GameState.paused)) ? 0 : 1,
+                  duration: const Duration(milliseconds: 300),
+              child: const BackgroundScroller(),),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
+                child:(speedMatch &&
+                    (value == GameState.started || value == GameState.paused)) ? SafeArea(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Image.asset('assets/speed_match.png', width: 80.w,),
+                  ),
+                ) : Container(),
+              ),
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -123,16 +144,6 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
                   ),
                 ),
               ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child,),
-                  child: (speedMatch &&
-                      (value == GameState.started || value == GameState.paused)) ? Image.asset('assets/speed_match.png', width: 80.w,) : Container(),),
-                ),
-              )
             ],
           );
         }
@@ -263,12 +274,36 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
   startSpeedMatch(Map<String, dynamic> data){
     if (gameController?.winner != GameWinner.draw) return;
     final hash = data['hash'];
-    if (hash != null && hash == gameController?.roomInfo.lastHash){
-      gameInitAction(data, speedMatch: true);
-      initGameTimer();
+    final coinWinner = data['coinWinner'];
+    if (hash != null
+        && hash == gameController?.roomInfo.lastHash
+        && coinWinner != null){
+      theLuckyWinner = coinWinner ? 1 : 0;
+      if (speedMatch){
+        /// control speedMatch count
+        if (speedCount > 0){
+          speedCount++;
+          gameInitAction(data, speedMatch: true);
+          initGameTimer();
+        }else{
+          initCoinToss();
+        }
+      }else{
+        gameInitAction(data, speedMatch: true);
+        initGameTimer();
+      }
+
     }else{
       print('error, wrong hash');
     }
+  }
+
+  initCoinToss(){
+    gameController?.setState(GameState.coinToss);
+  }
+
+  onCoinTossEnd(){
+    gameController?.didIWin(theLuckyWinner);
   }
 
   gameInitAction(Map<String, dynamic> data, {bool speedMatch = false}){
@@ -327,7 +362,8 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
         }, ack: (response){
           if (response['success'] == true){
             startSpeedMatch({
-              'hash': gameController?.roomInfo.lastHash
+              'hash': gameController?.roomInfo.lastHash,
+              'coinWinner': response['coinWinner']
             });
           }
         });
@@ -396,6 +432,8 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
             ],
           );
         }
+      case GameState.coinToss:
+        return CoinToss(onEnd: onCoinTossEnd);
       case GameState.ended:
         return gameEndDialog();
 

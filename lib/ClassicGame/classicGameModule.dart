@@ -51,6 +51,8 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
   late Widget opponentCharacter;
   late Widget myCharacter;
 
+  late ClassicGameController gameControl;
+
   Timer? timeoutTimer;
 
   GameWinner? winner;
@@ -91,59 +93,60 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
 
     mainController = context.watch<MainController>();
 
-    return ChangeNotifierProvider<ClassicGameController>(
+    if (widget.isNine) gameControl = context.watch<ClassicGameController>();
+    return (widget.isNine) ?
+    Container(
+      padding: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+          color: Colors.transparent),
+      /// MAIN GRID
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: LayoutBuilder(
+            builder: (context, constraints) {
+              lines.clear();
+              //Draw box lines
+              createGridLines(
+                  constraints.maxWidth,
+                  constraints.maxWidth,
+                  3,
+                  3,
+                  lines,
+                  colorDarkBlue,
+                  _animationController);
+              final linearGrid = gameControl.grid[widget.smallIndex!];
+              return Stack(
+                children: lines
+                  ..addAll([GridView.builder(
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                      ),
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: linearGrid.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          child: linearGrid[index] == -1
+                              ? Container()
+                              : linearGrid[index] ==
+                              0 ? myCharacter : opponentCharacter,
+                        );
+                      })]),
+              );
+            }),
+      ),
+    )
+        : ChangeNotifierProvider<ClassicGameController>(
       create: (context) => controller,
       child: Consumer<ClassicGameController>(
         builder: (BuildContext context, ClassicGameController gameLiveController, Widget? child) {
           // updateGameState(gameLiveController);
-          return (widget.isNine) ?
-          Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                color: Colors.transparent),
-            /// MAIN GRID
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    lines.clear();
-                    //Draw box lines
-                    createGridLines(
-                        constraints.maxWidth,
-                        constraints.maxWidth,
-                        3,
-                        3,
-                        lines,
-                        colorDarkBlue,
-                        _animationController);
-                    final linearGrid = gameLiveController.grid[widget.smallIndex!];
-                    return Stack(
-                      children: lines
-                        ..addAll([GridView.builder(
-                            gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                            ),
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            itemCount: linearGrid.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                child: linearGrid[index] == -1
-                                    ? Container()
-                                    : linearGrid[index] ==
-                                    0 ? myCharacter : opponentCharacter,
-                              );
-                            })]),
-                    );
-                  }),
-            ),
-          ) :
-          Stack(
+          return Stack(
             children: [
               Center(
                 child: Column(
@@ -432,9 +435,6 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
                   ],
                 ),
               ),
-              gameLiveController.winner != GameWinner.none ? Container(
-                child: Text(' GAME ENDED'),
-              ) : Container()
             ],
           );
         },
@@ -454,6 +454,8 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
         return;
       }
       if (controller.state == GameState.paused){
+
+        controller.addExtraTime(500);
         return;
       }
       if (controller.timeout == null && _progress != 0) {
@@ -473,8 +475,8 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
           if (controller.isMyTurn){
             final req = controller.playRandom();
             if (req != null){
-              print('played Random');
               widget.socket.emitWithAck('gameListener', req, ack: (data){
+                print('eh? $data');
               });
             }
           }

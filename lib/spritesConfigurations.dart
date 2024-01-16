@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/widgets.dart';
-import 'package:flutter/material.dart';
 
 
 enum characters
@@ -73,6 +72,25 @@ enum spellEffects {
   gaurdianPower1,
   gaurdianPower2,
   gaurdianPower3
+}
+
+enum Badges{
+  rookie,
+  novice,
+  apprentice,
+  ascendant,
+  expert,
+  elite,
+  master,
+  grandmaster,
+  legend,
+  champion,
+}
+
+enum Coins{
+  bronze,
+  silver,
+  gold
 }
 
 class Sprites{
@@ -381,7 +399,6 @@ class Sprites{
       stepTime: 0.1,
     )),
     characters.reaper1 : SpriteAnimationWidget.asset(
-      key: const Key('sdsdsd'),
         anchor: Anchor.center,
         path: 'pixels/reaper1.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -547,5 +564,91 @@ class Sprites{
     ))
   };
 
+  static Map<Badges, SpriteWidget> badgeOf = {
+    Badges.rookie: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(0, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.novice: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.apprentice: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128 * 2, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.ascendant: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128 * 3, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.expert: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128 * 4, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.elite: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128 * 5, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.master: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128 * 6, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.grandmaster: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128 * 7, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.legend: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128 * 8, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+    Badges.champion: SpriteWidget.asset(
+      path: 'tier_badges.png',
+      srcPosition: Vector2(128 * 9, 0),
+      srcSize: Vector2(128, 128),
+    ),
+
+  };
+
+  static Map<Coins, SpriteAnimationWidget> coinOf = {
+    Coins.bronze : SpriteAnimationWidget.asset(
+        anchor: Anchor.center,
+        path: 'sprite_bronze.png', data: SpriteAnimationData.sequenced(
+      amount: 10,
+      textureSize: Vector2(120,120),
+      stepTime: 0.1,
+    )),
+    Coins.silver : SpriteAnimationWidget.asset(
+        anchor: Anchor.center,
+        path: 'sprite_silver.png', data: SpriteAnimationData.sequenced(
+      amount: 10,
+      textureSize: Vector2(120,120),
+      stepTime: 0.1,
+    )),
+    Coins.gold : SpriteAnimationWidget.asset(
+        anchor: Anchor.center,
+        path: 'sprite_gold.png', data: SpriteAnimationData.sequenced(
+      amount: 10,
+      textureSize: Vector2(120,120),
+      stepTime: 0.1,
+    )),
+  };
 }
 

@@ -9,8 +9,9 @@ import 'package:tictactoe/Controllers/mainController.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/routesGenerator.dart';
+import 'package:tictactoe/spritesConfigurations.dart';
 
-import 'Authentication/authentication.dart';
+import '../Authentication/authentication.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,7 +22,7 @@ class HomePage extends StatefulWidget {
 
 List<(String, String)> routes = [
   (Routes.classicGameModeSelect, 'CLASSIC GAME'),
-  (Routes.experimentalGameMain, 'NINE X NINE'),
+  (Routes.ninesGameMain, 'NINE X NINE'),
   (Routes.experimentalGameMain2, 'BIG GRID'),
   (Routes.experimentalGameMain3, 'FOURTH DIMENSION')
 ];
@@ -141,18 +142,14 @@ class _HomePageState extends State<HomePage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Icon(
-                                Icons.monetization_on,
-                                color: Colors.white,
-                                size: 27,
-                              ),
-                              Spacer(),
+                              AspectRatio(
+                                  aspectRatio: 1,
+                              child: Sprites.coinOf[Coins.bronze],),
                               Text('100',
                                   style: TextStyle(
                                       fontSize: 20, color: Colors.white)),
-                              Spacer(),
                               Icon(
                                 Icons.add_circle_outlined,
                                 color: Colors.white,
@@ -293,7 +290,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GameButton2(
                       onPressed: () {
-                        Navigator.of(context).pushNamed(Routes.storeHome);
+                        // Navigator.of(context).pushNamed(Routes.s);
                       },
                       borderRadius: BorderRadius.circular(10),
                       aspectRatio: 1.5 / 1,
@@ -493,13 +490,60 @@ class _HomePageState extends State<HomePage> {
                                 Colors.lightBlueAccent,
                                 Colors.lightBlue
                               ])),
-                      child: Column(children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Column(children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                flex: 10,
+                                child: ClipRRect(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                          colorDarkBlue,
+                                          Colors.blue.shade800,
+                                        ])),
+                                    child: NeoPopShimmer(
+                                      shimmerColor: colorLightGrey.withOpacity(0.8),
+                                      duration: const Duration(milliseconds: 1500),
+                                      delay: const Duration(milliseconds: 2000),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.fromLTRB(4, 2, 4, 2),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Tournaments', // add your text here
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                            Spacer(),
+                                            Text(
+                                              'Time Left: 2h 6m 32s', // add your text here
+                                              style: TextStyle(
+                                                color: Colors.yellow,
+                                              ),
+                                              textAlign: TextAlign.end,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Expanded(
                               flex: 10,
                               child: Container(
                                 decoration: BoxDecoration(
@@ -507,74 +551,32 @@ class _HomePageState extends State<HomePage> {
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
                                         colors: [
-                                      colorDarkBlue,
-                                      Colors.blue.shade800,
+                                      Colors.lightBlue,
+                                      Colors.lightBlue.shade800,
                                     ])),
-                                child: NeoPopShimmer(
-                                  shimmerColor: colorLightGrey.withOpacity(0.8),
-                                  duration: const Duration(milliseconds: 1500),
-                                  delay: const Duration(milliseconds: 2000),
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(4, 2, 4, 2),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Tournaments', // add your text here
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                          textAlign: TextAlign.start,
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.white,
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        'Battle Royale!', // add your text here
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
                                         ),
-                                        Spacer(),
-                                        Text(
-                                          'Time Left: 2h 6m 32s', // add your text here
-                                          style: TextStyle(
-                                            color: Colors.yellow,
-                                          ),
-                                          textAlign: TextAlign.end,
-                                        )
-                                      ],
-                                    ),
+                                        textAlign: TextAlign.end,
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                            flex: 10,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                    Colors.lightBlue,
-                                    Colors.lightBlue.shade800,
-                                  ])),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      color: Colors.white,
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      'Battle Royale!', // add your text here
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 25,
-                                      ),
-                                      textAlign: TextAlign.end,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )),
-                      ])),
+                              )),
+                        ]),
+                      )),
                   SizedBox(
                     height: 2.h,
                   ),

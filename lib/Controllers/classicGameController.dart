@@ -67,9 +67,9 @@ class ClassicGameController extends ChangeNotifier{
     grid = List<List<int>>
         .generate(gridLength, (index) => List.filled(gridLength, -1));
     _currentState = currentState;
-    _roundTimeout = DateTime.now().add(
-        isNine ? const Duration(seconds: 20) :
-        const Duration(seconds: 13));
+    _roundTimeout = DateTime.now().add(Duration(seconds:
+        isNine ? Const.nineRoundDuration :
+        speedMatch ? Const.speedRoundDuration : Const.classicRoundDuration));
 
     if (roomInfo.userTurn == opponent.userId){
       _myIndex = Const.oCell;
@@ -179,12 +179,8 @@ class ClassicGameController extends ChangeNotifier{
   //   return bestScore;
   // }
 
-  _winCheck({bool notify = true}){
-    // TODO:: complete
-    final data = isNine ? _checkNine() : _checkWinnerClassic();
-    winningPath = data.$2;
-    _gameWinner = data.$1;
-    switch (data.$1){
+  _setIfIWon(){
+    switch (_gameWinner){
       case GameWinner.o:
         if (_myIndex == Const.oCell){
           _iWon = true;
@@ -197,6 +193,15 @@ class ClassicGameController extends ChangeNotifier{
         break;
       default: // nothing
     }
+  }
+  _winCheck({bool notify = true}){
+    // TODO:: complete
+    final data = isNine ? _checkNine() : _checkWinnerClassic();
+    winningPath = data.$2;
+    _gameWinner = data.$1;
+
+    _setIfIWon();
+
     if (_gameWinner != GameWinner.none) {
       _roundTimeout = null;
       _currentState.value = GameState.ended;
@@ -204,7 +209,7 @@ class ClassicGameController extends ChangeNotifier{
       setTimeout();
     }
 
-    if (notify) notifyListeners();
+    if (notify && hasListeners) notifyListeners();
   }
 
   (GameWinner, List<int>) _checkNine(){
@@ -454,6 +459,16 @@ class ClassicGameController extends ChangeNotifier{
     }
   }
 
+  didIWin(int winIndex, {bool tournament = false}){
+    if (_currentState.value == GameState.coinToss){
+      _gameWinner = GameWinner.values[winIndex];
+      _setIfIWon();
+      _currentState.value = GameState.ended;
+
+      if (hasListeners) notifyListeners();
+    }
+  }
+
   gotOffline(){
     _myConnection = GameConn.offline;
     _currentState.value = GameState.paused;
@@ -470,16 +485,23 @@ class ClassicGameController extends ChangeNotifier{
   setOppConnection(GameConn conn, {String? clientId}){
     _oppConnection = conn;
     if (conn == GameConn.online && clientId != null) opponent.clientId = clientId;
-    if (_currentState.value == GameState.started) {
-      _currentState.value =
-          conn == GameConn.offline ? GameState.paused : GameState.started;
-      notifyListeners();
+    if (conn == GameConn.offline){
+      if (_currentState.value == GameState.started) {
+        _currentState.value = GameState.paused;
+        notifyListeners();
+      }
+    }else{
+      if (_currentState.value == GameState.paused) {
+        _currentState.value = GameState.started;
+        notifyListeners();
+      }
     }
+
   }
 
   GameState setState(GameState state){
     _currentState.value = state;
-    notifyListeners();
+    if (hasListeners) notifyListeners();
     return state;
   }
 
@@ -549,6 +571,11 @@ class ClassicGameController extends ChangeNotifier{
     notifyListeners();
   }
 
+  addExtraTime(int time){
+    _roundTimeout = _roundTimeout?.add( Duration(milliseconds: time));
+    if (hasListeners) notifyListeners();
+  }
+
 
   (bool, dynamic) endGameDueConnection(Map<String, dynamic> data, {bool tournament = false}){
     final hash = data['hash'];
@@ -600,7 +627,7 @@ class ClassicGameController extends ChangeNotifier{
     return hash.toString();
   }
 
- @override
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();

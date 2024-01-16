@@ -4,7 +4,9 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flame/game.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -34,38 +36,12 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
   late Animation animation;
   late AnimationController focusController;
   late Animation focusAnimation;
-
-  List<Widget> nineGames = [];
+  List<ClassicGameModule> nineGames = [];
   double gridSize = 90.w;
 
   List<int> focusedGrid = [];
   int selectedIndex = -1;
   Alignment startFrom = Alignment.topLeft;
-
-  Alignment setStartPoint(int index){
-    late Alignment ret;
-    switch(index){
-      case 0 : ret = Alignment.topLeft;
-        break;
-      case 1 : ret = Alignment.topCenter;
-        break;
-      case 2 : ret = Alignment.topRight;
-        break;
-      case 3 : ret = Alignment.centerLeft;
-        break;
-      case 4 : ret = Alignment.center;
-        break;
-      case 5 : ret = Alignment.centerRight;
-        break;
-      case 6 : ret = Alignment.bottomLeft;
-        break;
-      case 7 : ret = Alignment.bottomCenter;
-        break;
-      case 8 : ret = Alignment.bottomRight;
-        break;
-    }
-    return ret;
-  }
 
   late Socket socket;
 
@@ -79,7 +55,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
 
   String uid = '';
 
-  double _progress = 0.0;
+  final ValueNotifier<double> _progress = ValueNotifier(0.0);
 
   late Timer gameTimer;
 
@@ -125,17 +101,16 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
         });
       }
     });
-
     super.initState();
   }
 
-  @override
-  void dispose() {
-    animationController.dispose();
-    focusController.dispose();
-    super.dispose();
-    socket.disconnect();
-    timeoutTimer?.cancel();
+ @override
+ void dispose() {
+   timeoutTimer?.cancel();
+   socket.disconnect();
+   animationController.dispose();
+   focusController.dispose();
+  super.dispose();
   }
 
   @override
@@ -171,214 +146,332 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
                   child:
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
-                    child: state != GameState.started && state != GameState.paused
-                        && state != GameState.ended ? Column(
-                      key: Key('Classdj2!###kjds'),
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        state == GameState.connecting ? const Text("Connecting...")
-                            : state == GameState.starting ? Text("Starting in $gameStartsIn..") : const Text("Waiting for opponent..."),
-                        SizedBox(height: 30),
-                        SizedBox(
-                            width: 50.w,
-                            child: LoadingWidget(circular: true, scaleFactor: 12))
-                      ],
-                    ) : ChangeNotifierProvider<ClassicGameController>(
-                      create: (context) => gameController!,
-                      child: Consumer<ClassicGameController>(
-                        builder: (context, controller, child) {
-                          return AnimatedBuilder(
-                              animation: Listenable.merge([animationController, focusController]),
-                              builder: (context, child) {
-                                List<Widget> lines = [];
-                                createGridLines(
-                                    gridSize, gridSize, 3, 3, lines,
-                                    colorDarkBlue, animationController,
-                                    thickness: 4);
-                                return Stack(
+                    child: state != GameState.started && state != GameState.paused ?
+                    viewMiddleWidget(state)
+                        : AnimatedBuilder(
+                        animation: Listenable.merge([animationController, focusController]),
+                        builder: (context, child) {
+                          List<Widget> lines = [];
+                          createGridLines(
+                              gridSize, gridSize, 3, 3, lines,
+                              colorDarkBlue, animationController,
+                              thickness: 4);
+                          return Stack(
 
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 3.w),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SafeArea(
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: IconButton(
-                                          onPressed: () => Navigator.of(context).pop(),
-                                          icon: Icon(CupertinoIcons.back),
+                                    Row(
+                                      children: [
+                                        AnimatedContainer(
+                                            duration: const Duration(milliseconds: 300),
+                                            height: 6.h,
+                                            padding: EdgeInsets.symmetric(vertical: 2.w, horizontal: 3.w),
+                                            decoration: BoxDecoration(
+                                                border: !gameController?.isMyTurn ? Border.all(color: colorLightYellow, width: 0.5.w): null,
+                                                borderRadius: BorderRadius.circular(25.sp),
+                                                gradient: LinearGradient(
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                    colors: !gameController?.isMyTurn ?
+                                                    [Colors.deepOrange, colorPurple]
+                                                        : [Colors.deepOrange, Colors.deepOrange.shade900]
+                                                )
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text('ENEMY', style: TextStyle(
+                                                    fontSize: 11.sp,
+                                                    fontWeight: FontWeight.w800,
+                                                    color: gameController?.isMyTurn ? Colors.grey : Colors.black),),
+                                                SizedBox(width: 10.w),
+                                                AspectRatio(aspectRatio: 1, child: opponentCharacter),
+                                              ],
+                                            )),
+                                        Expanded(
+                                          child: ValueListenableBuilder(
+                                              valueListenable: _progress,
+                                              builder: (context, progress, child) {
+                                                return gameController?.oppConnection == GameConn.offline ?
+                                                Padding(
+                                                  padding: const EdgeInsets.all(10.0),
+                                                  child: LinearProgressIndicator(
+                                                    color: Colors.purple,
+                                                    backgroundColor: Colors.black,
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                )
+                                                    : AnimatedOpacity(
+                                                  duration: const Duration(milliseconds: 200),
+                                                  opacity: (!gameController?.isMyTurn && gameController?.winner == GameWinner.none) ?
+                                                  progress > 0 ? 1 : 0 : 0,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(10),
+                                                    child: LinearPercentIndicator(
+                                                      animation: true,
+                                                      animateFromLastPercent: true,
+                                                      animationDuration: 600,
+                                                      progressColor: Colors.purple,
+                                                      backgroundColor: Colors.black,
+                                                      percent: progress <= 0 ? 1 : progress,
+                                                      barRadius: const Radius.circular(20),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    Center(
-                                      child: Container(
-                                          height: gridSize,
-                                          width: gridSize,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            gradient: const LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [Colors.purple, Colors.green]
-                                            )
-                                          ),
-                                          child: Stack(
-                                            children: [
-                                              ...lines,
-                                              GridView.builder(
-                                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                                                  shrinkWrap: true,
-                                                  physics: const NeverScrollableScrollPhysics(),
-                                                  padding: EdgeInsets.zero,
-                                                  itemCount: 9,
-                                                  itemBuilder: (context, index){
-                                                    return Transform(
+                                    SizedBox(height: 1.h),
+                                    if (gameController != null) ChangeNotifierProvider(
+                                      create: (context) => gameController,
+                                      child: Consumer<ClassicGameController>(
+                                        builder: (context, controller, child) {
+                                          return Center(
+                                            child: Container(
+                                                height: gridSize,
+                                                width: gridSize,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  gradient: const LinearGradient(
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                    colors: [colorPurple, colorDeepOrange]
+                                                  )
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    ...lines,
+                                                    if (nineGames.isNotEmpty) GridView.builder(
+                                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                                                        shrinkWrap: true,
+                                                        physics: const NeverScrollableScrollPhysics(),
+                                                        padding: EdgeInsets.zero,
+                                                        itemCount: 9,
+                                                        itemBuilder: (context, index){
+                                                          return Transform(
+                                                            transform: Matrix4.identity()
+                                                              ..scale(selectedIndex == index ? 1 + (focusController.value/2) : 1.0),
+                                                            alignment: setStartPoint(index),
+                                                            child: Opacity(
+                                                              opacity: selectedIndex == index ? 1 - focusController.value : 1,
+                                                              child: GestureDetector(
+                                                                  behavior: HitTestBehavior.opaque,
+                                                                  onTap: () async{
+                                                                    print('leh msh tapped');
+                                                                    focusedGrid = gameController!.grid[index];
+                                                                    setState(() {
+                                                                      selectedIndex = index;
+                                                                      startFrom = setStartPoint(index);
+                                                                    });
+                                                                    focusController.forward();
+                                                                    print('tapped: $selectedIndex');
+                                                                  },
+                                                                  child: IgnorePointer(
+                                                                      ignoring: true,
+                                                                      child: Stack(
+                                                                        children: [
+                                                                          if (gameController?.nineWins[index] == -1) nineGames[index],
+                                                                          Positioned.fill(child:
+                                                                          (gameController?.nineWins[index] != -1) ? Padding(
+                                                                              padding: EdgeInsets.all(2.w),
+                                                                          child: (gameController?.nineWins[index] == 1) ?
+                                                                          myCharacter : opponentCharacter,) : Container())
+                                                                        ],
+                                                                      ))),
+                                                            ),
+                                                          );
+                                                        }),
+                                                    Transform(
                                                       transform: Matrix4.identity()
-                                                        ..scale(selectedIndex == index ? 1 + (focusController.value/2) : 1.0),
-                                                      alignment: setStartPoint(index),
-                                                      child: Opacity(
-                                                        opacity: selectedIndex == index ? 1 - focusController.value : 1,
-                                                        child: GestureDetector(
-                                                            behavior: HitTestBehavior.opaque,
-                                                            onTap: () async{
-                                                              print('leh msh tapped');
-                                                              focusedGrid = controller.grid[index];
-                                                              setState(() {
-                                                                selectedIndex = index;
-                                                                startFrom = setStartPoint(index);
-                                                              });
-                                                              focusController.forward();
-                                                              print('tapped: $selectedIndex');
-                                                            },
-                                                            child: IgnorePointer(
-                                                                ignoring: true,
-                                                                child: Stack(
-                                                                  children: [
-                                                                    if (controller.nineWins[index] == -1) nineGames[index],
-                                                                    Positioned.fill(child:
-                                                                    (controller.nineWins[index] != -1) ? (controller.nineWins[index] == 1) ?
-                                                                    myCharacter : opponentCharacter : Container())
-                                                                  ],
-                                                                ))),
-                                                      ),
-                                                    );
-                                                  }),
-                                              Transform(
-                                                transform: Matrix4.identity()
-                                                  ..scale(0.3 + (focusController.value * 0.7)),
-                                                alignment: startFrom,
-                                                child: Visibility(
-                                                  visible: focusController.value*4 > 0.25 ? true : false,
-                                                  child: Opacity(
-                                                    opacity: focusController.value*4 > 1 ? 1 : focusController.value*4,
-                                                    child: Center(
-                                                      child: Transform(
-                                                        transform: Matrix4.identity()
-                                                          ..scale(1.0),
-                                                        child: Builder(
-                                                            builder: (context) {
-                                                              List<Widget> lines = [];
-                                                              createGridLines(
-                                                                  gridSize, gridSize, 3, 3, lines,
-                                                                  Colors.lightBlueAccent, animationController,
-                                                                  thickness: 3);
-                                                              return Container(
-                                                                height: gridSize,
-                                                                width: gridSize,
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(20),
-                                                                    gradient: const LinearGradient(
-                                                                        begin: Alignment.topLeft,
-                                                                        end: Alignment.bottomRight,
-                                                                        colors: [Colors.purple, Colors.green]
-                                                                    )
-                                                                ),
-                                                                child: Stack(
-                                                                  children: [
-                                                                    ...lines,
-                                                                    GridView.builder(
-                                                                        gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                                                                        itemCount: 9,
-                                                                        padding: EdgeInsets.zero,
-                                                                        physics: const NeverScrollableScrollPhysics(),
-                                                                        shrinkWrap: true,
-                                                                        itemBuilder: (context, index){
-                                                                          return GestureDetector(
-                                                                            behavior: HitTestBehavior.opaque,
-                                                                            onTap: () async{
-                                                                              if (selectedIndex == -1){
-                                                                                setState(() {
-                                                                                  selectedIndex = -1;
-                                                                                });
-                                                                                await focusController.reverse();
-                                                                                return;
-                                                                              }
-                                                                              if (controller.isMyTurn && controller.state == GameState.started){
-                                                                                if (nextGridPlay == -1 || (controller.nineWins[nextGridPlay] == -1 && selectedIndex == nextGridPlay)
-                                                                                || (controller.nineWins[selectedIndex] == -1 && controller.nineWins[nextGridPlay] != -1)){
-                                                                                  if (selectedIndex != -1){
-                                                                                    final resp = controller.setManualMove((selectedIndex, index), myPlay: true);
-
-                                                                                    if (resp != null){
-                                                                                      socket.emitWithAck('gameListener', resp, ack: (data){
-                                                                                        // nothin
-                                                                                      });
-                                                                                    }
+                                                        ..scale(0.3 + (focusController.value * 0.7)),
+                                                      alignment: startFrom,
+                                                      child: Visibility(
+                                                        visible: focusController.value*4 > 0.25 ? true : false,
+                                                        child: Opacity(
+                                                          opacity: focusController.value*4 > 1 ? 1 : focusController.value*4,
+                                                          child: Center(
+                                                            child: Builder(
+                                                                builder: (context) {
+                                                                  List<Widget> lines = [];
+                                                                  createGridLines(
+                                                                      gridSize, gridSize, 3, 3, lines,
+                                                                      Colors.lightBlueAccent, animationController,
+                                                                      thickness: 3);
+                                                                  return Container(
+                                                                    height: gridSize,
+                                                                    width: gridSize,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(20),
+                                                                        gradient: const LinearGradient(
+                                                                            begin: Alignment.topLeft,
+                                                                            end: Alignment.bottomRight,
+                                                                            colors: [Colors.purple, Colors.green]
+                                                                        )
+                                                                    ),
+                                                                    child: Stack(
+                                                                      children: [
+                                                                        ...lines,
+                                                                        GridView.builder(
+                                                                            gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                                                                            itemCount: 9,
+                                                                            padding: EdgeInsets.zero,
+                                                                            physics: const NeverScrollableScrollPhysics(),
+                                                                            shrinkWrap: true,
+                                                                            itemBuilder: (context, index){
+                                                                              return GestureDetector(
+                                                                                behavior: HitTestBehavior.opaque,
+                                                                                onTap: () async{
+                                                                                  if (selectedIndex == -1){
                                                                                     setState(() {
                                                                                       selectedIndex = -1;
                                                                                     });
-                                                                                    await Future.delayed(const Duration(milliseconds: 400));
                                                                                     await focusController.reverse();
-                                                                                  }else{
-                                                                                    print('??');
+                                                                                    return;
                                                                                   }
-                                                                                }
+                                                                                  if (gameController?.isMyTurn && gameController?.state == GameState.started){
+                                                                                    if (nextGridPlay == -1 || (gameController?.nineWins[nextGridPlay] == -1 && selectedIndex == nextGridPlay)
+                                                                                    || (gameController?.nineWins[selectedIndex] == -1 && gameController?.nineWins[nextGridPlay] != -1)){
+                                                                                      if (selectedIndex != -1){
+                                                                                        final resp = gameController?.setManualMove((selectedIndex, index), myPlay: true);
 
-                                                                              }
+                                                                                        if (resp != null){
+                                                                                          socket.emitWithAck('gameListener', resp, ack: (data){
+                                                                                            // nothin
+                                                                                          });
+                                                                                        }
+                                                                                        setState(() {
+                                                                                          selectedIndex = -1;
+                                                                                        });
+                                                                                        await Future.delayed(const Duration(milliseconds: 400));
+                                                                                        await focusController.reverse();
+                                                                                      }else{
+                                                                                        print('??');
+                                                                                      }
+                                                                                    }
 
-                                                                            },
-                                                                            child: focusedGrid.isNotEmpty ? Container(
-                                                                              margin: const EdgeInsets.all(10),
-                                                                              child: focusedGrid[index] == 0 ? myCharacter :
-                                                                              focusedGrid[index] == 1 ? opponentCharacter : Container(),
-                                                                            ) : Container(),
-                                                                          );
-                                                                        }),
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            }
+                                                                                  }
+
+                                                                                },
+                                                                                child: focusedGrid.isNotEmpty ? Container(
+                                                                                  margin: const EdgeInsets.all(10),
+                                                                                  child: focusedGrid[index] == 0 ? myCharacter :
+                                                                                  focusedGrid[index] == 1 ? opponentCharacter : Container(),
+                                                                                ) : Container(),
+                                                                              );
+                                                                            }),
+                                                                      ],
+                                                                    ),
+                                                                  );
+                                                                }
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
+                                                  ],
+                                                )
+                                            ),
+                                          );
+                                        }
                                       ),
                                     ),
-                                    SafeArea(
-                                      child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: ElevatedButton(
-                                          onPressed: (){
-                                            setState(() {});
-                                          },
-                                          child: const Text('RESET'),
+                                    SizedBox(height: 1.h),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: ValueListenableBuilder(
+                                              valueListenable: _progress,
+                                              builder: (context, progress, child) {
+                                                return gameController?.myConnection == GameConn.offline ?
+                                                Padding(
+                                                  padding: const EdgeInsets.all(10.0),
+                                                  child: LinearProgressIndicator(
+                                                    color: Colors.purple,
+                                                    backgroundColor: Colors.black,
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                )
+                                                    : AnimatedOpacity(
+                                                  duration: const Duration(milliseconds: 300),
+                                                  opacity: (gameController?.isMyTurn && gameController?.winner == GameWinner.none)
+                                                      ? progress > 0 ? 1 : 0 : 0,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(10),
+                                                    child: LinearPercentIndicator(
+                                                      animation: true,
+                                                      animateFromLastPercent: true,
+                                                      animationDuration: 600,
+                                                      progressColor: Colors.purple,
+                                                      backgroundColor: Colors.black,
+                                                      percent: (!gameController?.isMyTurn) ? 1 : progress,
+                                                      barRadius: const Radius.circular(20),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
                                         ),
-                                      ),
-                                    )
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: AnimatedContainer(
+                                              duration: const Duration(milliseconds: 300),
+                                              height: 6.h,
+                                              padding: EdgeInsets.symmetric(vertical: 2.w, horizontal: 3.w),
+                                              decoration: BoxDecoration(
+                                                  border: gameController?.isMyTurn ? Border.all(color: colorLightYellow, width: 0.5.w): null,
+                                                  borderRadius: BorderRadius.circular(25.sp),
+                                                  gradient: LinearGradient(
+                                                      begin: Alignment.topLeft,
+                                                      end: Alignment.bottomRight,
+                                                      colors: gameController?.isMyTurn ?
+                                                      [Colors.deepOrange, colorPurple]
+                                                          : [Colors.deepOrange.shade900, Colors.deepOrange.shade900]
+                                                  )
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  AspectRatio(aspectRatio: 1, child: opponentCharacter),
+                                                  SizedBox(width: 10.w),
+                                                  Text('YOU', style: TextStyle(
+                                                      fontSize: 11.sp,
+                                                      fontWeight: FontWeight.w800,
+                                                      color: !gameController?.isMyTurn ? Colors.grey : Colors.black),),
+                                                ],
+                                              )),
+                                        ),
+                                      ],
+                                    ),
                                   ],
-                                );
-                              }
+                                ),
+                              ),
+                              SafeArea(
+                                child: Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: ElevatedButton(
+                                    onPressed: (){
+                                      setState(() {});
+                                    },
+                                    child: const Text('RESET'),
+                                  ),
+                                ),
+                              )
+                            ],
                           );
                         }
-                      ),
                     ))
                   ,
                 ),
                 SafeArea(
                   child: IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        nineGames.clear();
+                        Navigator.of(context).pop();
+                      },
                       icon: Icon(CupertinoIcons.left_chevron)
                   ),
                 ),
@@ -431,6 +524,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
     });
 
     socket.on('gameConnection', (data) {
+      print('connection: $data');
       if (data['type'] == 'disconnect'){
         setState(() {
           oppConnected = false;
@@ -471,7 +565,10 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
       if (mounted){
         gotDisconnected = true;
         if (gameController != null &&
-            gameController!.hasListeners) gameController!.gotOffline();
+            gameController!.hasListeners) {
+          print('runn success');
+          gameController!.gotOffline();
+        }
       }
     });
 
@@ -519,7 +616,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
           currentState: currentState,
           uid: uid,
           gridLength: 9);
-      nineGames = List<Widget>
+      nineGames = List<ClassicGameModule>
           .generate(9, (index) => ClassicGameModule(
           controller: gameController!, socket: socket,
           isNine: true,
@@ -588,11 +685,12 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
           return;
         }
         if (gameController!.state == GameState.paused){
+          gameController?.addExtraTime(500);
           return;
         }
-        if (gameController!.timeout == null && _progress != 0) {
+        if (gameController!.timeout == null && _progress.value != 0) {
           setState(() {
-            _progress = 0;
+            _progress.value = 0;
           });
         }else{
           final now = DateTime.now();
@@ -600,7 +698,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
             setState(() {
 
               final perc = gameController!.timeout!.difference(now).inSeconds / Const.nineRoundDuration;
-              _progress = perc > 1 ? 1 : perc < 0 ? 0 : perc;
+              _progress.value = perc > 1 ? 1 : perc < 0 ? 0 : perc;
             });
           }else{
             if (gameController!.isMyTurn && mounted){
@@ -612,13 +710,196 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
               }
             }
             setState(() {
-              _progress = 0;
+              _progress.value = 0;
             });
           }
         }
       }
 
     });
+  }
+
+  Widget viewMiddleWidget(GameState value){
+    switch (value){
+      case GameState.starting:
+      case GameState.waiting:
+      case GameState.connecting:
+        return Column(
+        key: Key('Classdj2!###kjds'),
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          value == GameState.connecting ? const Text("Connecting...")
+              : value == GameState.starting ? Text("Starting in $gameStartsIn..")
+              : const Text("Searching for an opponent.."),
+          SizedBox(height: 30),
+          SizedBox(
+              width: 50.w,
+              child: LoadingWidget(circular: true, scaleFactor: 12))
+        ],
+      );
+      case GameState.ended:
+        return gameEndDialog();
+
+      default: return Text('1Should not appear');
+    }
+
+  }
+  Widget StartingSpeedMatch(){
+    return Container(
+      width: 80.w,
+      padding: EdgeInsets.all(6.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+            colors: [
+              Colors.purple,
+              colorPurple
+            ]
+        ),
+        boxShadow: [
+          BoxShadow(
+              color: colorDarkBlue.withOpacity(0.5),
+              offset: Offset(3, 3),
+              spreadRadius: 1,
+              blurRadius: 3)
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          const Text(
+            "The Match Ended With Draw!",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 1.h),
+          Text(
+            "Starting Speed Match!",
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.w700
+            ),
+          ),
+          Text(
+            "$gameStartsIn...",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+            ),
+          ),
+          LinearPercentIndicator(
+            animationDuration: 1000,
+            animation: true,
+            animateFromLastPercent: true,
+            percent: gameStartsIn/3,
+            backgroundColor: colorPurple,
+            progressColor: colorDeepOrange,
+            barRadius: Radius.circular(20),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget gameEndDialog(){
+    return Container(
+      width: 80.w,
+      padding: EdgeInsets.all(6.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+            colors: [
+              Colors.purple,
+              colorPurple
+            ]
+        ),
+        boxShadow: [
+          BoxShadow(
+              color: colorDarkBlue.withOpacity(0.5),
+              offset: Offset(3, 3),
+              spreadRadius: 1,
+              blurRadius: 3)
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            "Game Ended",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 1.h),
+          Text(
+            gameController?.iWon ? "You Won !" : "You Lost !",
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 35.0,
+                fontWeight: FontWeight.w700
+            ),
+          ),
+          SizedBox(height: 3.h),
+          GameButton(
+            height: 6.h,
+            baseDecoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: gameController?.iWon ?
+                [colorDeepOrange, colorDeepOrange] :
+                [Colors.red, colorDeepOrange],
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            topDecoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors:  !gameController?.iWon ?
+                [colorDeepOrange, colorDeepOrange] :
+                [colorLightYellow, colorDeepOrange],
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            onPressed: (){},
+            aspectRatio: 3/1,
+            enableShimmer: false,
+            borderRadius: BorderRadius.circular(10),
+            child: Center(
+                child: Text(gameController?.iWon ? 'Claim Reward' : 'Back To Home',
+                  style: TextStyle(color: Colors.black),)),
+          )
+        ],
+      ),
+    );
+  }
+
+  Alignment setStartPoint(int index){
+    late Alignment ret;
+    switch(index){
+      case 0 : ret = Alignment.topLeft;
+      break;
+      case 1 : ret = Alignment.topCenter;
+      break;
+      case 2 : ret = Alignment.topRight;
+      break;
+      case 3 : ret = Alignment.centerLeft;
+      break;
+      case 4 : ret = Alignment.center;
+      break;
+      case 5 : ret = Alignment.centerRight;
+      break;
+      case 6 : ret = Alignment.bottomLeft;
+      break;
+      case 7 : ret = Alignment.bottomCenter;
+      break;
+      case 8 : ret = Alignment.bottomRight;
+      break;
+    }
+    return ret;
   }
 }
 

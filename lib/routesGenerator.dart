@@ -9,6 +9,7 @@ import 'package:tictactoe/Tournaments/tournamentHome.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/charactersPage.dart';
 import 'package:tictactoe/ClassicGame/classicGameMain.dart';
+import 'package:tictactoe/coinToss.dart';
 import 'package:tictactoe/difficultySelect.dart';
 import 'package:tictactoe/nineGame/nineGameMain.dart';
 import 'package:tictactoe/ClassicGame/classicGameModule.dart';
@@ -58,6 +59,7 @@ class Routes{
   static const experimentalGameMain3 = '/experimentalGameMain3';
   static const gameModeSelection = '/gameModeSelection';
   static const powersCharacterSelect = '/powersCharacterSelect';
+  static const coinToss = '/coinToss';
 
 
 }
@@ -97,6 +99,7 @@ class RoutesGen{
       case Routes.classicTournamentRoom: return GamePageRoute(builder: (_) => ClassicTournamentRoom());
       case Routes.powersCharacterSelect: return GamePageRoute(builder: (_) => CharacterSelectPage());
       case '/characters': return GamePageRoute(builder: (_) => CharactersPage());
+      case Routes.coinToss: return GamePageRoute(builder: (_) => CoinToss(onEnd: (){},));
 
       default: return GamePageRoute(builder: (_) => Scaffold(body: Text('ERROR')));
     }

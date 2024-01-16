@@ -102,6 +102,17 @@ class _CharactersPageState extends State<CharactersPage> {
                       ),
                     );
                   }),
+              GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3),
+                  itemCount: 10,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return AspectRatio(
+                        aspectRatio: 1,
+                        child: Sprites.badgeOf[Badges.values[index]]);
+                  })
             ],
           ),
         ),
