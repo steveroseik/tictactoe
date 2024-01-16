@@ -795,3 +795,59 @@ class GameButton extends StatelessWidget {
   }
 }
 
+
+class GameButton2 extends StatelessWidget {
+  final BoxDecoration? baseDecoration;
+  final BoxDecoration? topDecoration;
+  late BorderRadius borderRadius;
+  late Color color;
+  final Gradient? gradient;
+  final Widget? child;
+  Function()? onPressed;
+  final Duration? animationDuration;
+
+  final double? height;
+  final double? width;
+  final double? aspectRatio;
+
+  GameButton2(
+      {super.key,
+      this.baseDecoration,
+      this.topDecoration,
+      BorderRadius? borderRadius,
+      Color? color,
+      this.gradient,
+      this.child,
+      this.onPressed,
+      this.animationDuration,
+      this.height,
+      this.width,
+      this.aspectRatio}) {
+    this.borderRadius = borderRadius ?? BorderRadius.circular(10);
+    this.color = color ?? Colors.black;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedLayerButton(
+      baseDecoration: baseDecoration ??
+          BoxDecoration(borderRadius: borderRadius, color: color),
+      topDecoration: topDecoration ??
+          BoxDecoration(borderRadius: borderRadius, color: color),
+      buttonHeight: height,
+      buttonWidth: width,
+      aspectRatio: aspectRatio,
+      animationDuration: animationDuration ?? const Duration(milliseconds: 100),
+      animationCurve: Curves.easeIn,
+      onClick: onPressed,
+      topLayerChild: Stack(
+        alignment: Alignment.center,
+        children: [
+          child ?? Container(),
+        ],
+      ),
+    );
+  }
+}
+
+
