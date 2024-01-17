@@ -565,66 +565,65 @@ class Sprites{
   };
 
   static Map<Badges, SpriteWidget> badgeOf = {
-    Badges.rookie: SpriteWidget.asset(
+    Badges.champion: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(0, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.novice: SpriteWidget.asset(
+    Badges.legend: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.apprentice: SpriteWidget.asset(
+    Badges.grandmaster: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128 * 2, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.ascendant: SpriteWidget.asset(
+    Badges.master: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128 * 3, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.expert: SpriteWidget.asset(
+    Badges.elite: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128 * 4, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.elite: SpriteWidget.asset(
+    Badges.expert: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128 * 5, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.master: SpriteWidget.asset(
+    Badges.ascendant: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128 * 6, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.grandmaster: SpriteWidget.asset(
+    Badges.apprentice: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128 * 7, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.legend: SpriteWidget.asset(
+    Badges.novice: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128 * 8, 0),
       srcSize: Vector2(128, 128),
     ),
 
-    Badges.champion: SpriteWidget.asset(
+    Badges.rookie: SpriteWidget.asset(
       path: 'tier_badges.png',
       srcPosition: Vector2(128 * 9, 0),
       srcSize: Vector2(128, 128),
     ),
-
   };
 
   static Map<Coins, SpriteAnimationWidget> coinOf = {
@@ -649,6 +648,12 @@ class Sprites{
       textureSize: Vector2(120,120),
       stepTime: 0.1,
     )),
+  };
+
+  static Map<Coins, String> staticCoinOf = {
+    Coins.bronze : 'assets/static_bronze.png',
+    Coins.silver : 'assets/static_silver.png',
+    Coins.gold :'assets/static_gold.png',
   };
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/PowersGame/Characters/core.dart';
@@ -49,113 +50,143 @@ class _MultiplayerSingleSelectPageState extends State<MultiplayerSingleSelectPag
                   SizedBox(
                     height: 5.h,
                   ),
-                  const Text(
-                    "Classic",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 26.0,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(Routes.classicGameMain);
-                    },
-                    child: Container(
-                      width: 98.w,
-                      padding: EdgeInsets.all(6.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                              color: colorDarkBlue.withOpacity(0.5),
-                              offset: Offset(3, 3),
-                              spreadRadius: 1,
-                              blurRadius: 3)
-                        ],
-                        color: colorDarkBlue.withOpacity(0.8),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(height: 1.h),
-                          GameButton(
-                              onPressed: (){},
-                              height: 10.h,
-                              baseDecoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        Colors.deepPurple.shade800,
-                                        Colors.black
-                                      ]
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Routes.classicGameMain);
+                        },
+                        child: Container(
+                          width: 98.w,
+                          padding: EdgeInsets.all(6.w),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: colorDarkBlue.withOpacity(0.5),
+                                  offset: Offset(3, 3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3)
+                            ],
+                            color: colorDarkBlue.withOpacity(0.8),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 6.h,
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Sprites.badgeOf[Badges.rookie],),
                                   ),
-                                borderRadius: BorderRadius.circular(15)
-                              ),
-                              topDecoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        Colors.deepPurple,
-                                        Colors.black
-                                      ]
+                                  Expanded(
+                                    child: LinearPercentIndicator(
+                                      percent: 0.5,
+                                      backgroundColor: Colors.blueGrey.shade700,
+                                      barRadius: const Radius.circular(20),
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(15)
+                                  Container(
+                                    height: 7.h,
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Sprites.badgeOf[Badges.apprentice],),
+                                  ),
+                                ],
                               ),
-                              borderRadius: BorderRadius.circular(15),
-                              aspectRatio: 4/1,
-                              child: DefaultTextStyle.merge(
-                                style: TextStyle(
-                                    color: Colors.white,),
-                                child: Padding(
-                                  padding: EdgeInsets.all(10),
+                              SizedBox(height: 1.h),
+                              GameButton(
+                                  onPressed: (){},
+                                  baseDecoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                          colors: [
+                                            Colors.deepPurple.shade800,
+                                            Colors.black
+                                          ]
+                                      ),
+                                      borderRadius: BorderRadius.circular(15)
+                                  ),
+                                  topDecoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                          colors: [
+                                            Colors.deepPurple,
+                                            Colors.black
+                                          ]
+                                      ),
+                                      borderRadius: BorderRadius.circular(15)
+                                  ),
+                                  borderRadius: BorderRadius.circular(15),
+                                  aspectRatio: 4/1,
+                                  width: 98.w,
+                                  child: DefaultTextStyle.merge(
+                                    style: TextStyle(
+                                      color: Colors.white,),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(3),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(1.w),
+                                            child: AspectRatio(
+                                              aspectRatio: 1,
+                                              child: Sprites.badgeOf[Badges.apprentice],),
+                                          ),
+                                          Text('Tiered Match',
+                                          style: TextStyle(fontSize: 20),),
+                                          Spacer(),
+                                          Text('1000'),
+                                          Container(
+                                            height: 6.h,
+                                            padding: EdgeInsets.all(3.w),
+                                            child: AspectRatio(
+                                              aspectRatio: 1,
+                                              child: Sprites.coinOf[Coins.silver],),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                              SizedBox(height: 2.h),
+                              ElevatedButton(
+                                  onPressed: (){},
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.black,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15)
+                                      )
+                                  ),
                                   child: Row(
                                     children: [
-                                      Container(
-                                        height: 6.h,
-                                        padding: EdgeInsets.all(1.w),
-                                        child: AspectRatio(
-                                          aspectRatio: 1,
-                                          child: Sprites.badgeOf[Badges.apprentice],),
-                                      ),
-                                      Text('Tiered Match'),
+                                      Text('Random Match'),
                                       Spacer(),
-                                      Text('1000'),
+                                      Text('500'),
                                       Container(
                                         height: 6.h,
                                         padding: EdgeInsets.all(3.w),
                                         child: AspectRatio(
                                           aspectRatio: 1,
-                                          child: Sprites.coinOf[Coins.silver],),
+                                          child: Sprites.coinOf[Coins.bronze],),
                                       )
                                     ],
-                                  ),
-                                ),
-                              )),
-                          SizedBox(height: 2.h),
-                          ElevatedButton(
-                              onPressed: (){},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)
-                                )
-                              ),
-                              child: Row(
-                                children: [
-                                  Text('Random Match'),
-                                  Spacer(),
-                                  Text('500'),
-                                  Container(
-                                    height: 6.h,
-                                    padding: EdgeInsets.all(3.w),
-                                    child: AspectRatio(
-                                        aspectRatio: 1,
-                                    child: Sprites.coinOf[Coins.bronze],),
-                                  )
-                                ],
-                              ))
-                        ],
+                                  ))
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                          top: -40,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: Image.asset(
+                                'assets/classic.png',
+                            width: 60.w,),
+                          )),
+                    ],
                   ),
                   SizedBox(
                     height: 5.h,
