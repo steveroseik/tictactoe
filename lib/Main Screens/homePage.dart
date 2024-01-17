@@ -66,8 +66,7 @@ class _HomePageState extends State<HomePage> {
           SafeArea(
             child: Align(
               alignment: Alignment.topCenter,
-              child: Container(
-                height: 10.h,
+              child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -78,24 +77,39 @@ class _HomePageState extends State<HomePage> {
                         ...gameCoinList()
                       ],
                     ),
-                    // Row(
-                    //   children: [
-                    //     AnimatedButton(
-                    //         onPressed: () {},
-                    //         width: 45,
-                    //         height: 45,
-                    //         color: Colors.yellow.shade800,
-                    //         child: IconButton(
-                    //             onPressed: () {},
-                    //             icon: Icon(
-                    //               Icons.settings,
-                    //               color: Colors.white,
-                    //               shadows: [
-                    //                 Shadow(color: Colors.yellow, blurRadius: 30)
-                    //               ],
-                    //             ))),
-                    //   ],
-                    // )
+                    SizedBox(height: 2.h),
+                    Row(
+                      children: [
+                        AnimatedButton(
+                          child: Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                          onPressed: () {
+                            dataEngine.signOut();
+                          },
+                          height: 50,
+                          width: 50,
+                          color: Colors.grey,
+                        ),
+                        Spacer(),
+                        AnimatedButton(
+                            onPressed: () {},
+                            width: 45,
+                            height: 45,
+                            color: Colors.yellow.shade800,
+                            child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.settings,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(color: Colors.yellow, blurRadius: 30)
+                                  ],
+                                ))),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -106,7 +120,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 20.h,
+                  height: 25.h,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -478,83 +492,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               )),
                         ])),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    //CarouselSlider(items: items, options: options),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-
-                    // GameButton(
-                    //   onPressed: () {
-                    //     print('tapped');
-                    //   },
-                    //   borderRadius: BorderRadius.circular(15),
-                    //   aspectRatio: 4 / 1,
-                    //   width: 70.w,
-                    //   baseDecoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(15),
-                    //       gradient: LinearGradient(
-                    //           begin: Alignment.topLeft,
-                    //           end: Alignment.bottomRight,
-                    //           colors: [Colors.green.shade800, colorDarkBlue])),
-                    //   topDecoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(15),
-                    //       gradient: const LinearGradient(
-                    //           begin: Alignment.topLeft,
-                    //           end: Alignment.bottomRight,
-                    //           colors: [Colors.green, colorDarkBlue])),
-                    //   child: const Center(
-                    //     child: Text(
-                    //       'Challenges', // add your text here
-                    //       style: TextStyle(
-                    //         color: Colors.white,
-                    //       ),
-                    //       textAlign: TextAlign.center,
-                    //     ),
-                    //   ),
-                    // ),
-                    // WinButton(disconnected: false),
-                    // LoseButton(),
-                    // DrawButton(),
                   ],
-                ),
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      children: [
-                        // AnimatedButton(
-                        //   child: Text(
-                        //     'Characters', // add your text here
-                        //     style: TextStyle(
-                        //       color: Colors.white,
-                        //     ),
-                        //   ),
-                        //   width: 100,
-                        //   onPressed: () {},
-                        // ),
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: AnimatedButton(
-                            child: Icon(
-                              Icons.logout,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                            onPressed: () {
-                              dataEngine.signOut();
-                            },
-                            height: 50,
-                            width: 50,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
               ],
             ),
