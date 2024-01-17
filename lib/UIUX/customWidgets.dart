@@ -1,10 +1,10 @@
 import 'dart:math';
+
 import 'package:animated_button/animated_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_dialogs/dialogs.dart';
 import 'package:neopop/widgets/shimmer/neopop_shimmer.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:simple_animated_button/elevated_layer_button.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
@@ -426,9 +426,14 @@ class LoadingWidget extends StatefulWidget {
   final bool? single;
   double scaleFactor = 1;
   late Color color;
-  LoadingWidget({super.key, required this.circular, this.single, double? scaleFactor, Color? color}){
-    this.scaleFactor = scaleFactor?? this.scaleFactor;
-    this.color = color?? colorPurple;
+  LoadingWidget(
+      {super.key,
+      required this.circular,
+      this.single,
+      double? scaleFactor,
+      Color? color}) {
+    this.scaleFactor = scaleFactor ?? this.scaleFactor;
+    this.color = color ?? colorPurple;
   }
 
   @override
@@ -448,9 +453,13 @@ class _LoadingWidgetState extends State<LoadingWidget>
   void initState() {
     super.initState();
     leftPattern = Image.asset('assets/patternXO.png',
-        scale: widget.scaleFactor, repeat: ImageRepeat.repeat, color: colorLightYellow);
+        scale: widget.scaleFactor,
+        repeat: ImageRepeat.repeat,
+        color: colorLightYellow);
     rightPattern = Image.asset('assets/patternXO.png',
-        scale: widget.scaleFactor, repeat: ImageRepeat.repeat, color: colorLightYellow);
+        scale: widget.scaleFactor,
+        repeat: ImageRepeat.repeat,
+        color: colorLightYellow);
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -459,16 +468,16 @@ class _LoadingWidgetState extends State<LoadingWidget>
     widget.circular
         ? null
         : _controller.addListener(() {
-      setState(() {
-        if (_controller.value == 1) {
-          // Swap the patterns when animation completes
-          final temp = leftPattern;
-          leftPattern = rightPattern;
-          rightPattern = temp;
-          _controller.reset();
-        }
-      });
-    });
+            setState(() {
+              if (_controller.value == 1) {
+                // Swap the patterns when animation completes
+                final temp = leftPattern;
+                leftPattern = rightPattern;
+                rightPattern = temp;
+                _controller.reset();
+              }
+            });
+          });
   }
 
   @override
@@ -484,59 +493,59 @@ class _LoadingWidgetState extends State<LoadingWidget>
         child: SizedBox(
           child: widget.circular
               ? ShaderMask(
-            blendMode: BlendMode.srcIn,
-            shaderCallback: (Rect bounds) => RadialGradient(
-              center: Alignment.center,
-              colors: [
-                widget.color,
-                widget.color.withOpacity(0.97),
-                widget.color.withOpacity(0.0),
-              ],
-            ).createShader(bounds),
-            child: Stack(
-              children: [
-                Center(
-                  child: RotationTransition(
-                    turns: Tween<double>(begin: 0, end: 1)
-                        .animate(_controller),
-                    child: Container(
-                        width: widget.single ?? false ? null : 600,
-                        child: leftPattern),
+                  blendMode: BlendMode.srcIn,
+                  shaderCallback: (Rect bounds) => RadialGradient(
+                    center: Alignment.center,
+                    colors: [
+                      widget.color,
+                      widget.color.withOpacity(0.97),
+                      widget.color.withOpacity(0.0),
+                    ],
+                  ).createShader(bounds),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: RotationTransition(
+                          turns: Tween<double>(begin: 0, end: 1)
+                              .animate(_controller),
+                          child: Container(
+                              width: widget.single ?? false ? null : 600,
+                              child: leftPattern),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          )
+                )
               : ShaderMask(
-            blendMode: BlendMode.xor,
-            shaderCallback: (Rect bounds) => RadialGradient(
-              center: Alignment.center,
-              colors: [colorBlue.withOpacity(0.5), colorBlue],
-            ).createShader(bounds),
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 0,
-                  top: -_controller.value * 600,
-                  child: Container(
-                    width: 600,
-                    height: 600,
-                    child: leftPattern,
+                  blendMode: BlendMode.xor,
+                  shaderCallback: (Rect bounds) => RadialGradient(
+                    center: Alignment.center,
+                    colors: [colorBlue.withOpacity(0.5), colorBlue],
+                  ).createShader(bounds),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        top: -_controller.value * 600,
+                        child: Container(
+                          width: 600,
+                          height: 600,
+                          child: leftPattern,
+                        ),
+                      ),
+                      // Right pattern initially just to the right of the left pattern
+                      Positioned(
+                        left: 0,
+                        top: (1 - _controller.value) * 600,
+                        child: Container(
+                          width: 600,
+                          height: 600,
+                          child: rightPattern,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                // Right pattern initially just to the right of the left pattern
-                Positioned(
-                  left: 0,
-                  top: (1 - _controller.value) * 600,
-                  child: Container(
-                    width: 600,
-                    height: 600,
-                    child: rightPattern,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -741,66 +750,65 @@ class GameButton extends StatelessWidget {
   final double? width;
   final double? aspectRatio;
 
-  GameButton({super.key, this.baseDecoration, this.topDecoration,
-    BorderRadius? borderRadius,
-    Color? color, Color? shimmerColor,
-    this.enableShimmer = true,
-    this.gradient,
-    this.child, this.onPressed,
-    this.animationDuration, this.shimmerDelayDuration,
-    this.shimmerAnimationDuration,
-    this.height, this.width, this.aspectRatio}){
-
-
-    this.borderRadius = borderRadius?? BorderRadius.circular(0);
-    this.color = color?? Colors.black;
-    this.shimmerColor = shimmerColor?? colorYellow.withOpacity(0.8);
+  GameButton(
+      {super.key,
+      this.baseDecoration,
+      this.topDecoration,
+      BorderRadius? borderRadius,
+      Color? color,
+      Color? shimmerColor,
+      this.enableShimmer = true,
+      this.gradient,
+      this.child,
+      this.onPressed,
+      this.animationDuration,
+      this.shimmerDelayDuration,
+      this.shimmerAnimationDuration,
+      this.height,
+      this.width,
+      this.aspectRatio}) {
+    this.borderRadius = borderRadius ?? BorderRadius.circular(0);
+    this.color = color ?? Colors.black;
+    this.shimmerColor = shimmerColor ?? colorYellow.withOpacity(0.8);
   }
 
   @override
   Widget build(BuildContext context) {
     return ElevatedLayerButton(
-      baseDecoration: baseDecoration?.copyWith(
-          borderRadius: borderRadius,
-          color: color
-      ) ?? BoxDecoration(
-          borderRadius: borderRadius,
-          color: color
-      ),
-      topDecoration: topDecoration?.copyWith(
-          borderRadius: borderRadius,
-          color: color
-      ) ?? BoxDecoration(
-          borderRadius: borderRadius,
-          color: color
-      ),
+      baseDecoration:
+          baseDecoration?.copyWith(borderRadius: borderRadius, color: color) ??
+              BoxDecoration(borderRadius: borderRadius, color: color),
+      topDecoration:
+          topDecoration?.copyWith(borderRadius: borderRadius, color: color) ??
+              BoxDecoration(borderRadius: borderRadius, color: color),
       buttonHeight: height,
       buttonWidth: width,
       aspectRatio: aspectRatio,
-      animationDuration: animationDuration?? const Duration(milliseconds: 100),
+      animationDuration: animationDuration ?? const Duration(milliseconds: 100),
       animationCurve: Curves.easeIn,
       onClick: onPressed,
       topLayerChild: Stack(
         alignment: Alignment.center,
         children: [
-          Positioned.fill(child: child?? Container()),
-          if (enableShimmer) Positioned.fill(
-            child: ClipRRect(
-              borderRadius: borderRadius,
-              child: NeoPopShimmer(
-                  shimmerColor: shimmerColor,
-                  duration: shimmerAnimationDuration?? const Duration(milliseconds: 1500),
-                  delay: shimmerDelayDuration?? const Duration(milliseconds: 2000),
-                  child:Container()
+          Positioned.fill(child: child ?? Container()),
+          if (enableShimmer)
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: borderRadius,
+                child: NeoPopShimmer(
+                    shimmerColor: shimmerColor,
+                    duration: shimmerAnimationDuration ??
+                        const Duration(milliseconds: 1500),
+                    delay: shimmerDelayDuration ??
+                        const Duration(milliseconds: 2000),
+                    child: Container()),
               ),
             ),
-          ),
         ],
       ),
     );
   }
 }
-
 
 class GameButton2 extends StatelessWidget {
   final BoxDecoration? baseDecoration;
@@ -846,14 +854,15 @@ class GameButton2 extends StatelessWidget {
       animationDuration: animationDuration ?? const Duration(milliseconds: 100),
       animationCurve: Curves.easeIn,
       onClick: onPressed,
-      topLayerChild: Stack(
-        alignment: Alignment.center,
-        children: [
-          child ?? Container(),
-        ],
+      topLayerChild: ClipRRect(
+        borderRadius: borderRadius,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            child ?? Container(),
+          ],
+        ),
       ),
     );
   }
 }
-
-

@@ -73,9 +73,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ...gameCoinList()
-                      ],
+                      children: [...gameCoinList()],
                     ),
                     SizedBox(height: 2.h),
                     Row(
@@ -122,200 +120,46 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 25.h,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GameButton2(
-                        onPressed: () {},
-                        borderRadius: BorderRadius.circular(10),
-                        aspectRatio: 1.5 / 1,
-                        width: 20.w,
-                        baseDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colorDarkBlue,
-                        ),
-                        topDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.lightBlueAccent,
-                                  Colors.lightBlue
-                                ])),
-                        child: Column(children: [
-                          Expanded(
-                              flex: 10,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                      Colors.deepPurple,
-                                      Colors.purple.shade800,
-                                    ])),
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.leaderboard_rounded,
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )),
-                        ])),
-                    SizedBox(
-                      width: 1.h,
-                    ),
-                    GameButton2(
-                        onPressed: () async {
-                          final token =
-                              await Authentication().getFacebookAccessToken();
-                          print(token?.token);
-                          final friends = await Authentication()
-                              .getFacebookFriends(token: token!.token);
-                          print(friends[0]);
-                        },
-                        borderRadius: BorderRadius.circular(10),
-                        aspectRatio: 1.5 / 1,
-                        width: 20.w,
-                        baseDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colorDarkBlue,
-                        ),
-                        topDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.lightBlueAccent,
-                                  Colors.lightBlue
-                                ])),
-                        child: Column(children: [
-                          Expanded(
-                              flex: 10,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                      Colors.lightBlueAccent,
-                                      Colors.lightBlue
-                                    ])),
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.group,
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )),
-                        ])),
-                    SizedBox(
-                      width: 1.h,
-                    ),
-                    GameButton2(
-                        onPressed: () {
-                          // Navigator.of(context).pushNamed(Routes.s);
-                        },
-                        borderRadius: BorderRadius.circular(10),
-                        aspectRatio: 1.5 / 1,
-                        width: 20.w,
-                        baseDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colorDarkBlue,
-                        ),
-                        topDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.lightBlueAccent,
-                                  Colors.lightBlue
-                                ])),
-                        child: Column(children: [
-                          Expanded(
-                              flex: 10,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                      Colors.green,
-                                      Colors.green.shade800,
-                                    ])),
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.shopping_cart_rounded,
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )),
-                        ])),
-                  ],
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
                 CarouselSlider(
                   carouselController: gameModesController,
                   options: CarouselOptions(
-                      viewportFraction: 0.8,
-                      aspectRatio: 16/10,
-                      enlargeFactor: 0.25,
-                      enlargeCenterPage: true,
-                      clipBehavior: Clip.none,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          currentModePage = index;
-                        });
-                      },
+                    viewportFraction: 0.8,
+                    aspectRatio: 16 / 10,
+                    enlargeFactor: 0.25,
+                    enlargeCenterPage: true,
+                    clipBehavior: Clip.none,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        currentModePage = index;
+                      });
+                    },
                   ),
-                  items: [
-                    ...gameModeItems()
-                  ],
+                  items: [...gameModeItems()],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List<Widget>.generate(3, (index)
-                  => GestureDetector(
-                    onTap: () => gameModesController.animateToPage(index),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      width: currentModePage == index ? 12.0 : 9.0,
-                      height: currentModePage == index ? 12.0 : 9.0,
-                      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black)
-                              .withOpacity(currentModePage == index ? 0.9 : 0.4)),
-                    ),
-                  )),
+                  children: List<Widget>.generate(
+                      3,
+                      (index) => GestureDetector(
+                            onTap: () =>
+                                gameModesController.animateToPage(index),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              width: currentModePage == index ? 12.0 : 9.0,
+                              height: currentModePage == index ? 12.0 : 9.0,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 4.0),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: (Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black)
+                                      .withOpacity(currentModePage == index
+                                          ? 0.9
+                                          : 0.4)),
+                            ),
+                          )),
                 ),
                 SizedBox(
                   height: 0.5.h,
@@ -326,67 +170,279 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: 2.h,
                     ),
-                    GameButton2(
-                        onPressed: () {
-                          print('tapped');
-                        },
-                        borderRadius: BorderRadius.circular(10),
-                        aspectRatio: 4 / 1,
-                        width: 70.w,
-                        baseDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colorDarkBlue,
-                        ),
-                        topDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.lightBlueAccent,
-                                  Colors.lightBlue
-                                ])),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                      child: Row(
+                        children: [
+                          GameButton2(
+                              onPressed: () {},
+                              borderRadius: BorderRadius.circular(10),
+                              aspectRatio: 1,
+                              width: 17.5.w,
+                              baseDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: colorDarkBlue,
+                              ),
+                              topDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: const LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.lightBlueAccent,
+                                        Colors.lightBlue
+                                      ])),
+                              child: Column(children: [
                                 Expanded(
-                                  flex: 10,
-                                  child: ClipRRect(
+                                    flex: 10,
                                     child: Container(
                                       decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                               colors: [
-                                            colorDarkBlue,
+                                            Colors.blue,
                                             Colors.blue.shade800,
                                           ])),
-                                      child: NeoPopShimmer(
-                                        shimmerColor: colorLightGrey.withOpacity(0.8),
-                                        duration: const Duration(milliseconds: 1500),
-                                        delay: const Duration(milliseconds: 2000),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          AspectRatio(
+                                            aspectRatio: 1,
+                                            child: Image.asset(
+                                              'assets/icons8-ranking-48.png',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ])),
+                          Spacer(),
+                          GameButton2(
+                              onPressed: () {
+                                print('tapped');
+                              },
+                              borderRadius: BorderRadius.circular(10),
+                              aspectRatio: 4 / 1,
+                              width: 70.w,
+                              baseDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: colorDarkBlue,
+                              ),
+                              topDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: const LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.lightBlueAccent,
+                                        Colors.lightBlue
+                                      ])),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Column(children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        flex: 10,
+                                        child: ClipRRect(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                    colors: [
+                                                  colorDarkBlue,
+                                                  Colors.blue.shade800,
+                                                ])),
+                                            child: NeoPopShimmer(
+                                              shimmerColor: colorLightGrey
+                                                  .withOpacity(0.8),
+                                              duration: const Duration(
+                                                  milliseconds: 1500),
+                                              delay: const Duration(
+                                                  milliseconds: 2000),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 2, 10, 2),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      'Tournaments', // add your text here
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      'Active: 63', // add your text here
+                                                      style: TextStyle(
+                                                        color: Colors.yellow,
+                                                      ),
+                                                      textAlign: TextAlign.end,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                      flex: 10,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                colors: [
+                                              Colors.lightBlue,
+                                              Colors.lightBlue.shade800,
+                                            ])),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.fromLTRB(4, 2, 4, 2),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 2, 8, 2),
                                           child: Row(
                                             children: [
-                                              Text(
-                                                'Tournaments', // add your text here
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                                textAlign: TextAlign.start,
+                                              Icon(
+                                                Icons.star,
+                                                color: Colors.white,
                                               ),
                                               Spacer(),
                                               Text(
-                                                'Time Left: 2h 6m 32s', // add your text here
+                                                'Daily Tournament!', // add your text here
                                                 style: TextStyle(
-                                                  color: Colors.yellow,
+                                                  color: Colors.white,
+                                                  fontSize: 25,
+                                                ),
+                                                textAlign: TextAlign.end,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      )),
+                                ]),
+                              )),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                      child: Row(
+                        children: [
+                          GameButton2(
+                              onPressed: () async {
+                                final token = await Authentication()
+                                    .getFacebookAccessToken();
+                                print(token?.token);
+                                final friends = await Authentication()
+                                    .getFacebookFriends(token: token!.token);
+                                print(friends[0]);
+                              },
+                              borderRadius: BorderRadius.circular(10),
+                              aspectRatio: 1,
+                              width: 17.5.w,
+                              baseDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: colorDarkBlue,
+                              ),
+                              topDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: const LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.lightBlueAccent,
+                                        Colors.lightBlue
+                                      ])),
+                              child: Column(children: [
+                                Expanded(
+                                    flex: 10,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                            Colors.green,
+                                            Colors.green.shade800
+                                          ])),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          AspectRatio(
+                                            aspectRatio: 1,
+                                            child: Image.asset(
+                                              'assets/icons8-friends-64.png',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ])),
+                          Spacer(),
+                          GameButton2(
+                              onPressed: () {
+                                print('tapped');
+                              },
+                              borderRadius: BorderRadius.circular(10),
+                              aspectRatio: 4 / 1,
+                              width: 70.w,
+                              baseDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: colorDarkBlue,
+                              ),
+                              topDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: const LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.lightBlueAccent,
+                                        Colors.lightBlue
+                                      ])),
+                              child: Column(children: [
+                                Expanded(
+                                    flex: 10,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                            Colors.lightGreen,
+                                            Colors.lightGreen.shade800,
+                                          ])),
+                                      child: NeoPopShimmer(
+                                        shimmerColor:
+                                            Colors.yellow.withOpacity(0.8),
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                        delay:
+                                            const Duration(milliseconds: 2000),
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 2, 8, 2),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Play With Friends', // add your text here
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 25,
                                                 ),
                                                 textAlign: TextAlign.end,
                                               )
@@ -394,105 +450,257 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                                flex: 10,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                        Colors.lightBlue,
-                                        Colors.lightBlue.shade800,
-                                      ])),
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.white,
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          'Battle Royale!', // add your text here
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 25,
-                                          ),
-                                          textAlign: TextAlign.end,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                          ]),
-                        )),
-                    SizedBox(
-                      height: 2.h,
+                                    )),
+                              ])),
+                        ],
+                      ),
                     ),
-                    GameButton2(
-                        onPressed: () {
-                          print('tapped');
-                        },
-                        borderRadius: BorderRadius.circular(10),
-                        aspectRatio: 4 / 1,
-                        width: 70.w,
-                        baseDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colorDarkBlue,
-                        ),
-                        topDecoration: BoxDecoration(
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                      child: Row(children: [
+                        GameButton2(
+                            onPressed: () {
+                              // Navigator.of(context).pushNamed(Routes.s);
+                            },
                             borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.lightBlueAccent,
-                                  Colors.lightBlue
-                                ])),
-                        child: Column(children: [
-                          Expanded(
-                              flex: 10,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                      Colors.lightGreen,
-                                      Colors.lightGreen.shade800,
+                            aspectRatio: 1,
+                            width: 17.5.w,
+                            baseDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: colorDarkBlue,
+                            ),
+                            topDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                gradient: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.lightBlueAccent,
+                                      Colors.lightBlue
                                     ])),
-                                child: NeoPopShimmer(
-                                  shimmerColor: Colors.yellow.withOpacity(0.8),
-                                  duration: const Duration(milliseconds: 1500),
-                                  delay: const Duration(milliseconds: 2000),
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                            child: Column(children: [
+                              Expanded(
+                                  flex: 10,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                          Colors.yellow,
+                                          Colors.yellow.shade800,
+                                        ])),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          'Play With Friends', // add your text here
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 25,
+                                        AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Image.asset(
+                                            'assets/icons8-store-48.png',
                                           ),
-                                          textAlign: TextAlign.end,
-                                        )
+                                        ),
                                       ],
                                     ),
-                                  ),
+                                  )),
+                            ])),
+                        Spacer(),
+                        GameButton2(
+                            onPressed: () {
+                              print('tapped');
+                            },
+                            borderRadius: BorderRadius.circular(10),
+                            aspectRatio: 2 / 1,
+                            width: 70.w,
+                            baseDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: colorDarkBlue,
+                            ),
+                            topDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                gradient: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.lightBlueAccent,
+                                      Colors.lightBlue
+                                    ])),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Column(children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      flex: 10,
+                                      child: ClipRRect(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                  colors: [
+                                                Colors.orange,
+                                                Colors.orange.shade800,
+                                              ])),
+                                          child: NeoPopShimmer(
+                                            shimmerColor:
+                                                colorLightGrey.withOpacity(0.8),
+                                            duration: const Duration(
+                                                milliseconds: 1500),
+                                            delay: const Duration(
+                                                milliseconds: 2000),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 2, 10, 2),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'Challenges', // add your text here
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                    textAlign: TextAlign.start,
+                                                  ),
+                                                  Spacer(),
+                                                  Text(
+                                                    '2/5 Complete!', // add your text here
+                                                    style: TextStyle(
+                                                      color: Colors.yellow,
+                                                    ),
+                                                    textAlign: TextAlign.end,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              )),
-                        ])),
+                                Expanded(
+                                    flex: 10,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                            Colors.yellow.shade600,
+                                            Colors.yellow.shade800,
+                                          ])),
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8, 2, 8, 2),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Win 5 matches in a row', // add your text here
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 25,
+                                                  ),
+                                                  textAlign: TextAlign.end,
+                                                ),
+                                              ],
+                                            ),
+                                            // Text(
+                                            //   'Reward:',
+                                            //   style: TextStyle(
+                                            //       color: Colors.white,
+                                            //       fontSize: 20),
+                                            //   textAlign: TextAlign.start,
+                                            // ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Container(
+                                                  height: 6.h,
+                                                  padding: EdgeInsets.all(3.w),
+                                                  child: Row(
+                                                    children: [
+                                                      AspectRatio(
+                                                        aspectRatio: 1,
+                                                        child: Sprites.coinOf[
+                                                            Coins.bronze],
+                                                      ),
+                                                      SizedBox(
+                                                        width: 1.w,
+                                                      ),
+                                                      Text(
+                                                        '50',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 6.h,
+                                                  padding: EdgeInsets.all(3.w),
+                                                  child: Row(
+                                                    children: [
+                                                      AspectRatio(
+                                                        aspectRatio: 1,
+                                                        child: Sprites.coinOf[
+                                                            Coins.silver],
+                                                      ),
+                                                      SizedBox(
+                                                        width: 1.w,
+                                                      ),
+                                                      Text(
+                                                        '25',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 6.h,
+                                                  padding: EdgeInsets.all(3.w),
+                                                  child: Row(
+                                                    children: [
+                                                      AspectRatio(
+                                                        aspectRatio: 1,
+                                                        child: Sprites
+                                                            .coinOf[Coins.gold],
+                                                      ),
+                                                      SizedBox(
+                                                        width: 1.w,
+                                                      ),
+                                                      Text(
+                                                        '10',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                              ]),
+                            )),
+                      ]),
+                    ),
                   ],
+                ),
+                SizedBox(
+                  height: 2.h,
                 ),
               ],
             ),
@@ -502,11 +710,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Widget> gameModeItems(){
+  List<Widget> gameModeItems() {
     return [
       gameModeWidget(
-          imgPath: 'assets/classic.png',
-          imgWidth: 50.w,
+        imgPath: 'assets/classic.png',
+        imgWidth: 50.w,
       ),
       gameModeWidget(
         imgPath: 'assets/9x9.png',
@@ -516,7 +724,6 @@ class _HomePageState extends State<HomePage> {
         imgPath: 'assets/powers.png',
         imgWidth: 50.w,
       ),
-
     ];
   }
 
@@ -524,7 +731,7 @@ class _HomePageState extends State<HomePage> {
     required String imgPath,
     required double imgWidth,
     EdgeInsets? containerPadding,
-}){
+  }) {
     return Padding(
       padding: EdgeInsets.all(3),
       child: Stack(
@@ -533,22 +740,16 @@ class _HomePageState extends State<HomePage> {
           Container(
             padding: containerPadding ?? EdgeInsets.all(3.w),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                    color: colorDarkBlue.withOpacity(0.3),
-                    offset: Offset(3, 3),
-                    spreadRadius: 1,
-                    blurRadius: 3)
-              ],
-              gradient: LinearGradient(
-                colors: [
-                  colorDarkBlue.withOpacity(0.5),
-                  Colors.black
-
-                ]
-              )
-            ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      color: colorDarkBlue.withOpacity(0.3),
+                      offset: Offset(3, 3),
+                      spreadRadius: 1,
+                      blurRadius: 3)
+                ],
+                gradient: LinearGradient(
+                    colors: [colorDarkBlue.withOpacity(0.5), Colors.black])),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -558,7 +759,8 @@ class _HomePageState extends State<HomePage> {
                       flex: 2,
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: Sprites.badgeOf[Badges.rookie],),
+                        child: Sprites.badgeOf[Badges.rookie],
+                      ),
                     ),
                     Flexible(
                       flex: 7,
@@ -572,34 +774,32 @@ class _HomePageState extends State<HomePage> {
                       flex: 3,
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: Sprites.badgeOf[Badges.apprentice],),
+                        child: Sprites.badgeOf[Badges.apprentice],
+                      ),
                     ),
                   ],
                 ),
                 GameButton(
-                    onPressed: (){},
+                    onPressed: () {},
                     baseDecoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              Colors.deepPurple.shade800,
-                              Colors.deepPurple.shade900.withOpacity(0.4),
-                            ]
-                        ),
+                      gradient: LinearGradient(colors: [
+                        Colors.deepPurple.shade800,
+                        Colors.deepPurple.shade900.withOpacity(0.4),
+                      ]),
                     ),
                     topDecoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              Colors.deepPurple,
-                              Colors.deepPurple.shade900
-                            ]
-                        ),
+                      gradient: LinearGradient(colors: [
+                        Colors.deepPurple,
+                        Colors.deepPurple.shade900
+                      ]),
                     ),
                     borderRadius: BorderRadius.circular(10),
-                    aspectRatio: 5/1,
+                    aspectRatio: 5 / 1,
                     width: 98.w,
                     child: DefaultTextStyle.merge(
                       style: TextStyle(
-                        color: Colors.white,),
+                        color: Colors.white,
+                      ),
                       child: Padding(
                         padding: EdgeInsets.all(3),
                         child: Row(
@@ -608,10 +808,13 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.all(1.w),
                               child: AspectRatio(
                                 aspectRatio: 1,
-                                child: Sprites.badgeOf[Badges.apprentice],),
+                                child: Sprites.badgeOf[Badges.apprentice],
+                              ),
                             ),
-                            Text('Tiered Match',
-                              style: TextStyle(fontSize: 20),),
+                            Text(
+                              'Tiered Match',
+                              style: TextStyle(fontSize: 20),
+                            ),
                             Spacer(),
                             Text('1000'),
                             Container(
@@ -619,37 +822,35 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.all(3.w),
                               child: AspectRatio(
                                 aspectRatio: 1,
-                                child: Sprites.coinOf[Coins.silver],),
+                                child: Sprites.coinOf[Coins.silver],
+                              ),
                             )
                           ],
                         ),
                       ),
                     )),
                 GameButton(
-                    onPressed: (){},
+                    onPressed: () {},
                     enableShimmer: false,
                     baseDecoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              Colors.deepPurple.shade800,
-                              Colors.deepPurple.shade900.withOpacity(0.3),
-                            ]
-                        ),
+                      gradient: LinearGradient(colors: [
+                        Colors.deepPurple.shade800,
+                        Colors.deepPurple.shade900.withOpacity(0.3),
+                      ]),
                     ),
                     topDecoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              Colors.deepPurple.shade900,
-                              Colors.deepPurple.shade700,
-                            ]
-                        ),
+                      gradient: LinearGradient(colors: [
+                        Colors.deepPurple.shade900,
+                        Colors.deepPurple.shade700,
+                      ]),
                     ),
                     borderRadius: BorderRadius.circular(10),
-                    aspectRatio: 6/1,
+                    aspectRatio: 6 / 1,
                     width: 98.w,
                     child: DefaultTextStyle.merge(
                       style: TextStyle(
-                        color: Colors.white,),
+                        color: Colors.white,
+                      ),
                       child: Padding(
                         padding: EdgeInsets.only(left: 20),
                         child: Row(
@@ -661,7 +862,8 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.all(3.w),
                               child: AspectRatio(
                                 aspectRatio: 1,
-                                child: Sprites.coinOf[Coins.bronze],),
+                                child: Sprites.coinOf[Coins.bronze],
+                              ),
                             )
                           ],
                         ),
@@ -677,28 +879,28 @@ class _HomePageState extends State<HomePage> {
               child: Center(
                 child: Image.asset(
                   imgPath,
-                  width: imgWidth,),
+                  width: imgWidth,
+                ),
               )),
         ],
       ),
     );
   }
 
-  List<Widget> gameCoinList(){
-    return List.from(Coins.values.map(
-            (e) => coinWidget(coin: e, scale: 1.2)));
+  List<Widget> gameCoinList() {
+    return List.from(Coins.values.map((e) => coinWidget(coin: e, scale: 1.2)));
   }
 
   Widget coinWidget({
     required Coins coin,
     double? scale,
-}){
+  }) {
     return Transform(
-      transform: Matrix4.identity()..scale(scale?? 1),
+      transform: Matrix4.identity()..scale(scale ?? 1),
       child: SizedBox(
         width: 20.w,
         child: AspectRatio(
-          aspectRatio: 3/1,
+          aspectRatio: 3 / 1,
           child: Stack(
             clipBehavior: Clip.none,
             fit: StackFit.passthrough,
@@ -707,11 +909,7 @@ class _HomePageState extends State<HomePage> {
                 width: 20.w,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
-                        colors: [
-                          Colors.black,
-                          Colors.deepPurple.shade900
-                        ]
-                    ),
+                        colors: [Colors.black, Colors.deepPurple.shade900]),
                     boxShadow: [
                       BoxShadow(
                           color: colorDarkBlue.withOpacity(0.3),
@@ -719,14 +917,16 @@ class _HomePageState extends State<HomePage> {
                           spreadRadius: 1,
                           blurRadius: 3)
                     ],
-                    borderRadius: BorderRadius.circular(20)
-                ),
+                    borderRadius: BorderRadius.circular(20)),
                 padding: const EdgeInsets.only(left: 20),
                 child: Center(
-                  child: Text('100',
+                  child: Text(
+                    '100',
                     style: TextStyle(
-                      color: Colors.white,),
-                    textAlign: TextAlign.start,),
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
                 ),
               ),
               Align(
@@ -736,9 +936,8 @@ class _HomePageState extends State<HomePage> {
                   transform: Matrix4.identity()..scale(1.5),
                   child: AspectRatio(
                     aspectRatio: 1,
-                    child: Image.asset(
-                        Sprites.staticCoinOf[coin]!
-                    ),),
+                    child: Image.asset(Sprites.staticCoinOf[coin]!),
+                  ),
                 ),
               ),
             ],
