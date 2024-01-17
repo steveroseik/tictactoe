@@ -585,18 +585,16 @@ class _HomePageState extends State<HomePage> {
                               Colors.deepPurple.shade900.withOpacity(0.4),
                             ]
                         ),
-                        borderRadius: BorderRadius.circular(15)
                     ),
                     topDecoration: BoxDecoration(
                         gradient: LinearGradient(
                             colors: [
                               Colors.deepPurple,
-                              Colors.black
+                              Colors.deepPurple.shade900
                             ]
                         ),
-                        borderRadius: BorderRadius.circular(15)
                     ),
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(10),
                     aspectRatio: 5/1,
                     width: 98.w,
                     child: DefaultTextStyle.merge(
@@ -634,22 +632,19 @@ class _HomePageState extends State<HomePage> {
                         gradient: LinearGradient(
                             colors: [
                               Colors.deepPurple.shade800,
-                              Colors.black,
+                              Colors.deepPurple.shade900.withOpacity(0.3),
                             ]
                         ),
-                        borderRadius: BorderRadius.circular(15)
                     ),
                     topDecoration: BoxDecoration(
                         gradient: LinearGradient(
                             colors: [
-                              colorDarkBlue,
-                              Colors.black,
-                              Colors.deepPurple.shade800,
+                              Colors.deepPurple.shade900,
+                              Colors.deepPurple.shade700,
                             ]
                         ),
-                        borderRadius: BorderRadius.circular(15)
                     ),
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(10),
                     aspectRatio: 6/1,
                     width: 98.w,
                     child: DefaultTextStyle.merge(
