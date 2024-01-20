@@ -595,10 +595,12 @@ class _HomePageState extends State<HomePage> {
                                           ])),
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            8, 2, 8, 2),
+                                            5, 5, 5, 5),
                                         child: Column(
                                           children: [
                                             Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   'Win 5 matches in a row', // add your text here
@@ -606,7 +608,6 @@ class _HomePageState extends State<HomePage> {
                                                     color: Colors.white,
                                                     fontSize: 25,
                                                   ),
-                                                  textAlign: TextAlign.end,
                                                 ),
                                               ],
                                             ),
@@ -617,77 +618,142 @@ class _HomePageState extends State<HomePage> {
                                             //       fontSize: 20),
                                             //   textAlign: TextAlign.start,
                                             // ),
+                                            Spacer(),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.orange.shade800,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Container(
+                                                    height: 5.h,
+                                                    padding:
+                                                        EdgeInsets.all(3.w),
+                                                    child: Row(
+                                                      children: [
+                                                        AspectRatio(
+                                                          aspectRatio: 1,
+                                                          child: Sprites.coinOf[
+                                                              Coins.bronze],
+                                                        ),
+                                                        SizedBox(
+                                                          width: 1.w,
+                                                        ),
+                                                        Text(
+                                                          '50',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 20),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 5.h,
+                                                    padding:
+                                                        EdgeInsets.all(3.w),
+                                                    child: Row(
+                                                      children: [
+                                                        AspectRatio(
+                                                          aspectRatio: 1,
+                                                          child: Sprites.coinOf[
+                                                              Coins.silver],
+                                                        ),
+                                                        SizedBox(
+                                                          width: 1.w,
+                                                        ),
+                                                        Text(
+                                                          '25',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 20),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 5.h,
+                                                    padding:
+                                                        EdgeInsets.all(3.w),
+                                                    child: Row(
+                                                      children: [
+                                                        AspectRatio(
+                                                          aspectRatio: 1,
+                                                          child: Sprites.coinOf[
+                                                              Coins.gold],
+                                                        ),
+                                                        SizedBox(
+                                                          width: 1.w,
+                                                        ),
+                                                        Text(
+                                                          '10',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 20),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Container(
-                                                  height: 6.h,
-                                                  padding: EdgeInsets.all(3.w),
-                                                  child: Row(
-                                                    children: [
-                                                      AspectRatio(
-                                                        aspectRatio: 1,
-                                                        child: Sprites.coinOf[
-                                                            Coins.bronze],
-                                                      ),
-                                                      SizedBox(
-                                                        width: 1.w,
-                                                      ),
-                                                      Text(
-                                                        '50',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 20),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 6.h,
-                                                  padding: EdgeInsets.all(3.w),
-                                                  child: Row(
-                                                    children: [
-                                                      AspectRatio(
-                                                        aspectRatio: 1,
-                                                        child: Sprites.coinOf[
-                                                            Coins.silver],
-                                                      ),
-                                                      SizedBox(
-                                                        width: 1.w,
-                                                      ),
-                                                      Text(
-                                                        '25',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 20),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 6.h,
-                                                  padding: EdgeInsets.all(3.w),
-                                                  child: Row(
-                                                    children: [
-                                                      AspectRatio(
-                                                        aspectRatio: 1,
-                                                        child: Sprites
-                                                            .coinOf[Coins.gold],
-                                                      ),
-                                                      SizedBox(
-                                                        width: 1.w,
-                                                      ),
-                                                      Text(
-                                                        '10',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 20),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
+                                                  MainAxisAlignment.center,
+                                              children: List<Widget>.generate(
+                                                  3,
+                                                  (index) => GestureDetector(
+                                                        onTap: () =>
+                                                            gameModesController
+                                                                .animateToPage(
+                                                                    index),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      300),
+                                                          width:
+                                                              currentModePage ==
+                                                                      index
+                                                                  ? 8.0
+                                                                  : 5.0,
+                                                          height:
+                                                              currentModePage ==
+                                                                      index
+                                                                  ? 8.0
+                                                                  : 5.0,
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 8.0,
+                                                                  horizontal:
+                                                                      4.0),
+                                                          decoration: BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: (Theme.of(context)
+                                                                              .brightness ==
+                                                                          Brightness
+                                                                              .dark
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black)
+                                                                  .withOpacity(
+                                                                      currentModePage ==
+                                                                              index
+                                                                          ? 0.9
+                                                                          : 0.4)),
+                                                        ),
+                                                      )),
                                             ),
                                           ],
                                         ),
