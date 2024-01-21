@@ -105,17 +105,6 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
                           ),
                         ) : Container(),
                       ),
-                      if (gameValue != GameState.starting && gameValue != GameState.started) SafeArea(
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: ElevatedButton(
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Leave \n $uid'),
-                          ),
-                        ),
-                      ),
                       Positioned.fill(
                         child: Container(
                           decoration: BoxDecoration(
@@ -139,7 +128,7 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
                                     children: [
                                       tourValue == GameState.connecting ? const Text("Connecting...")
                                           : tourValue == GameState.waiting ? const Text("Finding a tournament...")
-                                          : Text("Game Startingz in $gameStartsIn..."),
+                                          : Text("Game Starting in $gameStartsIn..."),
                                       SizedBox(height: 30),
                                       SizedBox(
                                           width: 50.w,
@@ -147,6 +136,17 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
                                     ],
                                   )),
                             ],
+                          ),
+                        ),
+                      ),
+                      if (gameValue != GameState.starting && gameValue != GameState.started) SafeArea(
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: ElevatedButton(
+                            onPressed: (){
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Leave'),
                           ),
                         ),
                       ),

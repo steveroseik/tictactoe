@@ -7,7 +7,7 @@ class Const{
   /// quantum state cell
   static const qCell = 2;
 
-  static const gameServerUrl = 'ws://172.20.10.5:3000';
+  static const gameServerUrl = 'ws://192.168.1.4:3000';
 
   static const int speedRoundDuration = 3;
 
@@ -38,6 +38,8 @@ enum GameWinner {o, x, draw, none}
 
 /// Game Connection enum
 enum GameConn {online, offline}
+
+enum GameMode { classicSingle, nineSingle, powersSingle, classicTournament, nineTournament, powersTournament}
 
 /// User Session enum
 enum UserSession {guest, completeUser, unverifiedUser, incompleteUser, noUser, loading, restrictedUser}

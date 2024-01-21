@@ -14,6 +14,7 @@ import 'package:tictactoe/routesGenerator.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
 
 import '../Authentication/authentication.dart';
+import '../Configurations/constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -63,62 +64,13 @@ class _HomePageState extends State<HomePage> {
                 ])),
           ),
           const BackgroundScroller(),
-          SafeArea(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [...gameCoinList()],
-                    ),
-                    SizedBox(height: 2.h),
-                    Row(
-                      children: [
-                        AnimatedButton(
-                          child: Icon(
-                            Icons.logout,
-                            color: Colors.white,
-                            size: 25,
-                          ),
-                          onPressed: () {
-                            dataEngine.signOut();
-                          },
-                          height: 50,
-                          width: 50,
-                          color: Colors.grey,
-                        ),
-                        Spacer(),
-                        AnimatedButton(
-                            onPressed: () {},
-                            width: 45,
-                            height: 45,
-                            color: Colors.yellow.shade800,
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.settings,
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(color: Colors.yellow, blurRadius: 30)
-                                  ],
-                                ))),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
           SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
                 SizedBox(
-                  height: 25.h,
+                  height: 26.h,
                 ),
                 CarouselSlider(
                   carouselController: gameModesController,
@@ -161,288 +113,76 @@ class _HomePageState extends State<HomePage> {
                             ),
                           )),
                 ),
-                SizedBox(
-                  height: 0.5.h,
-                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                      child: Row(
-                        children: [
-                          GameButton2(
-                              onPressed: () {},
-                              borderRadius: BorderRadius.circular(10),
-                              aspectRatio: 1,
-                              width: 17.5.w,
-                              baseDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: colorDarkBlue,
-                              ),
-                              topDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: const LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Colors.lightBlueAccent,
-                                        Colors.lightBlue
-                                      ])),
-                              child: Column(children: [
+                    GameButton2(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Routes.tournamentsHome);
+                        },
+                        borderRadius: BorderRadius.circular(10),
+                        aspectRatio: 4 / 1,
+                        width: 70.w,
+                        baseDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colorDarkBlue,
+                        ),
+                        topDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.lightBlueAccent,
+                                  Colors.lightBlue
+                                ])),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Column(children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
                                 Expanded(
-                                    flex: 10,
+                                  flex: 10,
+                                  child: ClipRRect(
                                     child: Container(
                                       decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                               colors: [
-                                            Colors.blue,
-                                            Colors.blue.shade800,
-                                          ])),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          AspectRatio(
-                                            aspectRatio: 1,
-                                            child: Image.asset(
-                                              'assets/icons8-ranking-48.png',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )),
-                              ])),
-                          Spacer(),
-                          GameButton2(
-                              onPressed: () {
-                                print('tapped');
-                              },
-                              borderRadius: BorderRadius.circular(10),
-                              aspectRatio: 4 / 1,
-                              width: 70.w,
-                              baseDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: colorDarkBlue,
-                              ),
-                              topDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: const LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Colors.lightBlueAccent,
-                                        Colors.lightBlue
-                                      ])),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Column(children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        flex: 10,
-                                        child: ClipRRect(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                    colors: [
-                                                  colorDarkBlue,
-                                                  Colors.blue.shade800,
-                                                ])),
-                                            child: NeoPopShimmer(
-                                              shimmerColor: colorLightGrey
-                                                  .withOpacity(0.8),
-                                              duration: const Duration(
-                                                  milliseconds: 1500),
-                                              delay: const Duration(
-                                                  milliseconds: 2000),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 2, 10, 2),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      'Tournaments', // add your text here
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                    ),
-                                                    Spacer(),
-                                                    Text(
-                                                      'Active: 63', // add your text here
-                                                      style: TextStyle(
-                                                        color: Colors.yellow,
-                                                      ),
-                                                      textAlign: TextAlign.end,
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Expanded(
-                                      flex: 10,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                                colors: [
-                                              Colors.lightBlue,
-                                              Colors.lightBlue.shade800,
-                                            ])),
+                                                colorDarkBlue,
+                                                Colors.blue.shade800,
+                                              ])),
+                                      child: NeoPopShimmer(
+                                        shimmerColor: colorLightGrey
+                                            .withOpacity(0.8),
+                                        duration: const Duration(
+                                            milliseconds: 1500),
+                                        delay: const Duration(
+                                            milliseconds: 2000),
                                         child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              8, 2, 8, 2),
+                                          padding:
+                                          const EdgeInsets.fromLTRB(
+                                              10, 2, 10, 2),
                                           child: Row(
                                             children: [
-                                              Icon(
-                                                Icons.star,
-                                                color: Colors.white,
+                                              Text(
+                                                'Tournaments', // add your text here
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                                textAlign:
+                                                TextAlign.start,
                                               ),
                                               Spacer(),
                                               Text(
-                                                'Daily Tournament!', // add your text here
+                                                'Active: 63', // add your text here
                                                 style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 25,
-                                                ),
-                                                textAlign: TextAlign.end,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      )),
-                                ]),
-                              )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                      child: Row(
-                        children: [
-                          GameButton2(
-                              onPressed: () async {
-                                final token = await Authentication()
-                                    .getFacebookAccessToken();
-                                print(token?.token);
-                                final friends = await Authentication()
-                                    .getFacebookFriends(token: token!.token);
-                                print(friends[0]);
-                              },
-                              borderRadius: BorderRadius.circular(10),
-                              aspectRatio: 1,
-                              width: 17.5.w,
-                              baseDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: colorDarkBlue,
-                              ),
-                              topDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: const LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Colors.lightBlueAccent,
-                                        Colors.lightBlue
-                                      ])),
-                              child: Column(children: [
-                                Expanded(
-                                    flex: 10,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [
-                                            Colors.green,
-                                            Colors.green.shade800
-                                          ])),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          AspectRatio(
-                                            aspectRatio: 1,
-                                            child: Image.asset(
-                                              'assets/icons8-friends-64.png',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )),
-                              ])),
-                          Spacer(),
-                          GameButton2(
-                              onPressed: () {
-                                print('tapped');
-                              },
-                              borderRadius: BorderRadius.circular(10),
-                              aspectRatio: 4 / 1,
-                              width: 70.w,
-                              baseDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: colorDarkBlue,
-                              ),
-                              topDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: const LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Colors.lightBlueAccent,
-                                        Colors.lightBlue
-                                      ])),
-                              child: Column(children: [
-                                Expanded(
-                                    flex: 10,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [
-                                            Colors.lightGreen,
-                                            Colors.lightGreen.shade800,
-                                          ])),
-                                      child: NeoPopShimmer(
-                                        shimmerColor:
-                                            Colors.yellow.withOpacity(0.8),
-                                        duration:
-                                            const Duration(milliseconds: 1500),
-                                        delay:
-                                            const Duration(milliseconds: 2000),
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              8, 2, 8, 2),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'Play With Friends', // add your text here
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 25,
+                                                  color: Colors.yellow,
                                                 ),
                                                 textAlign: TextAlign.end,
                                               )
@@ -450,319 +190,343 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       ),
-                                    )),
-                              ])),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                      child: Row(children: [
-                        GameButton2(
-                            onPressed: () {
-                              // Navigator.of(context).pushNamed(Routes.s);
-                            },
-                            borderRadius: BorderRadius.circular(10),
-                            aspectRatio: 1,
-                            width: 17.5.w,
-                            baseDecoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: colorDarkBlue,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            topDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: const LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Colors.lightBlueAccent,
-                                      Colors.lightBlue
-                                    ])),
-                            child: Column(children: [
-                              Expanded(
-                                  flex: 10,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                          Colors.yellow,
-                                          Colors.yellow.shade800,
-                                        ])),
+                            Expanded(
+                                flex: 10,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            Colors.lightBlue,
+                                            Colors.lightBlue.shade800,
+                                          ])),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        8, 2, 8, 2),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
                                       children: [
-                                        AspectRatio(
-                                          aspectRatio: 1,
-                                          child: Image.asset(
-                                            'assets/icons8-store-48.png',
-                                          ),
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.white,
                                         ),
+                                        Spacer(),
+                                        Text(
+                                          'Daily Tournament!', // add your text here
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 25,
+                                          ),
+                                          textAlign: TextAlign.end,
+                                        )
                                       ],
                                     ),
-                                  )),
-                            ])),
-                        Spacer(),
-                        GameButton2(
-                            onPressed: () {
-                              print('tapped');
-                            },
-                            borderRadius: BorderRadius.circular(10),
-                            aspectRatio: 2 / 1,
-                            width: 70.w,
-                            baseDecoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: colorDarkBlue,
+                                  ),
+                                )),
+                          ]),
+                        )),
+                    SizedBox(height: 1.h),
+                    GameButton(
+                        onPressed: () {
+                          print('tapped');
+                        },
+                        enableShimmer: false,
+                        borderRadius: BorderRadius.circular(10),
+                        aspectRatio: 4 / 1,
+                        width: 70.w,
+                        baseDecoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                            Colors.lightGreen.shade600,
+                            Colors.lightGreen.shade900,
+                            ]
+                          )
+                        ),
+                        topDecoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.lightGreen,
+                                  Colors.lightGreen.shade800,
+                                ]
+                            )
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Play With Friends', // add your text here
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
                             ),
-                            topDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: const LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Colors.lightBlueAccent,
-                                      Colors.lightBlue
-                                    ])),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Column(children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      flex: 10,
-                                      child: ClipRRect(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight,
-                                                  colors: [
+                            textAlign: TextAlign.end,
+                          ),
+                        )),
+                    SizedBox(height: 1.h),
+                    GameButton2(
+                        onPressed: () {
+                          print('tapped');
+                        },
+                        borderRadius: BorderRadius.circular(10),
+                        aspectRatio: 6 / 3,
+                        width: 80.w,
+                        baseDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colorDarkBlue,
+                        ),
+                        topDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.lightBlueAccent,
+                                  Colors.lightBlue
+                                ])),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Column(children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  flex: 10,
+                                  child: ClipRRect(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
                                                 Colors.orange,
                                                 Colors.orange.shade800,
                                               ])),
-                                          child: NeoPopShimmer(
-                                            shimmerColor:
-                                                colorLightGrey.withOpacity(0.8),
-                                            duration: const Duration(
-                                                milliseconds: 1500),
-                                            delay: const Duration(
-                                                milliseconds: 2000),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      10, 2, 10, 2),
+                                      child: NeoPopShimmer(
+                                        shimmerColor:
+                                        colorPurple.withOpacity(0.8),
+                                        duration: const Duration(
+                                            milliseconds: 1500),
+                                        delay: const Duration(
+                                            milliseconds: 2000),
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.fromLTRB(
+                                              10, 2, 10, 2),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'Challenges', // add your text here
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                                textAlign: TextAlign.start,
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                '2/5 Complete!', // add your text here
+                                                style: TextStyle(
+                                                  color: Colors.yellow,
+                                                ),
+                                                textAlign: TextAlign.end,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Expanded(
+                                flex: 10,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            Colors.yellow.shade600,
+                                            Colors.yellow.shade800,
+                                          ])),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Win 5 matches in a row', // add your text here
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                          shadows: [
+                                            Shadow(
+                                                color: Colors.black.withOpacity(0.4),
+                                              blurRadius: 10,
+                                            )
+                                          ]
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      // Text(
+                                      //   'Reward:',
+                                      //   style: TextStyle(
+                                      //       color: Colors.white,
+                                      //       fontSize: 20),
+                                      //   textAlign: TextAlign.start,
+                                      // ),
+                                      Container(
+                                        margin: EdgeInsets.symmetric(horizontal: 20),
+                                        decoration: BoxDecoration(
+                                            color: Colors.orange.shade800,
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                20)),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              height: 5.h,
+                                              padding: EdgeInsets.all(3.w),
                                               child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                  Text(
-                                                    'Challenges', // add your text here
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                    textAlign: TextAlign.start,
+                                                  AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: Sprites.coinOf[
+                                                    Coins.bronze],
                                                   ),
-                                                  Spacer(),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
                                                   Text(
-                                                    '2/5 Complete!', // add your text here
+                                                    '50',
                                                     style: TextStyle(
-                                                      color: Colors.yellow,
+                                                        color:
+                                                        Colors.white,
+                                                      fontSize: 20
                                                     ),
-                                                    textAlign: TextAlign.end,
+                                                    textAlign: TextAlign.center,
                                                   )
                                                 ],
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Expanded(
-                                    flex: 10,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [
-                                            Colors.yellow.shade600,
-                                            Colors.yellow.shade800,
-                                          ])),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            5, 5, 5, 5),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  'Win 5 matches in a row', // add your text here
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 25,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            // Text(
-                                            //   'Reward:',
-                                            //   style: TextStyle(
-                                            //       color: Colors.white,
-                                            //       fontSize: 20),
-                                            //   textAlign: TextAlign.start,
-                                            // ),
-                                            Spacer(),
                                             Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.orange.shade800,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20)),
+                                              height: 5.h,
+                                              padding:
+                                              EdgeInsets.all(3.w),
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
                                                 children: [
-                                                  Container(
-                                                    height: 5.h,
-                                                    padding:
-                                                        EdgeInsets.all(3.w),
-                                                    child: Row(
-                                                      children: [
-                                                        AspectRatio(
-                                                          aspectRatio: 1,
-                                                          child: Sprites.coinOf[
-                                                              Coins.bronze],
-                                                        ),
-                                                        SizedBox(
-                                                          width: 1.w,
-                                                        ),
-                                                        Text(
-                                                          '50',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 20),
-                                                        )
-                                                      ],
-                                                    ),
+                                                  AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: Sprites.coinOf[
+                                                    Coins.silver],
                                                   ),
-                                                  Container(
-                                                    height: 5.h,
-                                                    padding:
-                                                        EdgeInsets.all(3.w),
-                                                    child: Row(
-                                                      children: [
-                                                        AspectRatio(
-                                                          aspectRatio: 1,
-                                                          child: Sprites.coinOf[
-                                                              Coins.silver],
-                                                        ),
-                                                        SizedBox(
-                                                          width: 1.w,
-                                                        ),
-                                                        Text(
-                                                          '25',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 20),
-                                                        )
-                                                      ],
-                                                    ),
+                                                  SizedBox(
+                                                    width: 1.w,
                                                   ),
-                                                  Container(
-                                                    height: 5.h,
-                                                    padding:
-                                                        EdgeInsets.all(3.w),
-                                                    child: Row(
-                                                      children: [
-                                                        AspectRatio(
-                                                          aspectRatio: 1,
-                                                          child: Sprites.coinOf[
-                                                              Coins.gold],
-                                                        ),
-                                                        SizedBox(
-                                                          width: 1.w,
-                                                        ),
-                                                        Text(
-                                                          '10',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 20),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  Text(
+                                                    '25',
+                                                    style: TextStyle(
+                                                        color:
+                                                        Colors.white,
+                                                        fontSize: 20),
+                                                  )
                                                 ],
                                               ),
                                             ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: List<Widget>.generate(
-                                                  3,
-                                                  (index) => GestureDetector(
-                                                        onTap: () =>
-                                                            gameModesController
-                                                                .animateToPage(
-                                                                    index),
-                                                        child:
-                                                            AnimatedContainer(
-                                                          duration:
-                                                              const Duration(
-                                                                  milliseconds:
-                                                                      300),
-                                                          width:
-                                                              currentModePage ==
-                                                                      index
-                                                                  ? 8.0
-                                                                  : 5.0,
-                                                          height:
-                                                              currentModePage ==
-                                                                      index
-                                                                  ? 8.0
-                                                                  : 5.0,
-                                                          margin: EdgeInsets
-                                                              .symmetric(
-                                                                  vertical: 8.0,
-                                                                  horizontal:
-                                                                      4.0),
-                                                          decoration: BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              color: (Theme.of(context)
-                                                                              .brightness ==
-                                                                          Brightness
-                                                                              .dark
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Colors
-                                                                          .black)
-                                                                  .withOpacity(
-                                                                      currentModePage ==
-                                                                              index
-                                                                          ? 0.9
-                                                                          : 0.4)),
-                                                        ),
-                                                      )),
+                                            Container(
+                                              height: 5.h,
+                                              padding:
+                                              EdgeInsets.all(3.w),
+                                              child: Row(
+                                                children: [
+                                                  AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: Sprites.coinOf[
+                                                    Coins.gold],
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
+                                                  Text(
+                                                    '10',
+                                                    style: TextStyle(
+                                                        color:
+                                                        Colors.white,
+                                                        fontSize: 20),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    )),
-                              ]),
-                            )),
-                      ]),
-                    ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: List<Widget>.generate(
+                                            3,
+                                                (index) => GestureDetector(
+                                              onTap: () =>
+                                                  gameModesController
+                                                      .animateToPage(
+                                                      index),
+                                              child:
+                                              AnimatedContainer(
+                                                duration:
+                                                const Duration(
+                                                    milliseconds:
+                                                    300),
+                                                width:
+                                                currentModePage ==
+                                                    index
+                                                    ? 8.0
+                                                    : 5.0,
+                                                height:
+                                                currentModePage ==
+                                                    index
+                                                    ? 8.0
+                                                    : 5.0,
+                                                margin: EdgeInsets
+                                                    .symmetric(
+                                                    vertical: 8.0,
+                                                    horizontal:
+                                                    4.0),
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape
+                                                        .circle,
+                                                    color: (Theme.of(context)
+                                                        .brightness ==
+                                                        Brightness
+                                                            .dark
+                                                        ? Colors
+                                                        .white
+                                                        : Colors
+                                                        .black)
+                                                        .withOpacity(
+                                                        currentModePage ==
+                                                            index
+                                                            ? 0.9
+                                                            : 0.4)),
+                                              ),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ]),
+                        )),
                   ],
                 ),
                 SizedBox(
@@ -770,7 +534,192 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-          )
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [...gameCoinList()],
+                    ),
+                    SizedBox(height: 3.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GameButton(
+                          onPressed: (){},
+                          width: 12.w,
+                          aspectRatio: 1,
+                          borderRadius: BorderRadius.circular(10),
+                          baseDecoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.indigo.shade700,
+                                    Colors.indigo.shade900
+                                  ]
+                              )
+                          ),
+                          topDecoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.indigo,
+                                    Colors.indigo.shade400
+                                  ]
+                              )
+                          ),
+                          enableShimmer: false,
+                          child:  Icon(
+                            Icons.settings,
+                            color: Colors.white,
+                          ),
+                        ),
+
+                        Container(
+                          width: 12.w,
+                          height: 12.w,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.deepPurple.shade900,
+                                      colorPurple
+                                    ],
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: colorDarkBlue.withOpacity(0.3),
+                                        offset: Offset(3, 3),
+                                        spreadRadius: 1,
+                                        blurRadius: 3)
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                  top: -15,
+                                  child: SizedBox(
+                                      height: 14.w,
+                                      child: Image.asset('assets/trophy.png'))),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 12.w,
+                          height: 12.w,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.black,
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          Colors.deepPurple.shade900,
+                                          colorPurple
+                                        ]
+                                    ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: colorDarkBlue.withOpacity(0.3),
+                                        offset: Offset(3, 3),
+                                        spreadRadius: 1,
+                                        blurRadius: 3)
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                  top: -13,
+                                  child: SizedBox(
+                                      height: 12.w,
+                                      child: Image.asset('assets/friends.png'))),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 12.w,
+                          height: 12.w,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.black,
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          Colors.deepPurple.shade900,
+                                          colorPurple
+                                        ]
+                                    ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: colorDarkBlue.withOpacity(0.3),
+                                        offset: Offset(3, 3),
+                                        spreadRadius: 1,
+                                        blurRadius: 3)
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                  top: -10,
+                                  child: SizedBox(
+                                      height: 12.w,
+                                      child: Image.asset('assets/shop-bag.png'))),
+                            ],
+                          ),
+                        ),
+                        GameButton(
+                          onPressed: () => dataEngine.signOut(),
+                          width: 12.w,
+                          aspectRatio: 1,
+                          borderRadius: BorderRadius.circular(10),
+                          baseDecoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.black,
+                                    Colors.black
+                                  ]
+                              )
+                          ),
+                          topDecoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.red,
+                                    Colors.black
+                                  ]
+                              )
+                          ),
+                          enableShimmer: false,
+                          child:  Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -781,14 +730,17 @@ class _HomePageState extends State<HomePage> {
       gameModeWidget(
         imgPath: 'assets/classic.png',
         imgWidth: 50.w,
+        gameMode: GameMode.classicSingle
       ),
       gameModeWidget(
         imgPath: 'assets/9x9.png',
         imgWidth: 30.w,
+          gameMode: GameMode.nineSingle
       ),
       gameModeWidget(
         imgPath: 'assets/powers.png',
         imgWidth: 50.w,
+          gameMode: GameMode.powersSingle
       ),
     ];
   }
@@ -796,6 +748,7 @@ class _HomePageState extends State<HomePage> {
   gameModeWidget({
     required String imgPath,
     required double imgWidth,
+    required GameMode gameMode,
     EdgeInsets? containerPadding,
   }) {
     return Padding(
@@ -846,7 +799,20 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 GameButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      switch(gameMode){
+                        case GameMode.classicSingle:
+                          Navigator.of(context).pushNamed(Routes.classicGameMain);
+                          break;
+                        case GameMode.nineSingle:
+                          Navigator.of(context).pushNamed(Routes.ninesGameMain);
+                          break;
+                        case GameMode.powersSingle:
+                          Navigator.of(context).pushNamed(Routes.powersCharacterSelect);
+                          break;
+                        default: return null;
+                      }
+                    },
                     baseDecoration: BoxDecoration(
                       gradient: LinearGradient(colors: [
                         Colors.deepPurple.shade800,
@@ -900,14 +866,14 @@ class _HomePageState extends State<HomePage> {
                     enableShimmer: false,
                     baseDecoration: BoxDecoration(
                       gradient: LinearGradient(colors: [
-                        Colors.deepPurple.shade800,
-                        Colors.deepPurple.shade900.withOpacity(0.3),
+                        Colors.deepPurple.shade900,
+                        Colors.black
                       ]),
                     ),
                     topDecoration: BoxDecoration(
                       gradient: LinearGradient(colors: [
+                        Colors.black,
                         Colors.deepPurple.shade900,
-                        Colors.deepPurple.shade700,
                       ]),
                     ),
                     borderRadius: BorderRadius.circular(10),
