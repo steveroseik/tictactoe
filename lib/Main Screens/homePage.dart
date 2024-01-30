@@ -1,4 +1,3 @@
-import 'package:animated_button/animated_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
@@ -13,7 +12,6 @@ import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/routesGenerator.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
 
-import '../Authentication/authentication.dart';
 import '../Configurations/constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -68,7 +66,6 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 SizedBox(
                   height: 26.h,
                 ),
@@ -118,7 +115,8 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     GameButton2(
                         onPressed: () {
-                          Navigator.of(context).pushNamed(Routes.tournamentsHome);
+                          Navigator.of(context)
+                              .pushNamed(Routes.tournamentsHome);
                         },
                         borderRadius: BorderRadius.circular(10),
                         aspectRatio: 4 / 1,
@@ -141,8 +139,7 @@ class _HomePageState extends State<HomePage> {
                           child: Column(children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Expanded(
@@ -154,19 +151,18 @@ class _HomePageState extends State<HomePage> {
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                               colors: [
-                                                colorDarkBlue,
-                                                Colors.blue.shade800,
-                                              ])),
+                                            colorDarkBlue,
+                                            Colors.blue.shade800,
+                                          ])),
                                       child: NeoPopShimmer(
-                                        shimmerColor: colorLightGrey
-                                            .withOpacity(0.8),
-                                        duration: const Duration(
-                                            milliseconds: 1500),
-                                        delay: const Duration(
-                                            milliseconds: 2000),
+                                        shimmerColor:
+                                            colorLightGrey.withOpacity(0.8),
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                        delay:
+                                            const Duration(milliseconds: 2000),
                                         child: Padding(
-                                          padding:
-                                          const EdgeInsets.fromLTRB(
+                                          padding: const EdgeInsets.fromLTRB(
                                               10, 2, 10, 2),
                                           child: Row(
                                             children: [
@@ -175,8 +171,7 @@ class _HomePageState extends State<HomePage> {
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                 ),
-                                                textAlign:
-                                                TextAlign.start,
+                                                textAlign: TextAlign.start,
                                               ),
                                               Spacer(),
                                               Text(
@@ -203,12 +198,12 @@ class _HomePageState extends State<HomePage> {
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                           colors: [
-                                            Colors.lightBlue,
-                                            Colors.lightBlue.shade800,
-                                          ])),
+                                        Colors.lightBlue,
+                                        Colors.lightBlue.shade800,
+                                      ])),
                                   child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        8, 2, 8, 2),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 2, 8, 2),
                                     child: Row(
                                       children: [
                                         Icon(
@@ -240,25 +235,21 @@ class _HomePageState extends State<HomePage> {
                         aspectRatio: 4 / 1,
                         width: 70.w,
                         baseDecoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                            Colors.lightGreen.shade600,
-                            Colors.lightGreen.shade900,
-                            ]
-                          )
-                        ),
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                              Colors.lightGreen.shade600,
+                              Colors.lightGreen.shade900,
+                            ])),
                         topDecoration: BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Colors.lightGreen,
-                                  Colors.lightGreen.shade800,
-                                ]
-                            )
-                        ),
+                              Colors.lightGreen,
+                              Colors.lightGreen.shade800,
+                            ])),
                         child: const Center(
                           child: Text(
                             'Play With Friends', // add your text here
@@ -307,19 +298,18 @@ class _HomePageState extends State<HomePage> {
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                               colors: [
-                                                Colors.orange,
-                                                Colors.orange.shade800,
-                                              ])),
+                                            Colors.orange,
+                                            Colors.orange.shade800,
+                                          ])),
                                       child: NeoPopShimmer(
                                         shimmerColor:
-                                        colorPurple.withOpacity(0.8),
-                                        duration: const Duration(
-                                            milliseconds: 1500),
-                                        delay: const Duration(
-                                            milliseconds: 2000),
+                                            colorPurple.withOpacity(0.8),
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                        delay:
+                                            const Duration(milliseconds: 2000),
                                         child: Padding(
-                                          padding:
-                                          const EdgeInsets.fromLTRB(
+                                          padding: const EdgeInsets.fromLTRB(
                                               10, 2, 10, 2),
                                           child: Row(
                                             children: [
@@ -355,25 +345,26 @@ class _HomePageState extends State<HomePage> {
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                           colors: [
-                                            Colors.yellow.shade600,
-                                            Colors.yellow.shade800,
-                                          ])),
+                                        Colors.yellow.shade600,
+                                        Colors.yellow.shade800,
+                                      ])),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         'Win 5 matches in a row', // add your text here
                                         style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                          shadows: [
-                                            Shadow(
-                                                color: Colors.black.withOpacity(0.4),
-                                              blurRadius: 10,
-                                            )
-                                          ]
-                                        ),
+                                            color: Colors.white,
+                                            fontSize: 25,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.4),
+                                                blurRadius: 10,
+                                              )
+                                            ]),
                                         textAlign: TextAlign.center,
                                       ),
                                       // Text(
@@ -384,27 +375,31 @@ class _HomePageState extends State<HomePage> {
                                       //   textAlign: TextAlign.start,
                                       // ),
                                       Container(
-                                        margin: EdgeInsets.symmetric(horizontal: 20),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 20),
                                         decoration: BoxDecoration(
                                             color: Colors.orange.shade800,
                                             borderRadius:
-                                            BorderRadius.circular(
-                                                20)),
+                                                BorderRadius.circular(20)),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Container(
                                               height: 5.h,
                                               padding: EdgeInsets.all(3.w),
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   AspectRatio(
                                                     aspectRatio: 1,
-                                                    child: Sprites.coinOf[
-                                                    Coins.bronze],
+                                                    child: Sprites
+                                                        .coinOf[Coins.bronze],
                                                   ),
                                                   SizedBox(
                                                     width: 1.w,
@@ -412,10 +407,8 @@ class _HomePageState extends State<HomePage> {
                                                   Text(
                                                     '50',
                                                     style: TextStyle(
-                                                        color:
-                                                        Colors.white,
-                                                      fontSize: 20
-                                                    ),
+                                                        color: Colors.white,
+                                                        fontSize: 20),
                                                     textAlign: TextAlign.center,
                                                   )
                                                 ],
@@ -423,14 +416,13 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                             Container(
                                               height: 5.h,
-                                              padding:
-                                              EdgeInsets.all(3.w),
+                                              padding: EdgeInsets.all(3.w),
                                               child: Row(
                                                 children: [
                                                   AspectRatio(
                                                     aspectRatio: 1,
-                                                    child: Sprites.coinOf[
-                                                    Coins.silver],
+                                                    child: Sprites
+                                                        .coinOf[Coins.silver],
                                                   ),
                                                   SizedBox(
                                                     width: 1.w,
@@ -438,8 +430,7 @@ class _HomePageState extends State<HomePage> {
                                                   Text(
                                                     '25',
                                                     style: TextStyle(
-                                                        color:
-                                                        Colors.white,
+                                                        color: Colors.white,
                                                         fontSize: 20),
                                                   )
                                                 ],
@@ -447,14 +438,13 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                             Container(
                                               height: 5.h,
-                                              padding:
-                                              EdgeInsets.all(3.w),
+                                              padding: EdgeInsets.all(3.w),
                                               child: Row(
                                                 children: [
                                                   AspectRatio(
                                                     aspectRatio: 1,
-                                                    child: Sprites.coinOf[
-                                                    Coins.gold],
+                                                    child: Sprites
+                                                        .coinOf[Coins.gold],
                                                   ),
                                                   SizedBox(
                                                     width: 1.w,
@@ -462,8 +452,7 @@ class _HomePageState extends State<HomePage> {
                                                   Text(
                                                     '10',
                                                     style: TextStyle(
-                                                        color:
-                                                        Colors.white,
+                                                        color: Colors.white,
                                                         fontSize: 20),
                                                   )
                                                 ],
@@ -474,53 +463,43 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         children: List<Widget>.generate(
                                             3,
-                                                (index) => GestureDetector(
-                                              onTap: () =>
-                                                  gameModesController
-                                                      .animateToPage(
-                                                      index),
-                                              child:
-                                              AnimatedContainer(
-                                                duration:
-                                                const Duration(
-                                                    milliseconds:
-                                                    300),
-                                                width:
-                                                currentModePage ==
-                                                    index
-                                                    ? 8.0
-                                                    : 5.0,
-                                                height:
-                                                currentModePage ==
-                                                    index
-                                                    ? 8.0
-                                                    : 5.0,
-                                                margin: EdgeInsets
-                                                    .symmetric(
-                                                    vertical: 8.0,
-                                                    horizontal:
-                                                    4.0),
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape
-                                                        .circle,
-                                                    color: (Theme.of(context)
-                                                        .brightness ==
-                                                        Brightness
-                                                            .dark
-                                                        ? Colors
-                                                        .white
-                                                        : Colors
-                                                        .black)
-                                                        .withOpacity(
-                                                        currentModePage ==
-                                                            index
-                                                            ? 0.9
-                                                            : 0.4)),
-                                              ),
-                                            )),
+                                            (index) => GestureDetector(
+                                                  onTap: () =>
+                                                      gameModesController
+                                                          .animateToPage(index),
+                                                  child: AnimatedContainer(
+                                                    duration: const Duration(
+                                                        milliseconds: 300),
+                                                    width:
+                                                        currentModePage == index
+                                                            ? 8.0
+                                                            : 5.0,
+                                                    height:
+                                                        currentModePage == index
+                                                            ? 8.0
+                                                            : 5.0,
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 8.0,
+                                                            horizontal: 4.0),
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: (Theme.of(context)
+                                                                        .brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black)
+                                                            .withOpacity(
+                                                                currentModePage ==
+                                                                        index
+                                                                    ? 0.9
+                                                                    : 0.4)),
+                                                  ),
+                                                )),
                                       ),
                                     ],
                                   ),
@@ -552,7 +531,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GameButton(
-                          onPressed: (){},
+                          onPressed: () {},
                           width: 12.w,
                           aspectRatio: 1,
                           borderRadius: BorderRadius.circular(10),
@@ -561,28 +540,23 @@ class _HomePageState extends State<HomePage> {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    Colors.indigo.shade700,
-                                    Colors.indigo.shade900
-                                  ]
-                              )
-                          ),
+                                Colors.indigo.shade700,
+                                Colors.indigo.shade900
+                              ])),
                           topDecoration: BoxDecoration(
                               gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    Colors.indigo,
-                                    Colors.indigo.shade400
-                                  ]
-                              )
-                          ),
+                                Colors.indigo,
+                                Colors.indigo.shade400
+                              ])),
                           enableShimmer: false,
-                          child:  Icon(
+                          child: Icon(
                             Icons.settings,
                             color: Colors.white,
                           ),
                         ),
-
                         Container(
                           width: 12.w,
                           height: 12.w,
@@ -624,14 +598,12 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.black,
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          Colors.deepPurple.shade900,
-                                          colorPurple
-                                        ]
-                                    ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black,
+                                  gradient: LinearGradient(colors: [
+                                    Colors.deepPurple.shade900,
+                                    colorPurple
+                                  ]),
                                   boxShadow: [
                                     BoxShadow(
                                         color: colorDarkBlue.withOpacity(0.3),
@@ -645,41 +617,46 @@ class _HomePageState extends State<HomePage> {
                                   top: -13,
                                   child: SizedBox(
                                       height: 12.w,
-                                      child: Image.asset('assets/friends.png'))),
+                                      child:
+                                          Image.asset('assets/friends.png'))),
                             ],
                           ),
                         ),
-                        Container(
-                          width: 12.w,
-                          height: 12.w,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(Routes.storeHome);
+                          },
+                          child: Container(
+                            width: 12.w,
+                            height: 12.w,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.black,
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          Colors.deepPurple.shade900,
-                                          colorPurple
-                                        ]
-                                    ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: colorDarkBlue.withOpacity(0.3),
-                                        offset: Offset(3, 3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3)
-                                  ],
+                                    gradient: LinearGradient(colors: [
+                                      Colors.deepPurple.shade900,
+                                      colorPurple
+                                    ]),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: colorDarkBlue.withOpacity(0.3),
+                                          offset: Offset(3, 3),
+                                          spreadRadius: 1,
+                                          blurRadius: 3)
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                  top: -10,
-                                  child: SizedBox(
-                                      height: 12.w,
-                                      child: Image.asset('assets/shop-bag.png'))),
-                            ],
+                                Positioned(
+                                    top: -10,
+                                    child: SizedBox(
+                                        height: 12.w,
+                                        child: Image.asset(
+                                            'assets/shop-bag.png'))),
+                              ],
+                            ),
                           ),
                         ),
                         GameButton(
@@ -691,24 +668,14 @@ class _HomePageState extends State<HomePage> {
                               gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.black,
-                                    Colors.black
-                                  ]
-                              )
-                          ),
+                                  colors: [Colors.black, Colors.black])),
                           topDecoration: const BoxDecoration(
                               gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.red,
-                                    Colors.black
-                                  ]
-                              )
-                          ),
+                                  colors: [Colors.red, Colors.black])),
                           enableShimmer: false,
-                          child:  Icon(
+                          child: Icon(
                             Icons.logout,
                             color: Colors.white,
                           ),
@@ -728,20 +695,17 @@ class _HomePageState extends State<HomePage> {
   List<Widget> gameModeItems() {
     return [
       gameModeWidget(
-        imgPath: 'assets/classic.png',
-        imgWidth: 50.w,
-        gameMode: GameMode.classicSingle
-      ),
+          imgPath: 'assets/classic.png',
+          imgWidth: 50.w,
+          gameMode: GameMode.classicSingle),
       gameModeWidget(
-        imgPath: 'assets/9x9.png',
-        imgWidth: 30.w,
-          gameMode: GameMode.nineSingle
-      ),
+          imgPath: 'assets/9x9.png',
+          imgWidth: 30.w,
+          gameMode: GameMode.nineSingle),
       gameModeWidget(
-        imgPath: 'assets/powers.png',
-        imgWidth: 50.w,
-          gameMode: GameMode.powersSingle
-      ),
+          imgPath: 'assets/powers.png',
+          imgWidth: 50.w,
+          gameMode: GameMode.powersSingle),
     ];
   }
 
@@ -800,17 +764,20 @@ class _HomePageState extends State<HomePage> {
                 ),
                 GameButton(
                     onPressed: () {
-                      switch(gameMode){
+                      switch (gameMode) {
                         case GameMode.classicSingle:
-                          Navigator.of(context).pushNamed(Routes.classicGameMain);
+                          Navigator.of(context)
+                              .pushNamed(Routes.classicGameMain);
                           break;
                         case GameMode.nineSingle:
                           Navigator.of(context).pushNamed(Routes.ninesGameMain);
                           break;
                         case GameMode.powersSingle:
-                          Navigator.of(context).pushNamed(Routes.powersCharacterSelect);
+                          Navigator.of(context)
+                              .pushNamed(Routes.powersCharacterSelect);
                           break;
-                        default: return null;
+                        default:
+                          return null;
                       }
                     },
                     baseDecoration: BoxDecoration(
@@ -865,10 +832,8 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {},
                     enableShimmer: false,
                     baseDecoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        Colors.deepPurple.shade900,
-                        Colors.black
-                      ]),
+                      gradient: LinearGradient(
+                          colors: [Colors.deepPurple.shade900, Colors.black]),
                     ),
                     topDecoration: BoxDecoration(
                       gradient: LinearGradient(colors: [
