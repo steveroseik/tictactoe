@@ -9,14 +9,17 @@ import 'package:tictactoe/spritesConfigurations.dart';
 import '../../UIUX/themesAndStyles.dart';
 
 
-class CharacterSelectPage extends StatefulWidget {
-  const CharacterSelectPage({super.key});
+class PowersCharacterSelectPage extends StatefulWidget {
+  final bool tournament;
+  const PowersCharacterSelectPage({
+    this.tournament = false,
+    super.key});
 
   @override
-  State<CharacterSelectPage> createState() => _CharacterSelectPageState();
+  State<PowersCharacterSelectPage> createState() => _PowersCharacterSelectPageState();
 }
 
-class _CharacterSelectPageState extends State<CharacterSelectPage> {
+class _PowersCharacterSelectPageState extends State<PowersCharacterSelectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,8 +60,14 @@ class _CharacterSelectPageState extends State<CharacterSelectPage> {
                     });
                     return InkWell(
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.powersGameMain,
-                        arguments: character);
+                        if (widget.tournament){
+                          Navigator.of(context).pushNamed(Routes.powersGameMain,
+                              arguments: character);
+                        }else{
+                          Navigator.of(context).pushNamed(Routes.powersTournamentRoom,
+                              arguments: character);
+                        }
+
                       },
                       child: Container(
                         padding: EdgeInsets.all(3.w),

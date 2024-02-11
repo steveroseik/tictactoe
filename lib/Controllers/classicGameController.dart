@@ -8,6 +8,8 @@ import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
 
+import '../objects/powerRoomObject.dart';
+
 class ClassicGameController extends ChangeNotifier{
 
   late int gridLength;
@@ -22,7 +24,7 @@ class ClassicGameController extends ChangeNotifier{
 
   late int _myIndex;
 
-  ClassicRoom roomInfo;
+  GameRoom roomInfo;
 
   GameWinner _gameWinner = GameWinner.none;
 
@@ -44,6 +46,7 @@ class ClassicGameController extends ChangeNotifier{
 
   get isMyTurn => _myTurn;
   get state => _currentState.value;
+  get currentState => _currentState;
   get myConnection => _myConnection;
   get oppConnection => _oppConnection;
   DateTime? get timeout => _roundTimeout;
@@ -54,6 +57,7 @@ class ClassicGameController extends ChangeNotifier{
   get isNine => gridLength == 9;
 
   ClientObject get opponent => roomInfo.users.firstWhere((e) => e.userId != uid);
+  ClientObject get me => roomInfo.users.firstWhere((e) => e.userId == uid);
   
   ClassicGameController({
     required this.roomInfo,
@@ -466,6 +470,9 @@ class ClassicGameController extends ChangeNotifier{
       _currentState.value = GameState.ended;
 
       if (hasListeners) notifyListeners();
+      if (_iWon && tournament){
+        return _tournamentWinRequest();
+      }
     }
   }
 

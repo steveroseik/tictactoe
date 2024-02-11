@@ -44,8 +44,12 @@ class _TournamentsHomePageState extends State<TournamentsHomePage> {
                 ElevatedButton(onPressed: (){
                   Navigator.of(context).pushNamed(Routes.classicTournamentSelection);
                 }, child: Text("Classic Tournaments")),
-                ElevatedButton(onPressed: (){}, child: Text("Nine Tournaments")),
-                ElevatedButton(onPressed: (){}, child: Text("Powers Tournaments"))
+                ElevatedButton(onPressed: (){
+
+                }, child: Text("Nine Tournaments")),
+                ElevatedButton(onPressed: (){
+                  Navigator.of(context).pushNamed(Routes.powersTournamentSelection);
+                }, child: Text("Powers Tournaments"))
               ],
             ),
           )

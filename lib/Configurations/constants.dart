@@ -7,7 +7,7 @@ class Const{
   /// quantum state cell
   static const qCell = 2;
 
-  static const gameServerUrl = 'ws://192.168.1.4:3000';
+  static const gameServerUrl = 'ws://192.168.1.5:3000';
 
   static const int speedRoundDuration = 3;
 

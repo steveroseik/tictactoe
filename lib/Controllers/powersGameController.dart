@@ -28,9 +28,9 @@ class PowersGameController extends ChangeNotifier{
   bool _roundSinglePlayed = false;
 
 
-  PowersRoom roomInfo;
+  GameRoom roomInfo;
 
-  late PowerClient opponent;
+  late ClientObject opponent;
 
   GameWinner _gameWinner = GameWinner.none;
 
@@ -79,10 +79,10 @@ class PowersGameController extends ChangeNotifier{
 
     for (var i in roomInfo.users){
       if (i.userId == uid){
-        myCharacter = i.character;
+        myCharacter = i.character!;
       }else{
         opponent = i;
-        oppCharacter = i.character;
+        oppCharacter = i.character!;
       }
     }
 
@@ -118,10 +118,37 @@ class PowersGameController extends ChangeNotifier{
   }
 
   _winCheck({bool notify = true}){
-    final data = _checkWinner();
+    print('checking === == == == ==');
+    final data = (GameWinner.draw, <int>[]);//_checkWinner();
     winningPath = data.$2;
     _gameWinner = data.$1;
-    switch (data.$1){
+
+    _setIfIWon();
+
+    if (_gameWinner != GameWinner.none) {
+      _roundTimeout = null;
+      _currentState.value = GameState.ended;
+    }
+    print('${_currentState.value}');
+
+    if (notify && _gameWinner != GameWinner.none) notifyListeners();
+  }
+
+  didIWin(int winIndex, {bool tournament = false}){
+    if (_currentState.value == GameState.coinToss){
+      _gameWinner = GameWinner.values[winIndex];
+      _setIfIWon();
+      _currentState.value = GameState.ended;
+
+      if (hasListeners) notifyListeners();
+      if (_iWon && tournament){
+        return _tournamentWinRequest();
+      }
+    }
+  }
+
+  _setIfIWon(){
+    switch (_gameWinner){
       case GameWinner.o:
         if (_myIndex == 0){
           _iWon = true;
@@ -134,63 +161,120 @@ class PowersGameController extends ChangeNotifier{
         break;
       default: // nothing
     }
-    if (_gameWinner != GameWinner.none) {
-      _roundTimeout = null;
-      _currentState.value = GameState.ended;
-    }
-
-    if (notify) notifyListeners();
   }
 
   (GameWinner, List<int>) _checkWinner({bool path = true}) {
     // Check rows, columns, and diagonals for a winner
-
+    bool emptyCells = false;
     // Check rows
-    for (int i = 0; i < 3; i++) {
-      if (grid[i][0] == grid[i][1] && grid[i][1] == grid[i][2]) {
-        if (grid[i][0] == 1) {
-          return (GameWinner.x, path ? [i*3, i*3+1, i*3+2] : []); // Player X wins
-        } else if (grid[i][0] == 0) {
-          return (GameWinner.o, path ? [i*3, i*3+1, i*3+2] : []); // Player O wins
+    for (int i = 0; i < gridLen; i++) {
+      for (int j = 0; j <= gridLen - 5; j++) {
+        int countO = 0;
+        int countX = 0;
+        for (int k = 0; k < 5; k++) {
+          if (grid[i][j + k].resultVal == Const.oCell) {
+            countX = 0;
+            countO++;
+          } else if (grid[i][j + k].resultVal == Const.xCell) {
+            countO = 0;
+            countX++;
+          } else if (grid[i][j + k].resultVal == Const.qCell) {
+            countO++;
+            countX++;
+          }else{
+            emptyCells = true;
+          }
+          if (countO >= 5 ) {
+            return (GameWinner.o, List<int>.generate(5, (index) => (i*gridLen) + (j + k - index)));
+          }
+          if (countX >= 5 ) {
+            return (GameWinner.x, List<int>.generate(5, (index) => (i*gridLen) + (j + k - index)));
+          }
         }
+
       }
     }
 
     // Check columns
-    for (int j = 0; j < 3; j++) {
-      if (grid[0][j] == grid[1][j] && grid[1][j] == grid[2][j]) {
-        if (grid[0][j] == 1) {
-          return (GameWinner.x, path ? [j, j+3, j+6] : []); // Player X wins
-        } else if (grid[0][j] == 0) {
-          return (GameWinner.o, path ? [j, j+3, j+6] : []); // Player O wins
+    for (int j = 0; j < gridLen; j++) {
+      for (int i = 0; i <= gridLen - 5; i++) {
+        int countO = 0;
+        int countX = 0;
+        for (int k = 0; k < 5; k++) {
+          if (grid[i + k][j].resultVal == Const.oCell) {
+            countX = 0;
+            countO++;
+          } else if (grid[i + k][j].resultVal == Const.xCell) {
+            countX++;
+            countO = 0;
+          } else if (grid[i + k][j].resultVal == Const.qCell) {
+            countX++;
+            countO++;
+          }
+          if (countO >= 5 ) {
+            return (GameWinner.o, List<int>.generate(5, (index) => ((i + k - index)*gridLen) + j));
+          }
+          if (countX >= 5 ) {
+            return (GameWinner.x, List<int>.generate(5, (index) => ((i + k - index)*gridLen) + j));
+          }
         }
       }
     }
 
     // Check diagonals
-    if (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2]) {
-      if (grid[0][0] == 1) {
-        return (GameWinner.x, path ? [0, 4, 8] : []); // Player X wins
-      } else if (grid[0][0] == 0) {
-        return (GameWinner.o, path ? [0, 4, 8] : []); // Player O wins
+    for (int i = 0; i <= gridLen - 5; i++) {
+      for (int j = 0; j <= gridLen - 5; j++) {
+        int countO = 0;
+        int countX = 0;
+        for (int k = 0; k < 5; k++) {
+          if (grid[i + k][j + k].resultVal == Const.oCell) {
+            countX = 0;
+            countO++;
+          } else if (grid[i + k][j + k].resultVal == Const.xCell) {
+            countX++;
+            countO = 0;
+          } else if (grid[i + k][j + k].resultVal == Const.qCell) {
+            countX++;
+            countO++;
+          }
+          if (countO >= 5 ) {
+            return (GameWinner.o, List<int>.generate(5, (index) => ((i + k - index)*gridLen) + (j + k - index)));
+          }
+          if (countX >= 5 ) {
+            return (GameWinner.x, List<int>.generate(5, (index) => ((i + k - index)*gridLen) + (j + k - index)));
+          }
+        }
       }
     }
 
-    if (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0]) {
-      if (grid[0][2] == 1) {
-        return (GameWinner.x, path ? [2, 4, 6] : []); // Player X wins
-      } else if (grid[0][2] == 0) {
-        return (GameWinner.o, path ? [2, 4, 6] : []); // Player O wins
+    // Check anti-diagonals
+    for (int i = 4; i < gridLen; i++) {
+      for (int j = 0; j <= gridLen - 5; j++) {
+        int countO = 0;
+        int countX = 0;
+        for (int k = 0; k < 5; k++) {
+          if (grid[i - k][j + k].resultVal == Const.oCell) {
+            countX = 0;
+            countO++;
+          } else if (grid[i - k][j + k].resultVal == Const.xCell) {
+            countX++;
+            countO = 0;
+          } else if (grid[i - k][j + k].resultVal == Const.qCell) {
+            countX++;
+            countO++;
+          }
+          if (countO >= 5 ) {
+            return (GameWinner.o, List<int>.generate(5, (index) => ((i - k - index)*gridLen) + (j + k - index)));
+          }
+          if (countX >= 5 ) {
+            return (GameWinner.x, List<int>.generate(5, (index) => ((i - k + index)*gridLen) + (j + k - index)));
+          }
+        }
       }
     }
 
-    // Check for a draw
-    bool isDraw = spotsRemaining() == 0;
-
-    if (isDraw) return (GameWinner.draw, []); // It's a draw
-
-    // If no winner or draw yet
-    return (GameWinner.none, []);
+    // No winner found
+    return emptyCells ? (GameWinner.none, []) : (GameWinner.draw, []);
   }
 
   List<PowerCell> linearizedGrid(){
@@ -381,17 +465,13 @@ class PowersGameController extends ChangeNotifier{
     };
   }
 
-  moveValidated({Map<String, dynamic>? data, bool tournament = false}){
+  moveValidated({Map<String, dynamic>? data}){
+    print(data);
     if (data != null) roomInfo.lastHash = data['hash'];
-    _winCheck(notify: true);
-    if (_iWon){
-      if (tournament) return _tournamentWinRequest();
-    }else{
-      if (!canPlayMove && !canPlaySpell){
-        return endMyRound();
-      }
-    }
 
+    if (!canPlayMove && !canPlaySpell) return sendEndRound();
+
+    return null;
   }
 
   gotOffline(){
@@ -479,13 +559,10 @@ class PowersGameController extends ChangeNotifier{
     };
   }
 
-  Map<String, dynamic>? endMyRound(){
+  sendEndRound(){
 
-    if (!_myTurn) return null;
-    _myTurn = false;
-    decrementPowers(myPowers: false);
-    notifyListeners();
-    setTimeout();
+    if (!_myTurn) return;
+
     return {
       'type': 'powersEndRound',
       'roomId': roomInfo.id,
@@ -493,19 +570,38 @@ class PowersGameController extends ChangeNotifier{
     };
   }
 
-  bool setMyRound(Map<String, dynamic> data){
-    final userId = data['userId'];
-    if (userId != null && userId == opponent.userId){
-      decrementPowers();
-      _myTurn = true;
-      _roundSpellPlayed = false;
-      _roundSinglePlayed = false;
-
+  Map<String, dynamic>? endMyRound({bool tournament = false}){
+    _myTurn = false;
+    _winCheck(notify: true);
+    if (_gameWinner == GameWinner.none){
+      decrementPowers(myPowers: false);
       setTimeout();
       notifyListeners();
-      return true;
+    }else{
+      if (_iWon && tournament) return _tournamentWinRequest();
     }
-    return false;
+    return null;
+  }
+
+  Map<String, dynamic>? setMyRound(Map<String, dynamic> data,
+  {bool tournament = false}){
+
+    final userId = data['userId'];
+    if (userId != null && userId == opponent.userId){
+      _winCheck(notify: true);
+      if (_gameWinner == GameWinner.none){
+        decrementPowers();
+        _myTurn = true;
+        _roundSpellPlayed = false;
+        _roundSinglePlayed = false;
+
+        setTimeout();
+        notifyListeners();
+      }else{
+        if (_iWon && tournament) return _tournamentWinRequest();
+      }
+    }
+    return null;
   }
 
   decrementPowers({bool myPowers = true}){

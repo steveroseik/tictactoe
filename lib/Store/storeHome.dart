@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neopop/neopop.dart';
 import 'package:provider/provider.dart';
@@ -661,6 +662,12 @@ class _storeHomeState extends State<storeHome> {
               ),
             ),
           ),
+          SafeArea(child: Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icon(CupertinoIcons.left_chevron),),
+          ))
         ],
       ),
     );

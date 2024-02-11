@@ -12,13 +12,16 @@ import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/coinToss.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
 import 'package:tictactoe/ClassicGame/classicGameModule.dart';
+import 'package:tictactoe/spritesConfigurations.dart';
 
 import '../Configurations/constants.dart';
 import '../UIUX/customWidgets.dart';
 import '../UIUX/themesAndStyles.dart';
+import '../objects/powerRoomObject.dart';
 
 class ClassicGameMain extends StatefulWidget {
   final Socket? socket;
+  final ClassicGameController? controller;
   final Function(GameWinner, bool)? gameStateChange;
   final bool inTournament;
   final bool speedMatch;
@@ -28,6 +31,7 @@ class ClassicGameMain extends StatefulWidget {
     this.socket,
     this.gameStateChange,
     this.speedMatch = false,
+    this.controller,
     this.inTournament = false
   });
 
@@ -42,7 +46,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
   ValueNotifier<GameState> currentState = ValueNotifier(GameState.connecting);
 
-  ClassicRoom? roomInfo;
+  GameRoom? roomInfo;
 
   int gameStartsIn = 0;
 
@@ -67,6 +71,10 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
   @override
   void initState() {
     speedMatch = widget.speedMatch;
+    if (widget.controller != null) {
+      gameController = widget.controller;
+      currentState = widget.controller!.currentState;
+    }
     initSocket();
     initGameTimer();
 
@@ -124,11 +132,9 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
                       duration: const Duration(milliseconds: 300),
                       child: value != GameState.started && value != GameState.paused ?
                       viewMiddleWidget(value) : ClassicGameModule(
-                          key: const Key('classicGamePageKey'),
+                          key: UniqueKey(),
                           controller: gameController!,
-                          gameStateChanged: (winner, iWon){
-
-                          },
+                          gameStateChanged: (winner, iWon){},
                           socket: socket),),
                   ],
                 ),
@@ -315,7 +321,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
 
     if (!speedMatch){
-      roomInfo = ClassicRoom.fromResponse(data['roomInfo']);
+      roomInfo = GameRoom.fromResponse(data['roomInfo']);
       gameStartTime = calculateGameStartTime(roomInfo!.sessionEnd);
     }else{
       roomInfo!.sessionEnd = DateTime.now().add(const Duration(seconds: 3 + (Const.speedRoundDuration * 9)));
@@ -396,8 +402,9 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
   requestJoin(){
     uid = 'user${Random().nextInt(1000)}';
+    final characterId = Random().nextInt(45);
     socket.emitWithAck('joinClassic',  {
-      'token': 'classic.1.$uid'
+      'token': 'classic.1.$uid.$characterId'
     }, ack:  (response) {
       if (response['success'] == true){
         if (currentState.value == GameState.connecting) currentState.value = GameState.waiting;
@@ -418,7 +425,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
           return StartingSpeedMatch();
         }else{
           return Column(
-            key: Key('Classdj2!###kjds'),
+            key: UniqueKey(),
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

@@ -9,6 +9,8 @@ import 'package:tictactoe/SignUp/signup.dart';
 import 'package:tictactoe/Store/storeHome.dart';
 import 'package:tictactoe/Tournaments/classicTRoom.dart';
 import 'package:tictactoe/Tournaments/classicTournamentSelection.dart';
+import 'package:tictactoe/Tournaments/powersTRoom.dart';
+import 'package:tictactoe/Tournaments/powersTournamentSelection.dart';
 import 'package:tictactoe/Tournaments/tournamentHome.dart';
 import 'package:tictactoe/charactersPage.dart';
 import 'package:tictactoe/coinToss.dart';
@@ -49,7 +51,11 @@ class Routes {
   static const classicGameMain = '/game';
   static const tournamentsHome = '/tournaments';
   static const classicTournamentRoom = '/classicTournamentRoom';
+  static const nineTournamentRoom = '/powersTournamentRoom';
+  static const powersTournamentRoom = '/powersTournamentRoom';
   static const classicTournamentSelection = '/classicTournaments';
+  static const nineTournamentSelection = '/nineTournaments';
+  static const powersTournamentSelection = '/powersTournaments';
   static const ninesGameMain = '/nineGameMain';
   static const powersGameMain = '/powersGameMain';
   static const experimentalGameMain2 = '/experimentalGameMain2';
@@ -104,8 +110,14 @@ class RoutesGen {
         return GamePageRoute(builder: (_) => ClassicTournamentSelection());
       case Routes.classicTournamentRoom:
         return GamePageRoute(builder: (_) => ClassicTournamentRoom());
+      case Routes.powersTournamentSelection:
+        return GamePageRoute(builder: (_) => PowersTournamentSelection());
+      case Routes.powersTournamentRoom:
+        if (args is Character) return GamePageRoute(builder: (_) => PowersTournamentRoom(myCharacter: args));
+        return _errorRoute();
       case Routes.powersCharacterSelect:
-        return GamePageRoute(builder: (_) => CharacterSelectPage());
+        if (args is bool ) return GamePageRoute(builder: (_) => PowersCharacterSelectPage(tournament: args));
+        return GamePageRoute(builder: (_) => PowersCharacterSelectPage());
       case '/characters':
         return GamePageRoute(builder: (_) => CharactersPage());
       case Routes.coinToss:
@@ -116,7 +128,7 @@ class RoutesGen {
       case Routes.storeHome:
         return GamePageRoute(builder: (_) => storeHome());
       default:
-        return GamePageRoute(builder: (_) => Scaffold(body: Text('ERROR')));
+        return _errorRoute();
     }
   }
 

@@ -5,45 +5,51 @@ import 'package:flutter/material.dart';
 import '../PowersGame/Characters/core.dart';
 import 'classicObjects.dart';
 
-List<PowerClient> powerClientsFromJson(List<dynamic> data) => data.map((e) => PowerClient.fromJson(e)).toList();
+List<ClientObject> powerClientsFromJson(List<dynamic> data) => data.map((e) => ClientObject.fromJson(e)).toList();
 
-class PowerClient{
+class ClientObject{
   String userId;
   String clientId;
-  Character character;
+  Character? character;
+  int? characterId;
 
-  PowerClient({required this.clientId, required this.userId, required this.character});
+  ClientObject({required this.clientId,
+    required this.userId, this.character,
+  this.characterId});
 
-  factory PowerClient.fromJson(Map<String, dynamic> json) =>
-      PowerClient(
+  factory ClientObject.fromJson(Map<String, dynamic> json) =>
+      ClientObject(
         clientId: json['clientId'],
         userId: json['userId'],
-        character: Character.fromJson(json['character'])
+        character: json['character'] != null ?
+        Character.fromJson(json['character']) : null,
+        characterId: json['characterId']
       );
 
   toJson() => {
     'clientId': clientId,
     'userId': userId,
-    'character': character.toJson()
+    'character': character?.toJson(),
+    'characterId': characterId
   };
 }
 
-class PowersRoom {
+class GameRoom {
   String id;
   String lastHash;
   String userTurn;
-  List<PowerClient> users;
+  List<ClientObject> users;
   DateTime sessionEnd;
   DateTime? reconnectEnd;
   String? tournamentId;
 
-  PowersRoom({required this.id,
+  GameRoom({required this.id,
     required this.users,
     required this.lastHash, required this.sessionEnd,
     required this.userTurn, this.tournamentId, this.reconnectEnd});
 
   /// TODO: Characters are not fully initialized
-  factory PowersRoom.fromResponse(Map<String, dynamic> resp) => PowersRoom(
+  factory GameRoom.fromResponse(Map<String, dynamic> resp) => GameRoom(
       id: resp['id'],
       users: powerClientsFromJson(resp['users']),
       lastHash: resp['lastHash'],

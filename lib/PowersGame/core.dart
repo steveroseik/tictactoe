@@ -50,6 +50,7 @@ enum CellEffect{
   trapped,
   extraCell,
   decoy,
+  // clear,
 }
 
 /// CELL SPELLS

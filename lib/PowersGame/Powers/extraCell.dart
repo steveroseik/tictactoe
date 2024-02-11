@@ -87,6 +87,7 @@ class ExtraCellFinale extends Power{
 
   ExtraCellFinale({required super.playerState});
 
+  @override
   Map<int, Spell>? setSpell(
       {required List<int> cells, required List<PowerCell> grid}) {
     switch(canPlay(cells.first, cells.last, grid)){

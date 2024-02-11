@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,10 +61,15 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
   @override
   void initState() {
 
-    opponentCharacter = Sprites.characterOf[characters.angryPig]!;
-    myCharacter = Sprites.characterOf[characters.chameleon]!;
-
     controller = widget.controller;
+
+    if (controller.opponent.characterId != null){
+      opponentCharacter = Sprites.characterOf[characters.values[controller.opponent.characterId!]]!;
+      myCharacter = Sprites.characterOf[characters.values[controller.me.characterId!]]!;
+    }else{
+      opponentCharacter = controller.opponent.character!.avatar;
+      myCharacter = controller.me.character!.avatar;
+    }
 
     _animationController = AnimationController(
         duration: Duration(milliseconds: 3000), vsync: this);
@@ -92,7 +98,6 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
   Widget build(BuildContext context) {
 
     mainController = context.watch<MainController>();
-
     if (widget.isNine) gameControl = context.watch<ClassicGameController>();
     return (widget.isNine) ?
     Container(
@@ -134,7 +139,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
                           child: linearGrid[index] == -1
                               ? Container()
                               : linearGrid[index] ==
-                              0 ? myCharacter : opponentCharacter,
+                              controller.myIndex ? myCharacter : opponentCharacter,
                         );
                       })]),
               );
@@ -357,7 +362,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
                                                       -1
                                                       ? Container()
                                                       : linearGrid[index] ==
-                                                       0 ? myCharacter : opponentCharacter,
+                                                      controller.myIndex ? myCharacter : opponentCharacter,
                                                 ),
                                               );
                                             }),

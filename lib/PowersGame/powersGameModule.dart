@@ -11,9 +11,11 @@ import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/Controllers/powersGameController.dart';
 import 'package:tictactoe/PowersGame/Powers/cellBarrier.dart';
+import 'package:tictactoe/PowersGame/Powers/quantumCellWidget.dart';
 import 'package:tictactoe/PowersGame/Powers/sprites.dart';
 import 'package:tictactoe/PowersGame/core.dart';
 import 'package:tictactoe/PowersGame/powerCell.dart';
+import 'package:tictactoe/PowersGame/powerWidgets.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/objects/powerRoomObject.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
@@ -50,10 +52,14 @@ class SpellNotifier extends ChangeNotifier{
 class PowersGameModule extends StatefulWidget {
   final PowersGameController gameController;
   final Socket socket;
-  final PowersRoom roomInfo;
+  final GameRoom roomInfo;
+  final Function() checkWin;
+  final Function(Map<String, dynamic> data)? sendTournamentUpdate;
   const PowersGameModule({super.key,
     required this.gameController,
     required this.roomInfo,
+    required this.checkWin,
+    this.sendTournamentUpdate,
     required this.socket});
 
   @override
@@ -115,7 +121,7 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
     gameController = widget.gameController;
     animation = Tween(begin: 0.0, end: 1.0).animate(animationController);
     spellNotifier = SpellNotifier(length: rows*columns);
-    runTimeoutTimer();
+    runTimeoutTimer(socket: widget.socket);
     initTapsListener();
     super.initState();
   }
@@ -442,8 +448,10 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
                                     Expanded(
                                       child: InkWell(
                                         onTap: () {
+                                          accumulatedCells.clear();
                                           if (firstPower != true){
                                             setState(() {
+
                                               firstPower = true;
                                             });
                                           }else if (firstPower == true){
@@ -509,6 +517,7 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
                                     Expanded(
                                       child: InkWell(
                                         onTap: (){
+                                          accumulatedCells.clear();
                                           if (firstPower != false){
                                             setState(() {
                                               firstPower = false;
@@ -569,22 +578,7 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
     );
   }
 
-  Widget oppAvatarView(PowersGameController controller){
-    if (controller.sameAvatar) {
-      return ShaderMask(
-        blendMode: BlendMode.srcATop,
-        shaderCallback: (rect) => LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.deepOrange.withOpacity(0.9),
-            Colors.purple.withOpacity(0.2)
-          ]).createShader(rect),
-        child: controller.oppCharacter.avatar,);
-    }else{
-      return controller.oppCharacter.avatar;
-    }
-  }
+
 
   Widget viewCell(PowerCell cell, PowersGameController controller, index){
 
@@ -604,6 +598,8 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
 
   Widget viewSpell(PowerCell cell){
 
+    print(cell.spell!.effect);
+
     switch(cell.spell!.effect){
 
       case CellEffect.protected:
@@ -615,18 +611,40 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
               child: gaurdianPowerSprite(cell.spell!, gameController)),
         );
       case CellEffect.swapped:
-        // TODO: Handle this case.
-      case CellEffect.quantum:
-        // TODO: Handle this case.
-      case CellEffect.empty:
-        // TODO: Handle this case.
-      case CellEffect.hidden:
-        if (cell.spell!.from == gameController.myIndex) {
-          return AspectRatio(
+        return Padding(
+          padding: EdgeInsets.all(0.5.w),
+          child: AspectRatio(
             aspectRatio: 1,
             child: Opacity(
                 opacity: 0.4,
                 child: gameController.myCharacter.avatar),
+          ),
+        );
+      case CellEffect.quantum:
+        return QuantumCellWidget(
+            controller: gameController);
+
+      case CellEffect.empty:
+      case CellEffect.hidden:
+        if (cell.spell!.from == gameController.myIndex) {
+          return Padding(
+            padding: EdgeInsets.all(2.w),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Opacity(
+                  opacity: 0.4,
+                  child: gameController.myCharacter.avatar),
+            ),
+          );
+        }else if (cell.spell!.effect == CellEffect.empty){
+          return Padding(
+            padding: EdgeInsets.all(2.w),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Opacity(
+                  opacity: 0.4,
+                  child: gameController.oppCharacter.avatar),
+            ),
           );
         }
         break;
@@ -693,9 +711,16 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
           timer.cancel();
           pTimeoutCounter = 0;
           powerTimerOn = false;
-          final resp = (firstPower == null) ?
-          gameController.endMyRound() : null;
-          if (resp != null) widget.socket.emit('gameListener', resp);
+          if (firstPower == null) {
+            final resp = gameController.sendEndRound();
+            if (resp != null){
+              widget.socket.emitWithAck('gameListener', resp, ack: (data){
+                widget.checkWin();
+                final req = gameController.endMyRound();
+                if (req != null) widget.sendTournamentUpdate??(req);
+              });
+            }
+          }
         }else{
           pTimeoutCounter++;
         }
@@ -755,7 +780,7 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
     return false;
   }
 
-  runTimeoutTimer() async{
+  runTimeoutTimer({required Socket socket}) async{
     // await Future.delayed(const Duration(seconds: 3));
     // setState(() {});
 
@@ -786,8 +811,14 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
                 });
               }
             }else{
-              final endData = gameController.endMyRound();
-              sendToGameListener(endData);
+              final resp = gameController.sendEndRound();
+              if (resp != null){
+                widget.socket.emitWithAck('gameListener', resp, ack: (data){
+                  widget.checkWin();
+                  final req = gameController.endMyRound();
+                  if (req != null) widget.sendTournamentUpdate??(req);
+                });
+              }
             }
             firstPower = null;
             accumulatedCells.clear();
@@ -799,11 +830,11 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
     });
   }
 
-  sendToGameListener(dynamic data){
-    widget.socket.emitWithAck('gameListener', data, ack: (data){
-
-    });
-  }
+  // sendToGameListener(dynamic data){
+  //   widget.socket.emitWithAck('gameListener', data, ack: (data){
+  //
+  //   });
+  // }
 }
 
 

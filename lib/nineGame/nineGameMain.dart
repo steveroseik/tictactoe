@@ -17,6 +17,7 @@ import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
 import '../UIUX/customWidgets.dart';
 import '../ClassicGame/classicGameModule.dart';
+import '../objects/powerRoomObject.dart';
 import '../spritesConfigurations.dart';
 
 
@@ -47,7 +48,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
 
   ValueNotifier<GameState> currentState = ValueNotifier(GameState.connecting);
 
-  ClassicRoom? roomInfo;
+  GameRoom? roomInfo;
 
   int gameStartsIn = 0;
 
@@ -599,7 +600,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
       canLeave = false;
     });
 
-    roomInfo = ClassicRoom.fromResponse(data['roomInfo']);
+    roomInfo = GameRoom.fromResponse(data['roomInfo']);
 
     gameStartTime = calculateGameStartTime(roomInfo!.sessionEnd);
 
@@ -725,7 +726,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
       case GameState.waiting:
       case GameState.connecting:
         return Column(
-        key: Key('Classdj2!###kjds'),
+        key: UniqueKey(),
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

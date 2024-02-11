@@ -222,52 +222,7 @@ class _LoginPageState extends State<LoginPage>
                           )),
                         ],
                       ),
-                      //SizedBox(height: 3.h),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //   children: [
-                      //     Container(
-                      //       decoration: BoxDecoration(
-                      //           borderRadius: BorderRadius.circular(50),
-                      //           color: colorLightYellow),
-                      //       child: IconButton(
-                      //           onPressed: () {},
-                      //           icon: Image.asset(
-                      //             'assets/google_icon.png',
-                      //             height: 3.h,
-                      //           )),
-                      //     ),
-                      //     SizedBox(
-                      //       width: 5.w,
-                      //     ),
-                      //     Container(
-                      //       decoration: BoxDecoration(
-                      //           borderRadius: BorderRadius.circular(50),
-                      //           color: colorLightYellow),
-                      //       child: IconButton(
-                      //           onPressed: () {},
-                      //           icon: Image.asset(
-                      //             'assets/apple_icon.png',
-                      //             height: 3.5.h,
-                      //           )),
-                      //     ),
-                      //     SizedBox(
-                      //       width: 5.w,
-                      //     ),
-                      //     Container(
-                      //       decoration: BoxDecoration(
-                      //           borderRadius: BorderRadius.circular(50),
-                      //           color: colorLightYellow),
-                      //       child: IconButton(
-                      //           onPressed: () {},
-                      //           icon: Icon(
-                      //             Icons.facebook_rounded,
-                      //             color: CupertinoColors.systemBlue,
-                      //             size: 3.5.h,
-                      //           )),
-                      //     ),
-                      //   ],
-                      // ),
+
                       SizedBox(
                         height: 5.h,
                       ),
