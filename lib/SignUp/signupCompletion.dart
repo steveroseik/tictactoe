@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tictactoe/BackendMethods/backend.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignupCompletionPage extends StatefulWidget {
   const SignupCompletionPage({Key? key}) : super(key: key);
@@ -10,6 +13,7 @@ class SignupCompletionPage extends StatefulWidget {
 
 class _SignupCompletionPageState extends State<SignupCompletionPage> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final Backend backend= Backend();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
@@ -93,8 +97,57 @@ class _SignupCompletionPageState extends State<SignupCompletionPage> {
     );
   }
 
-  void _completeSignUp() {
-    // Create user in db
-    print("Created successfully");
+  // void _completeSignUp() {
+  //   // Create user in db
+  //   User? currentUser = _firebaseAuth.currentUser;
+  // // String email,
+  // // required String name,
+  // // required String username,
+  // // required bool isMale,
+  // // required DateTime birthdate,
+  // // required String provider,
+  // // required DateTime createdAt,
+  // // required DateTime lastModified,
+  // // required String facebookId,
+  // // String country = "",
+  // // String city = "",
+  //
+  //   // createUser(currentUser.email, currentUser.displayName, currentUser.providerData,currentUser.phoneNumber)
+  //   print("Created successfully");
+  // }
+
+  void _completeSignUp() async {
+    User? currentUser = _firebaseAuth.currentUser;
+    if (currentUser != null) {
+      Map<String, dynamic> userData = {
+        'email': currentUser.email,
+        'name': _usernameController.text,
+        'username': _usernameController.text,
+        'isMale': _isMale,
+        // TO DO: Add the rest of the fields
+      };
+
+      // Make HTTP POST request
+      Uri url = Uri.parse('http://localhost:3000/');
+      try {
+        final response = await http.post(
+          url,
+          body: json.encode({'createUserInput': userData}),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          // Success
+          print('User created successfully');
+        } else {
+          // Failure
+          print('Failed to create user. Error: ${response.body}');
+        }
+      } catch (e) {
+        print('Error creating user: $e');
+      }
+    }
   }
 }
