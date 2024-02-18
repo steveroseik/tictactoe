@@ -60,7 +60,8 @@ class _PowersCharacterSelectPageState extends State<PowersCharacterSelectPage> {
                     });
                     return InkWell(
                       onTap: () {
-                        if (widget.tournament){
+                        print(widget.tournament);
+                        if (!widget.tournament){
                           Navigator.of(context).pushNamed(Routes.powersGameMain,
                               arguments: character);
                         }else{

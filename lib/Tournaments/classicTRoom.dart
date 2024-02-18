@@ -113,37 +113,32 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
                         ) : Container(),
                       ),
                       Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black)
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 300),
-                                  child: tourValue == GameState.started || tourValue == GameState.ended ?
-                                  mainMiddleWidget(gameValue, tourValue)
-                                      : tourValue == GameState.starting &&
-                                      tournamentInfo?.users != null ?
-                                  participantsWidget() : Column(
-                                    key: UniqueKey(),
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      tourValue == GameState.connecting ? const Text("Connecting...")
-                                          : tourValue == GameState.waiting ? const Text("Finding a tournament...")
-                                          : Text("Game Starting in $gameStartsIn..."),
-                                      SizedBox(height: 30),
-                                      SizedBox(
-                                          width: 50.w,
-                                          child: LoadingWidget(circular: true, scaleFactor: 12))
-                                    ],
-                                  )),
-                            ],
-                          ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                child: tourValue == GameState.started || tourValue == GameState.ended ?
+                                mainMiddleWidget(gameValue, tourValue)
+                                    : tourValue == GameState.starting &&
+                                    tournamentInfo?.users != null ?
+                                participantsWidget() : Column(
+                                  key: UniqueKey(),
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    tourValue == GameState.connecting ? const Text("Connecting...")
+                                        : tourValue == GameState.waiting ? const Text("Finding a tournament...")
+                                        : Text("Game Starting in $gameStartsIn..."),
+                                    SizedBox(height: 30),
+                                    SizedBox(
+                                        width: 50.w,
+                                        child: LoadingWidget(circular: true, scaleFactor: 12))
+                                  ],
+                                )),
+                          ],
                         ),
                       ),
                       if (gameValue != GameState.starting && gameValue != GameState.started) SafeArea(

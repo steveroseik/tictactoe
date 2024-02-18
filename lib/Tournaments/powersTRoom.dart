@@ -11,6 +11,7 @@ import 'package:tictactoe/PowersGame/powersGameModule.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/objects/tournamentObject.dart';
 
+import '../ClassicGame/classicGameMain.dart';
 import '../Configurations/constants.dart';
 import '../PowersGame/Characters/core.dart';
 import '../PowersGame/core.dart';
@@ -83,47 +84,51 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ValueListenableBuilder<GameState>(
-          valueListenable: tourState,
-          builder: (context, tourValue, child) {
-            return ValueListenableBuilder<GameState>(
-                valueListenable: currentState,
-                builder: (context, gameValue, child) {
-                  return Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.deepOrange,
-                                  Colors.deepOrange,
-                                  Colors.deepPurple.shade800
-                                ])),
-                      ),
-                      AnimatedOpacity(
-                        opacity: (speedMatch &&
-                            (gameController?.state == GameState.started || gameController?.state == GameState.paused)) ? 0 : 1,
-                        duration: const Duration(milliseconds: 300),
-                        child: const BackgroundScroller(),),
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
-                        child:(speedMatch &&
-                            (gameController?.state == GameState.started || gameController?.state == GameState.paused)) ? SafeArea(
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Image.asset('assets/speed_match.png', width: 80.w,),
-                          ),
-                        ) : Container(),
-                      ),
-                      Positioned.fill(
-                        child: Container(
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
+      child: speedMatch ? ClassicGameMain(
+        speedMatch: true,
+        controller: extraController,
+        inTournament: true,
+        socket: socket,
+      ) :  Scaffold(
+        body: ValueListenableBuilder<GameState>(
+            valueListenable: tourState,
+            builder: (context, tourValue, child) {
+              return ValueListenableBuilder<GameState>(
+                  valueListenable: currentState,
+                  builder: (context, gameValue, child) {
+                    return Stack(
+                      children: [
+                        Container(
                           decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black)
-                          ),
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.deepOrange,
+                                    Colors.deepOrange,
+                                    Colors.deepPurple.shade800
+                                  ])),
+                        ),
+                        AnimatedOpacity(
+                          opacity: (speedMatch &&
+                              (gameController?.state == GameState.started || gameController?.state == GameState.paused)) ? 0 : 1,
+                          duration: const Duration(milliseconds: 300),
+                          child: const BackgroundScroller(),),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
+                          child:(speedMatch &&
+                              (gameController?.state == GameState.started || gameController?.state == GameState.paused)) ? SafeArea(
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Image.asset('assets/speed_match.png', width: 80.w,),
+                            ),
+                          ) : Container(),
+                        ),
+                        Positioned.fill(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -152,23 +157,23 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
                             ],
                           ),
                         ),
-                      ),
-                      if (gameValue != GameState.starting && gameValue != GameState.started) SafeArea(
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: ElevatedButton(
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Leave'),
+                        if (gameValue != GameState.starting) SafeArea(
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: ElevatedButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Leave'),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                }
-            );
-          }
+                      ],
+                    );
+                  }
+              );
+            }
+        ),
       ),
     );
   }
@@ -339,6 +344,12 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
 
     print(roomInfo!.lastHash);
     setState(() {});
+    Timer.periodic(gameStartTime!.difference(DateTime.now()), (timer){
+      gameController = PowersGameController(
+          roomInfo: roomInfo!,
+          currentState: currentState, uid: uid);
+      currentState.value = gameController!.setState(GameState.started);
+      timer.cancel();});
     initGameTimer();
   }
 
@@ -428,10 +439,13 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
 
   gameEndedWithDisconnect(Map<String, dynamic> data ){
 
-    if (gameController!.endGameDueConnection(data).$1) {
-      print('You won!!');
+    final resp = gameController!.endGameDueConnection(data, tournament: true);
+    if (resp.$1) {
+      // gameController!.setState(GameState.waiting);
+      sendTournamentUpdate(resp.$2);
     }else{
       print('Not the same');
+
     }
   }
 

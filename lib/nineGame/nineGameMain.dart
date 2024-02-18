@@ -663,7 +663,7 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
   requestJoin(){
     uid = 'user${Random().nextInt(1000)}';
     socket.emitWithAck('joinNine',  {
-      'token': 'nine.1.$uid'
+      'token': 'nine.1.$uid.24'
     }, ack:  (response) {
       if (response['success'] == true){
         if (currentState.value == GameState.connecting) currentState.value = GameState.waiting;

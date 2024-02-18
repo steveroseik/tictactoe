@@ -264,76 +264,93 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
                                 ],
                               ),
                             ),
+                            SizedBox(height: 10),
                             Center(
-                              child: Card(
-                                elevation: 20,
-                                color: Colors.transparent,
-                                shadowColor: colorDeepOrange,
-                                surfaceTintColor: Colors.yellow,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)
+                              child: Container(
+                                width: 95.w,
+                                height: 95.w,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          colorDeepOrange.withOpacity(0.9),
+                                          colorPurple.withOpacity(0.8)
+                                        ],
+                                    ),
+                                  boxShadow: [BoxShadow(
+                                    offset: Offset(4,4),
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 20
+
+                                  )]
                                 ),
-                                child: Container(
-                                  width: 95.w,
-                                  height: 95.w,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            colorDeepOrange.withOpacity(0.7),
-                                            colorPurple.withOpacity(0.6)
-                                          ]
-                                      )
-                                  ),
-                                  child: AnimatedBuilder(
-                                      animation: animationController,
-                                      builder: (context, child) {
-                                        List<Widget> lines = [];
-                                        createGridLines(94.5.w, 94.9.w, rows, columns, lines, Colors.black.withOpacity(0.7), animationController);
-                                        return Stack(
+                                child: AnimatedBuilder(
+                                    animation: animationController,
+                                    builder: (context, child) {
+                                      List<Widget> lines = [];
+                                      createGridLines(95.w, 95.w, rows, columns, lines, Colors.black.withOpacity(0.7), animationController);
+                                      return ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          alignment: Alignment.center,
                                           children: [
                                             ...lines,
-                                            GridView.builder(
-                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: rows),
-                                                padding: EdgeInsets.zero,
-                                                itemCount: gridLen*gridLen,
-                                                shrinkWrap: true,
-                                                physics: const NeverScrollableScrollPhysics(),
-                                                itemBuilder: (context, index){
-                                                  final row = index ~/ gridLen;
-                                                  final col = index % gridLen;
-                                                  return GestureDetector(
-                                                    behavior: HitTestBehavior.opaque,
-                                                    onTap: () {
-                                                      if (tapsSub != null && controller.state == GameState.started){
-                                                        gridTaps.add(index);
-                                                      }
-                                                    },
-                                                    child: Stack(
-                                                      alignment: Alignment.center,
-                                                      children: [
-                                                        Positioned.fill(child: Container(
-                                                          color: accumulatedCells.contains(index)
-                                                              ? Colors.red : Colors.transparent,)),
-                                                        if (controller.grid[row][col].spell != null) viewSpell(controller.grid[row][col]),
-                                                        if (controller.grid[row][col].observedVal != -1) Padding(
-                                                          padding: EdgeInsets.all(2.w),
-                                                          child: viewCell(controller.grid[row][col], controller, index),
+                                            Center(
+                                              child: GridView.builder(
+                                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: gridLen,
+                                                    mainAxisSpacing: 0
+                                                  ),
+                                                  padding: EdgeInsets.zero,
+                                                  itemCount: gridLen*gridLen,
+                                                  shrinkWrap: true,
+                                                  physics: const NeverScrollableScrollPhysics(),
+                                                  itemBuilder: (context, index){
+                                                    final row = index ~/ gridLen;
+                                                    final col = index % gridLen;
+                                                    return Container(
+                                                      // padding: EdgeInsets.all(5),
+                                                      decoration: BoxDecoration(
+                                                          // border: Border.all(color: Colors.black)
+                                                      ),
+                                                      child: GestureDetector(
+                                                        behavior: HitTestBehavior.opaque,
+                                                        onTap: () {
+                                                          if (tapsSub != null && controller.state == GameState.started){
+                                                            gridTaps.add(index);
+                                                          }
+                                                        },
+                                                        child: Stack(
+                                                          alignment: Alignment.center,
+                                                          children: [
+                                                            Center(child: Container(
+                                                              margin: EdgeInsets.all(1),
+                                                              color: accumulatedCells.contains(index)
+                                                                  ? Colors.red : Colors.transparent,)),
+                                                            if (controller.grid[row][col].spell != null) viewSpell(controller.grid[row][col]),
+                                                            if (controller.grid[row][col].observedVal != -1) Padding(
+                                                              padding: EdgeInsets.all(2.w),
+                                                              child: viewCell(controller.grid[row][col], controller, index),
+                                                            ),
+                                                            // animatedSprites[index]
+                                                          ],
                                                         ),
-                                                        // animatedSprites[index]
-                                                      ],
-                                                    ),
-                                                  );
-                                                }),
+                                                      ),
+                                                    );
+                                                  }),
+                                            ),
                                           ],
-                                        );
-                                      }
-                                  ),
+                                        ),
+                                      );
+                                    }
                                 ),
                               ),
                             ),
+                            SizedBox(height: 10),
                             Align(
                               alignment: Alignment.centerRight,
                               child: SizedBox(
@@ -662,13 +679,14 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
     return Container();
 
   }
+
   initTapsListener(){
     tapsSub = gridTaps.stream.listen((indexTapped) {
       print('tapped: $indexTapped');
 
       if (gameController.isMyTurn){
         if (firstPower == null){
-          handleSingleTap(indexTapped);
+          handleMoveTap(indexTapped);
         }else{
           handleSpellTap(indexTapped);
         }
@@ -682,7 +700,7 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
     });
   }
 
-  handleSingleTap(int index) {
+  handleMoveTap(int index) {
     if (!gameController.canPlayMove) return;
     final resp = gameController.setManualMove((index ~/ gridLen, index % gridLen ));
     if (resp == null) return;
@@ -766,7 +784,7 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
 
       firstPower = null;
       if (playHidden){
-        handleSingleTap(accumulatedCells.first);
+        handleMoveTap(accumulatedCells.first);
       }
     }
     accumulatedCells.clear();
