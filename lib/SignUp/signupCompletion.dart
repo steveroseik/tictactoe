@@ -119,24 +119,37 @@ class _SignupCompletionPageState extends State<SignupCompletionPage> {
   void _completeSignUp() async {
     User? currentUser = _firebaseAuth.currentUser;
     if (currentUser != null) {
-      Map<String, dynamic> userData = {
-        'email': currentUser.email,
-        'name': _usernameController.text,
-        'username': _usernameController.text,
-        'isMale': _isMale,
-        // TO DO: Add the rest of the fields
-      };
 
+      final query = '''
+          mutation q{
+                  createUser(createUserInput: {
+                      id: "${FirebaseAuth.instance.currentUser!.uid}",
+                      email: "${currentUser.email}",
+                      name: "${_usernameController.text}",
+                      username: "${_usernameController.text}",
+                      provider: "${FirebaseAuth.instance.currentUser!.providerData[0].providerId}"
+                      isMale: $_isMale,
+                      birthdate: "1990-11-11",
+                      createdAt: "1990-11-11"
+                      lastModified: "1990-11-11"
+                  })
+                }
+          ''';
+
+      print(query);
       // Make HTTP POST request
-      Uri url = Uri.parse('http://localhost:3000/');
+      Uri url = Uri.parse('http://172.20.10.2:3000/graphql');
       try {
+        print('trying');
         final response = await http.post(
           url,
-          body: json.encode({'createUserInput': userData}),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
+          body: jsonEncode({'query' : query }),
+          headers: {
+            'Content-Type': 'application/json',
           },
         );
+
+        print(response.body);
 
         if (response.statusCode == 200) {
           // Success
