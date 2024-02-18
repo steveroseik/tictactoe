@@ -117,9 +117,17 @@ class PowersGameController extends ChangeNotifier{
     return count;
   }
 
+  int count = 0;
   _winCheck({bool notify = true}){
     print('checking === == == == ==');
-    final data = (GameWinner.draw, <int>[]);//_checkWinner();
+    // late (GameWinner, List<int>) data;
+    final data = _checkWinner(); //(GameWinner.draw, <int>[]);//
+    // if (count == 3){
+    //   data = (GameWinner.draw, <int>[]);//_checkWinner(); //
+    // }else{
+    //   count++;
+    //   data = _checkWinner(); //(GameWinner.draw, <int>[]);//
+    // }
     winningPath = data.$2;
     _gameWinner = data.$1;
 
@@ -306,7 +314,7 @@ class PowersGameController extends ChangeNotifier{
           _oppLastMove = loc;
         }
 
-        if (myPlay) notifyListeners();
+        if (myPlay && hasListeners) notifyListeners();
         return true;
       }
     }
@@ -496,7 +504,7 @@ class PowersGameController extends ChangeNotifier{
 
   GameState setState(GameState state){
     _currentState.value = state;
-    notifyListeners();
+    if (hasListeners) notifyListeners();
     return state;
   }
 
@@ -540,7 +548,7 @@ class PowersGameController extends ChangeNotifier{
       _gameWinner = GameWinner.values[_myIndex];
       _iWon = true;
       _currentState.value = GameState.ended;
-      notifyListeners();
+      if (hasListeners) notifyListeners();
       return (true, !tournament ? null : _tournamentWinRequest());
     }
     return (false, !tournament ? null : _tournamentWinRequest());
@@ -657,6 +665,11 @@ class PowersGameController extends ChangeNotifier{
     final jsonString = jsonEncode(arr);
     final hash = sha256.convert(utf8.encode(jsonString));
     return hash.toString();
+  }
+
+  @override
+  void notifyListeners() {
+    if (hasListeners) super.notifyListeners();
   }
 
   @override

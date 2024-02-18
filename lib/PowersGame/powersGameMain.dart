@@ -78,17 +78,7 @@ class _PowersGameMainState extends State<PowersGameMain> {
     mySelectedCharacter = widget.character;
     initSocket();
 
-    gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (gameStartsIn <= 0){
-        if (roomInfo != null && roomInfo!.sessionEnd.isAfter(DateTime.now())){
-          timer.cancel();
-        }
-      }else{
-        setState(() {
-          gameStartsIn--;
-        });
-      }
-    });
+    initGameTimer();
 
     super.initState();
   }
@@ -146,15 +136,9 @@ class _PowersGameMainState extends State<PowersGameMain> {
                         AnimatedSwitcher(
                           duration: const Duration(milliseconds: 300),
                           child: value != GameState.started && value != GameState.paused ?
-                          viewMiddleWidget(value) : speedMatch ?
-                          ClassicGameModule(
-                            controller: extraController!,
-                            speedMatch: true,
-                            socket: socket,
-                            gameStateChanged: (GameWinner , bool ) {  },
-                          ):
-                          PowersGameModule(
+                          viewMiddleWidget(value) : PowersGameModule(
                               gameController: gameController!,
+
                              roomInfo: roomInfo!,
                               socket: socket,
                           checkWin: checkWin,),
@@ -325,16 +309,28 @@ class _PowersGameMainState extends State<PowersGameMain> {
 
     print(roomInfo!.lastHash);
     setState(() {});
-    initGameTimer();
-  }
-
-  initGameTimer(){
     Timer.periodic(gameStartTime!.difference(DateTime.now()), (timer){
       gameController = PowersGameController(
           roomInfo: roomInfo!,
           currentState: currentState, uid: uid);
       currentState.value = gameController!.setState(GameState.started);
       timer.cancel();});
+
+    initGameTimer();
+  }
+
+  initGameTimer(){
+    gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (gameStartsIn <= 0){
+        if (roomInfo != null && roomInfo!.sessionEnd.isAfter(DateTime.now())){
+          timer.cancel();
+        }
+      }else{
+        setState(() {
+          gameStartsIn--;
+        });
+      }
+    });
   }
 
   gameMoveValidation(data){
