@@ -20,6 +20,12 @@ class PowersCharacterSelectPage extends StatefulWidget {
 }
 
 class _PowersCharacterSelectPageState extends State<PowersCharacterSelectPage> {
+
+  @override
+  void initState() {
+    print(widget.tournament);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

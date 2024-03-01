@@ -40,12 +40,14 @@ class ClassicGameController extends ChangeNotifier{
 
   (int, int)? _lastMove;
 
+  bool _sameAvatar = false;
+
   String uid;
 
   DateTime? _roundTimeout;
 
   get isMyTurn => _myTurn;
-  get state => _currentState.value;
+  GameState get state => _currentState.value;
   get currentState => _currentState;
   get myConnection => _myConnection;
   get oppConnection => _oppConnection;
@@ -53,6 +55,7 @@ class ClassicGameController extends ChangeNotifier{
   GameWinner get winner => _gameWinner;
   get myIndex => _myIndex;
   get iWon => _iWon;
+  get sameAvatar => _sameAvatar;
 
   get isNine => gridLength == 9;
 
@@ -72,8 +75,8 @@ class ClassicGameController extends ChangeNotifier{
         .generate(gridLength, (index) => List.filled(gridLength, -1));
     _currentState = currentState;
     _roundTimeout = DateTime.now().add(Duration(seconds:
-        isNine ? Const.nineRoundDuration :
-        speedMatch ? Const.speedRoundDuration : Const.classicRoundDuration));
+    isNine ? Const.nineRoundDuration :
+    speedMatch ? Const.speedRoundDuration : Const.classicRoundDuration));
 
     if (roomInfo.userTurn == opponent.userId){
       _myIndex = Const.oCell;
@@ -82,9 +85,10 @@ class ClassicGameController extends ChangeNotifier{
       _myIndex = Const.xCell;
       _myTurn = true;
     }
-  }
 
-  int genCount = 0;
+    final chIds = roomInfo.users.map((e) => e.characterId).toSet().toList();
+    if (chIds.length == 1) _sameAvatar = true;
+  }
 
 
   int spotsRemaining({int? index}){
@@ -199,11 +203,11 @@ class ClassicGameController extends ChangeNotifier{
     }
   }
   _winCheck({bool notify = true}){
-    // TODO:: complete
-    final data = isNine ? _checkNine() : _checkWinnerClassic();
+    //_checkNine
+    final data = isNine ? (GameWinner.draw, <int>[]) : _checkWinnerClassic();//(GameWinner.draw, <int>[]);//
     winningPath = data.$2;
     _gameWinner = data.$1;
-
+    print('winner: $_gameWinner');
     _setIfIWon();
 
     if (_gameWinner != GameWinner.none) {
@@ -455,12 +459,16 @@ class ClassicGameController extends ChangeNotifier{
     };
   }
 
-  moveValidated({Map<String, dynamic>? data, bool tournament = false}){
+  Map<String, dynamic>? moveValidated({Map<String, dynamic>? data, bool tournament = false}){
     if (data != null) roomInfo.lastHash = data['hash'];
     _winCheck(notify: true);
+    print('did I win? :: $_iWon :: ${roomInfo.toJson()}');
+
     if (_iWon && tournament){
+
       return _tournamentWinRequest();
     }
+    return null;
   }
 
   didIWin(int winIndex, {bool tournament = false}){
@@ -472,6 +480,8 @@ class ClassicGameController extends ChangeNotifier{
       if (hasListeners) notifyListeners();
       if (_iWon && tournament){
         return _tournamentWinRequest();
+      }else{
+        print('controller say I didn\'t win');
       }
     }
   }
@@ -508,6 +518,11 @@ class ClassicGameController extends ChangeNotifier{
 
   GameState setState(GameState state){
     _currentState.value = state;
+    if (state == GameState.started && speedMatch){
+      _roundTimeout = DateTime.now().add(Duration(seconds:
+      isNine ? Const.nineRoundDuration :
+      speedMatch ? Const.speedRoundDuration : Const.classicRoundDuration));
+    }
     if (hasListeners) notifyListeners();
     return state;
   }
@@ -597,6 +612,8 @@ class ClassicGameController extends ChangeNotifier{
   }
 
 
+  Map<String, dynamic>? get winRequest => (_iWon) ? _tournamentWinRequest() : null;
+
   Map<String, dynamic> _tournamentWinRequest(){
     final opp = opponent;
     return {
@@ -632,6 +649,11 @@ class ClassicGameController extends ChangeNotifier{
     final jsonString = jsonEncode(arr);
     final hash = sha256.convert(utf8.encode(jsonString));
     return hash.toString();
+  }
+
+  @override
+  void notifyListeners() {
+    if (hasListeners) super.notifyListeners();
   }
 
   @override

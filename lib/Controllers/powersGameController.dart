@@ -92,6 +92,7 @@ class PowersGameController extends ChangeNotifier{
         sameAvatar = true;
       }
     }
+
     _currentState = currentState;
     _roundTimeout = DateTime.now().add(const Duration(seconds: Const.powersRoundDuration));
     if (roomInfo.userTurn == opponent.userId){
@@ -121,7 +122,7 @@ class PowersGameController extends ChangeNotifier{
   _winCheck({bool notify = true}){
     print('checking === == == == ==');
     // late (GameWinner, List<int>) data;
-    final data = _checkWinner(); //(GameWinner.draw, <int>[]);//
+    final data = (GameWinner.draw, <int>[]);//_checkWinner(); //
     // if (count == 3){
     //   data = (GameWinner.draw, <int>[]);//_checkWinner(); //
     // }else{

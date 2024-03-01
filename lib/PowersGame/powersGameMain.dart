@@ -314,9 +314,8 @@ class _PowersGameMainState extends State<PowersGameMain> {
           roomInfo: roomInfo!,
           currentState: currentState, uid: uid);
       currentState.value = gameController!.setState(GameState.started);
-      timer.cancel();});
-
-    initGameTimer();
+      timer.cancel();
+    });
   }
 
   initGameTimer(){

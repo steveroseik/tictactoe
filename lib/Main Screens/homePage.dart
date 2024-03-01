@@ -226,41 +226,6 @@ class _HomePageState extends State<HomePage> {
                           ]),
                         )),
                     SizedBox(height: 1.h),
-                    GameButton(
-                        onPressed: () {
-                          print('tapped');
-                        },
-                        enableShimmer: false,
-                        borderRadius: BorderRadius.circular(10),
-                        aspectRatio: 4 / 1,
-                        width: 70.w,
-                        baseDecoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                              Colors.lightGreen.shade600,
-                              Colors.lightGreen.shade900,
-                            ])),
-                        topDecoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                              Colors.lightGreen,
-                              Colors.lightGreen.shade800,
-                            ])),
-                        child: const Center(
-                          child: Text(
-                            'Play With Friends', // add your text here
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                            ),
-                            textAlign: TextAlign.end,
-                          ),
-                        )),
-                    SizedBox(height: 1.h),
                     GameButton2(
                         onPressed: () {
                           print('tapped');
@@ -298,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                               colors: [
-                                            Colors.orange,
+                                            Colors.deepPurple,
                                             Colors.orange.shade800,
                                           ])),
                                       child: NeoPopShimmer(
@@ -345,8 +310,8 @@ class _HomePageState extends State<HomePage> {
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                           colors: [
-                                        Colors.yellow.shade600,
-                                        Colors.yellow.shade800,
+                                            colorDarkBlue,
+                                            colorPurple,
                                       ])),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -374,92 +339,11 @@ class _HomePageState extends State<HomePage> {
                                       //       fontSize: 20),
                                       //   textAlign: TextAlign.start,
                                       // ),
-                                      Container(
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        decoration: BoxDecoration(
-                                            color: Colors.orange.shade800,
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 5.h,
-                                              padding: EdgeInsets.all(3.w),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  AspectRatio(
-                                                    aspectRatio: 1,
-                                                    child: Sprites
-                                                        .coinOf[Coins.bronze],
-                                                  ),
-                                                  SizedBox(
-                                                    width: 1.w,
-                                                  ),
-                                                  Text(
-                                                    '50',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20),
-                                                    textAlign: TextAlign.center,
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              height: 5.h,
-                                              padding: EdgeInsets.all(3.w),
-                                              child: Row(
-                                                children: [
-                                                  AspectRatio(
-                                                    aspectRatio: 1,
-                                                    child: Sprites
-                                                        .coinOf[Coins.silver],
-                                                  ),
-                                                  SizedBox(
-                                                    width: 1.w,
-                                                  ),
-                                                  Text(
-                                                    '25',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              height: 5.h,
-                                              padding: EdgeInsets.all(3.w),
-                                              child: Row(
-                                                children: [
-                                                  AspectRatio(
-                                                    aspectRatio: 1,
-                                                    child: Sprites
-                                                        .coinOf[Coins.gold],
-                                                  ),
-                                                  SizedBox(
-                                                    width: 1.w,
-                                                  ),
-                                                  Text(
-                                                    '10',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                      LinearPercentIndicator(
+                                        percent: 3/5,
+                                        trailing: Text('3 of 5', style: TextStyle(color: Colors.white),),
+                                        lineHeight: 10,
+                                        barRadius: Radius.circular(20),
                                       ),
                                       Row(
                                         mainAxisAlignment:

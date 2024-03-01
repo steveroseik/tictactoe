@@ -6,14 +6,14 @@ import '../UIUX/themesAndStyles.dart';
 import '../routesGenerator.dart';
 
 
-class PowersTournamentSelection extends StatefulWidget {
-  const PowersTournamentSelection({super.key});
+class NineTournamentSelection extends StatefulWidget {
+  const NineTournamentSelection({super.key});
 
   @override
-  State<PowersTournamentSelection> createState() => _PowersTournamentSelectionState();
+  State<NineTournamentSelection> createState() => _NineTournamentSelectionState();
 }
 
-class _PowersTournamentSelectionState extends State<PowersTournamentSelection> {
+class _NineTournamentSelectionState extends State<NineTournamentSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,13 +43,12 @@ class _PowersTournamentSelectionState extends State<PowersTournamentSelection> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(onPressed: (){
-                  Navigator.of(context).pushNamed(Routes.powersCharacterSelect,
-                  arguments: true);
-                }, child: Text("Neophyte Challenge")),
+                  Navigator.of(context).pushNamed(Routes.nineTournamentRoom);
+                }, child: Text("Daily")),
                 ElevatedButton(onPressed: (){
                   showCustomDialog(context: context, child: Container());
-                }, child: Text("Vanguard Valor Championship")),
-                ElevatedButton(onPressed: (){}, child: Text("Supremacy Summit Showdown"))
+                }, child: Text("Weekly")),
+                ElevatedButton(onPressed: (){}, child: Text("Monthly"))
               ],
             ),
           )

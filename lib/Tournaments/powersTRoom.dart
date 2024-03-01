@@ -121,7 +121,8 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
                           duration: const Duration(milliseconds: 300),
                           transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
                           child:(speedMatch &&
-                              (gameController?.state == GameState.started || gameController?.state == GameState.paused)) ? SafeArea(
+                              (gameController?.state == GameState.started || gameController?.state == GameState.paused)) ?
+                          SafeArea(
                             child: Align(
                               alignment: Alignment.topCenter,
                               child: Image.asset('assets/speed_match.png', width: 80.w,),

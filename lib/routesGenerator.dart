@@ -9,6 +9,8 @@ import 'package:tictactoe/SignUp/signup.dart';
 import 'package:tictactoe/Store/storeHome.dart';
 import 'package:tictactoe/Tournaments/classicTRoom.dart';
 import 'package:tictactoe/Tournaments/classicTournamentSelection.dart';
+import 'package:tictactoe/Tournaments/nineTRoom.dart';
+import 'package:tictactoe/Tournaments/nineTournamentSelection.dart';
 import 'package:tictactoe/Tournaments/powersTRoom.dart';
 import 'package:tictactoe/Tournaments/powersTournamentSelection.dart';
 import 'package:tictactoe/Tournaments/tournamentHome.dart';
@@ -51,7 +53,7 @@ class Routes {
   static const classicGameMain = '/game';
   static const tournamentsHome = '/tournaments';
   static const classicTournamentRoom = '/classicTournamentRoom';
-  static const nineTournamentRoom = '/powersTournamentRoom';
+  static const nineTournamentRoom = '/nineTournamentRoom';
   static const powersTournamentRoom = '/powersTournamentRoom';
   static const classicTournamentSelection = '/classicTournaments';
   static const nineTournamentSelection = '/nineTournaments';
@@ -92,6 +94,13 @@ class RoutesGen {
       case Routes.classicGameModeSelect:
         return GamePageRoute(builder: (_) => MultiplayerSingleSelectPage());
       case Routes.ninesGameMain:
+        if (args != null && args is Map<String, dynamic>) {
+          return GamePageRoute(builder: (_) => NineGameMain(
+            inTournament: args['inTournament']?? false,
+            roomInfo: args['roomInfo']!,
+            uid: args['uid']!,
+        ));
+        }
         return GamePageRoute(builder: (_) => NineGameMain());
       case Routes.powersGameMain:
         if (args is Character)
@@ -110,6 +119,10 @@ class RoutesGen {
         return GamePageRoute(builder: (_) => ClassicTournamentSelection());
       case Routes.classicTournamentRoom:
         return GamePageRoute(builder: (_) => ClassicTournamentRoom());
+      case Routes.nineTournamentSelection:
+        return GamePageRoute(builder: (_) => NineTournamentSelection());
+      case Routes.nineTournamentRoom:
+        return GamePageRoute(builder: (_) => NineTournamentRoom());
       case Routes.powersTournamentSelection:
         return GamePageRoute(builder: (_) => PowersTournamentSelection());
       case Routes.powersTournamentRoom:

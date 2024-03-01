@@ -405,7 +405,8 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
     if (move != null && hash != null){
       final resp = gameController!.validateMove(move, hash);
       socket.emitWithAck('gameListener', resp, ack: (data){
-        gameController!.moveValidated();
+        final resp = gameController!.moveValidated(tournament: true);
+        if (resp != null) sendTournamentUpdate(resp);
         checkWin();
         // if (gameController?.winner != GameWinner.none){
         //   if (!gameController?.iWon){
@@ -474,7 +475,7 @@ class _ClassicTournamentRoomState extends State<ClassicTournamentRoom> {
         }
 
       }
-      /// should handle when response['success'] == false
+      /// TODO: should handle when response['success'] == false
     });
   }
 

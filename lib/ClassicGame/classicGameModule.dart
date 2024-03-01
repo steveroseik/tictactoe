@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:tictactoe/ClassicGame/classicWidgets.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/mainController.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
@@ -64,7 +65,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
     controller = widget.controller;
 
     if (controller.opponent.characterId != null){
-      opponentCharacter = Sprites.characterOf[characters.values[controller.opponent.characterId!]]!;
+      opponentCharacter = classicOppViewAvatar(Sprites.characterOf[characters.values[controller.opponent.characterId!]]!, controller.sameAvatar);
       myCharacter = Sprites.characterOf[characters.values[controller.me.characterId!]]!;
     }else{
       opponentCharacter = controller.opponent.character!.avatar;
@@ -150,7 +151,6 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
       create: (context) => controller,
       child: Consumer<ClassicGameController>(
         builder: (BuildContext context, ClassicGameController gameLiveController, Widget? child) {
-          // updateGameState(gameLiveController);
           return Stack(
             children: [
               Center(
@@ -452,6 +452,10 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
     // setState(() {});
     if (widget.isNine) return;
 
+    if (widget.controller.state == GameState.coinToss) {
+      timeoutTimer?.cancel();
+      return;
+    }
     timeoutTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
 
       if (controller.state == GameState.ended) {
@@ -469,7 +473,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
         });
       }else{
         final now = DateTime.now();
-        if (controller.timeout!.isAfter(now)){
+        if (controller.timeout?.isAfter(now)?? false){
           setState(() {
 
             final perc = controller.timeout!.difference(now).inSeconds /

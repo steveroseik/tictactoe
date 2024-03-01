@@ -5,10 +5,12 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
+import 'package:tictactoe/Providers/socketProvider.dart';
 import 'package:tictactoe/coinToss.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
 import 'package:tictactoe/ClassicGame/classicGameModule.dart';
@@ -23,16 +25,22 @@ class ClassicGameMain extends StatefulWidget {
   final Socket? socket;
   final ClassicGameController? controller;
   final Function(GameWinner, bool)? gameStateChange;
+  final Function(Map<String, dynamic> data)? sendTournamentUpdate;
+  final Function()? onTournamentRoundEnd;
   final bool inTournament;
   final bool speedMatch;
+  final int gameStartsIn;
 
 
   const ClassicGameMain({super.key,
     this.socket,
     this.gameStateChange,
+    this.onTournamentRoundEnd,
+    this.sendTournamentUpdate,
     this.speedMatch = false,
     this.controller,
-    this.inTournament = false
+    this.inTournament = false,
+    this.gameStartsIn = 0
   });
 
   @override
@@ -68,13 +76,19 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
   int speedCount = 0;
 
+  List<StreamSubscription> subscriptions = [];
+
   @override
   void initState() {
+    print('speed data lehhhhhhh: ${widget.controller?.roomInfo.toJson()}');
     speedMatch = widget.speedMatch;
     if (widget.controller != null) {
       gameController = widget.controller;
       currentState = widget.controller!.currentState;
     }
+
+    gameStartsIn = widget.gameStartsIn;
+
     initSocket();
     initGameTimer();
 
@@ -83,9 +97,16 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
   @override
   void dispose() {
-    print('canceled');
+    print('getting off speed');
     super.dispose();
-    socket.disconnect();
+    gameTimer.cancel();
+    if (!widget.inTournament) {
+      getIt.get<SocketProvider>().disconnect();
+    }
+
+    for ( var sub in subscriptions){
+      sub.cancel();
+    }
   }
 
   @override
@@ -131,11 +152,21 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       child: value != GameState.started && value != GameState.paused ?
-                      viewMiddleWidget(value) : ClassicGameModule(
-                          key: UniqueKey(),
-                          controller: gameController!,
-                          gameStateChanged: (winner, iWon){},
-                          socket: socket),),
+                      viewMiddleWidget(
+                          controller: gameController,
+                          gameState: value,
+                          speedMatch: speedMatch,
+                          gameStartsIn: gameStartsIn,
+                          onCoinTossEnd: onCoinTossEnd,
+                          inTournament: widget.inTournament,
+                          onWinButtonClick: (){},
+                          tournamentRoundEnded: (){}
+                      )
+                          : ClassicGameModule(
+                            key: UniqueKey(),
+                            controller: gameController!,
+                            gameStateChanged: (winner, iWon){},
+                            socket: socket),),
                   ],
                 ),
               ),
@@ -172,22 +203,35 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
   }
 
   initSocket(){
-    if (widget.socket != null){
-      socket = widget.socket!;
-
+    final socketProvider = getIt.get<SocketProvider>();
+    if (widget.socket != null) {
+      socket = socketProvider.socket!;
     }else{
-      socket = io(Const.gameServerUrl,
-          OptionBuilder()
-              .setTransports(['websocket'])
-              .disableAutoConnect()
-              .enableForceNewConnection()
-              .build());
-
-      socket.connect();
+      socket = socketProvider.connect();
     }
 
 
-    socket.onConnect((_) async{
+    subscriptions.add(socketProvider.onGameListener.stream.listen((data) {
+
+      print('got data: ${jsonEncode(data)}');
+
+      switch(data['type']){
+
+        case 'gameInit': gameInitAction(data);
+        break;
+        case 'classicAction': gameClassicAction(data);
+        break;
+        case 'classicValidation': gameClassicValidation(data);
+        break;
+        case 'gameConnectionOff': gameEndedWithDisconnect(data);
+        break;
+        case 'switchToSpeed': startSpeedMatch(data);
+        break;
+        default: print('lel asaf ${jsonEncode(data)}');
+      }
+
+    }));
+    subscriptions.add(socketProvider.onConnect.stream.listen((_) async{
       print("Connection established : ${socket.id}");
       if (gotDisconnected){
         gotDisconnected = false;
@@ -207,9 +251,9 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
       }else{
         if (!widget.inTournament) requestJoin();
       }
-    });
+    }));
 
-    socket.on('gameConnection', (data) {
+    subscriptions.add(socketProvider.onGameConnection.stream.listen((data) {
       if (data['type'] == 'disconnect'){
         setState(() {
           oppConnected = false;
@@ -222,9 +266,37 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
         });
         gameController?.setOppConnection(GameConn.online, clientId: data['clientId']);
       }
-    });
+    }));
 
+    subscriptions.add(socketProvider.onDisconnect.stream.listen((_){
+      print("Disconnected");
+      currentState.value = GameState.connecting;
+      if (mounted){
+        gotDisconnected = true;
+        if (gameController != null &&
+            gameController!.hasListeners) gameController?.gotOffline();
+      }
+    }));
 
+    int errorCounter = 0;
+    subscriptions.add(socketProvider.onConnectionError.stream.listen((err) {
+      if (errorCounter == 4){
+        try{
+          socket.disconnect();
+        }catch (e){
+          print(e);
+        }
+        if (!widget.inTournament) Navigator.of(context).pop();
+      }else{
+        errorCounter++;
+      }
+    }));
+
+    subscriptions.add(socketProvider.onError.stream.listen((err)=>print('Socket Error: $err')));
+
+  }
+
+  initGameListener(){
     socket.on('gameListener', (data) {
 
       print('got data: ${jsonEncode(data)}');
@@ -245,32 +317,6 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
       }
 
     });
-
-    socket.onDisconnect((_){
-      print("Disconnected");
-      currentState.value = GameState.connecting;
-      if (mounted){
-        gotDisconnected = true;
-        if (gameController != null &&
-            gameController!.hasListeners) gameController?.gotOffline();
-      }
-    });
-
-    int errorCounter = 0;
-    socket.onConnectError((err) {
-      if (errorCounter == 4){
-        try{
-          socket.disconnect();
-        }catch (e){
-          print(e);
-        }
-        if (!widget.inTournament) Navigator.of(context).pop();
-      }else{
-        errorCounter++;
-      }
-    });
-
-    socket.onError((err)=>print('Socket Error: $err'));
   }
 
   calculateGameStartTime(DateTime endTime){
@@ -309,7 +355,10 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
   }
 
   onCoinTossEnd(){
-    gameController?.didIWin(theLuckyWinner);
+    final resp = gameController?.didIWin(theLuckyWinner, tournament: widget.inTournament);
+    if (resp != null && widget.inTournament){
+      Navigator.of(context).pop(resp);
+    }
   }
 
   gameInitAction(Map<String, dynamic> data, {bool speedMatch = false}){
@@ -329,7 +378,6 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
     }
 
 
-
     print(gameStartTime);
     gameStartsIn = gameStartTime!.difference(DateTime.now()).inSeconds;
 
@@ -347,32 +395,41 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
       timer.cancel();});
   }
 
+
+
   gameClassicValidation(data){
     if (data['success'] != true){
       print('YOU ARE CHEATING!!');
       Navigator.of(context).pop();
     }else{
+      print('running from classic');
       gameController?.moveValidated(data: data);
       checkWin();
     }
   }
 
   checkWin(){
+    print('CHECKIINGG WINNN!!: ${gameController?.state} :: ${gameController?.iWon}');
     if (gameController?.state == GameState.ended){
-      if (gameController?.winner == GameWinner.draw
-          && gameController?.isMyTurn){
-        socket.emitWithAck('gameListener', {
-          'type': "switchToSpeed",
-          'roomId': gameController?.roomInfo.id,
-          'hash': gameController?.roomInfo.lastHash,
-        }, ack: (response){
-          if (response['success'] == true){
-            startSpeedMatch({
-              'hash': gameController?.roomInfo.lastHash,
-              'coinWinner': response['coinWinner']
-            });
-          }
-        });
+      if (gameController?.winner == GameWinner.draw){
+        if (gameController?.isMyTurn){
+          socket.emitWithAck('gameListener', {
+            'type': "switchToSpeed",
+            'roomId': gameController?.roomInfo.id,
+            'hash': gameController?.roomInfo.lastHash,
+          }, ack: (response){
+            if (response['success'] == true){
+              startSpeedMatch({
+                'hash': gameController?.roomInfo.lastHash,
+                'coinWinner': response['coinWinner']
+              });
+            }
+          });
+        }
+      }else if (widget.inTournament){
+        Navigator.of(context)
+            .pop((gameController?.iWon??false) ?
+        gameController?.winRequest : null);
       }
     }
   }
@@ -384,17 +441,27 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
     if (move != null && hash != null){
       final resp = gameController?.validateMove(move, hash);
       socket.emitWithAck('gameListener', resp, ack: (data){
-        gameController?.moveValidated();
+        print('running from classic');
+        final update = gameController?.moveValidated(tournament: widget.inTournament);
+        if (update != null) {
+          print('sending from classic!!!!: ${update}');
+          if (widget.sendTournamentUpdate != null) widget.sendTournamentUpdate!(update);
+        }
         checkWin();
       });
 
     }
   }
 
-  gameEndedWithDisconnect(Map<String, dynamic> data ){
+  gameEndedWithDisconnect(Map<String, dynamic> data){
 
-    if (gameController!.endGameDueConnection(data).$1) {
-      print('You won!!');
+    final resp = gameController!.endGameDueConnection(data, tournament: widget.inTournament);
+    if (resp.$1) {
+      if (resp.$2 != null){
+
+        Navigator.of(context).pop(resp.$2);
+        // if (widget.sendTournamentUpdate != null) widget.sendTournamentUpdate!(resp.$2);
+      }
     }else{
       print('Not the same');
     }
@@ -413,169 +480,5 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
         Navigator.of(context).pop();
       }
     });
-  }
-
-
-  Widget viewMiddleWidget(GameState value){
-    switch (value){
-      case GameState.starting:
-      case GameState.waiting:
-      case GameState.connecting:
-        if (value == GameState.starting && speedMatch){
-          return StartingSpeedMatch();
-        }else{
-          return Column(
-            key: UniqueKey(),
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              value == GameState.connecting ? const Text("Connecting...")
-                  : value == GameState.starting ? Text("Starting in $gameStartsIn..")
-                  : const Text("Searching for an opponent.."),
-              SizedBox(height: 30),
-              SizedBox(
-                  width: 50.w,
-                  child: LoadingWidget(circular: true, scaleFactor: 12))
-            ],
-          );
-        }
-      case GameState.coinToss:
-        return CoinToss(onEnd: onCoinTossEnd);
-      case GameState.ended:
-        return gameEndDialog();
-
-      default: return Text('1Should not appear');
-    }
-
-  }
-  Widget StartingSpeedMatch(){
-    return Container(
-      width: 80.w,
-      padding: EdgeInsets.all(6.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-            colors: [
-              Colors.purple,
-              colorPurple
-            ]
-        ),
-        boxShadow: [
-          BoxShadow(
-              color: colorDarkBlue.withOpacity(0.5),
-              offset: Offset(3, 3),
-              spreadRadius: 1,
-              blurRadius: 3)
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          const Text(
-            "The Match Ended With Draw!",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(height: 1.h),
-          Text(
-            "Starting Speed Match!",
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20.0,
-                fontWeight: FontWeight.w700
-            ),
-          ),
-          Text(
-            "$gameStartsIn...",
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-            ),
-          ),
-          LinearPercentIndicator(
-            animationDuration: 1000,
-            animation: true,
-            animateFromLastPercent: true,
-            percent: gameStartsIn/3,
-            backgroundColor: colorPurple,
-            progressColor: colorDeepOrange,
-            barRadius: Radius.circular(20),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget gameEndDialog(){
-    return Container(
-      width: 80.w,
-      padding: EdgeInsets.all(6.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          colors: [
-            Colors.purple,
-            colorPurple
-          ]
-        ),
-        boxShadow: [
-          BoxShadow(
-              color: colorDarkBlue.withOpacity(0.5),
-              offset: Offset(3, 3),
-              spreadRadius: 1,
-              blurRadius: 3)
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          const Text(
-            "Game Ended",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(height: 1.h),
-          Text(
-            gameController?.iWon ? "You Won !" : "You Lost !",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 35.0,
-              fontWeight: FontWeight.w700
-            ),
-          ),
-          SizedBox(height: 3.h),
-          GameButton(
-            height: 6.h,
-            baseDecoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: gameController?.iWon ?
-                [colorDeepOrange, colorDeepOrange] :
-                [Colors.red, colorDeepOrange],
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            topDecoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors:  !gameController?.iWon ?
-                [colorDeepOrange, colorDeepOrange] :
-                [colorLightYellow, colorDeepOrange],
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            onPressed: (){},
-            aspectRatio: 3/1,
-            enableShimmer: false,
-            borderRadius: BorderRadius.circular(10),
-            child: Center(
-                child: Text(gameController?.iWon ? 'Claim Reward' : 'Back To Home',
-                style: TextStyle(color: Colors.black),)),
-          )
-        ],
-      ),
-    );
   }
 }

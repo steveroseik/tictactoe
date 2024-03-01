@@ -5,9 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_dialogs/dialogs.dart';
 import 'package:neopop/widgets/shimmer/neopop_shimmer.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:simple_animated_button/elevated_layer_button.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
+
+import '../Configurations/constants.dart';
+import '../coinToss.dart';
 
 class BackgroundScroller extends StatefulWidget {
   final double? height;
@@ -865,4 +870,192 @@ class GameButton2 extends StatelessWidget {
       ),
     );
   }
+}
+
+
+final loadingCircularBigScale = LoadingWidget(circular: true, scaleFactor: 12);
+Widget viewMiddleWidget({
+  required ClassicGameController? controller,
+  required GameState gameState,
+  required bool speedMatch,
+  required int gameStartsIn,
+  bool inTournament = false,
+  required Function() onCoinTossEnd,
+  required Function() onWinButtonClick,
+  required Function() tournamentRoundEnded,
+}){
+  switch (gameState){
+    case GameState.starting:
+    case GameState.waiting:
+    case GameState.connecting:
+      if (gameState == GameState.starting && speedMatch){
+        return StartingSpeedMatch(gameStartsIn, speedMatch, controller);
+      }else{
+        return Column(
+          key: UniqueKey(),
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            gameState == GameState.connecting ? const Text("Connecting...")
+                : gameState == GameState.starting ? Text("Starting in $gameStartsIn..")
+                : const Text("Searching for an opponent.."),
+            SizedBox(height: 30),
+            SizedBox(
+                width: 50.w,
+                child: loadingCircularBigScale)
+          ],
+        );
+      }
+    case GameState.coinToss:
+      return CoinToss(onEnd: onCoinTossEnd);
+
+    case GameState.ended:
+      if (controller?.winner == GameWinner.draw) return StartingSpeedMatch(gameStartsIn, speedMatch, controller);
+      tournamentRoundEnded;
+      return gameEndDialog(controller, inTournament);
+
+    default: return Text('1Should not appear');
+  }
+
+}
+Widget StartingSpeedMatch(int gameStartsIn, bool speedMatch, ClassicGameController? controller){
+  return Container(
+    key: Key('$speedMatch${controller?.roomInfo.id}'),
+    width: 80.w,
+    padding: EdgeInsets.all(6.w),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      gradient: const LinearGradient(
+          colors: [
+            Colors.purple,
+            colorPurple
+          ]
+      ),
+      boxShadow: [
+        BoxShadow(
+            color: colorDarkBlue.withOpacity(0.5),
+            offset: Offset(3, 3),
+            spreadRadius: 1,
+            blurRadius: 3)
+      ],
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        const Text(
+          "The Match Ended With Draw!",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(height: 1.h),
+        Text(
+          "Starting Speed Match!",
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+              fontWeight: FontWeight.w700
+          ),
+        ),
+        if (gameStartsIn > 0) Text(
+          "$gameStartsIn seconds",
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+          ),
+        ),
+        gameStartsIn == 0 ?
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: LinearProgressIndicator(
+            color: Colors.deepOrange,
+            backgroundColor: Colors.black,
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ) :
+        LinearPercentIndicator(
+          animationDuration: 1000,
+          animation: true,
+          animateFromLastPercent: true,
+          percent: gameStartsIn/3,
+          backgroundColor: colorPurple,
+          progressColor: colorDeepOrange,
+          barRadius: Radius.circular(20),
+        )
+      ],
+    ),
+  );
+}
+
+Widget gameEndDialog(ClassicGameController? gameController, bool inTournament){
+  return Container(
+    key: UniqueKey(),
+    width: 80.w,
+    padding: EdgeInsets.all(6.w),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      gradient: LinearGradient(
+          colors: [
+            Colors.purple,
+            colorPurple
+          ]
+      ),
+      boxShadow: [
+        BoxShadow(
+            color: colorDarkBlue.withOpacity(0.5),
+            offset: Offset(3, 3),
+            spreadRadius: 1,
+            blurRadius: 3)
+      ],
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text(
+          inTournament ? "Round Ended" : "Game Ended",
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(height: 1.h),
+        Text(
+          gameController?.iWon ? "You Won !" : "You Lost !",
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 35.0,
+              fontWeight: FontWeight.w700
+          ),
+        ),
+        SizedBox(height: 3.h),
+        GameButton(
+          height: 6.h,
+          baseDecoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: gameController?.iWon ?
+              [colorDeepOrange, colorDeepOrange] :
+              [Colors.red, colorDeepOrange],
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          topDecoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors:  !gameController?.iWon ?
+              [colorDeepOrange, colorDeepOrange] :
+              [colorLightYellow, colorDeepOrange],
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          onPressed: (){},
+          aspectRatio: 3/1,
+          enableShimmer: false,
+          borderRadius: BorderRadius.circular(10),
+          child: Center(
+              child: Text(gameController?.iWon ? (inTournament ? "Next Round" : 'Claim Reward') : 'Back To Home',
+                style: TextStyle(color: Colors.black),)),
+        )
+      ],
+    ),
+  );
 }
