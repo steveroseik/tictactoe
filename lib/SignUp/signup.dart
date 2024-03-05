@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../UIUX/customWidgets.dart';
 import '../UIUX/themesAndStyles.dart';
 
-
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
@@ -19,7 +18,8 @@ class _SignupPageState extends State<SignupPage> {
   final Authentication _authenticator = Authentication();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _reenterPasswordController = TextEditingController();
+  final TextEditingController _reenterPasswordController =
+      TextEditingController();
 
   String? email;
   String? username;
@@ -32,10 +32,21 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: colorBlue,
+      // backgroundColor: colorDeepOrange,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                  Colors.deepOrange,
+                  Colors.deepOrange,
+                  Colors.deepPurple.shade800
+                ])),
+          ),
           const BackgroundScroller(),
           AppBar(
               excludeHeaderSemantics: true,
@@ -147,30 +158,31 @@ class _SignupPageState extends State<SignupPage> {
                     width: 80.w,
                     height: 6.h,
                     child: ElevatedButton(
-                        onPressed: ()  async {
-                        if (_passwordController.text != _reenterPasswordController.text) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Passwords do not match')),
-                          );
-                          return;
-                        }
+                        onPressed: () async {
+                          if (_passwordController.text !=
+                              _reenterPasswordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Passwords do not match')),
+                            );
+                            return;
+                          }
 
-                        try {
-                          // Calling the signUpWithEmailAndPassword method
-                           await _authenticator.signUpWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                            context: context,
-                          );
-                          provider= "Email/Password";
-
-                        } catch (e) {
-                          // Handle other exceptions
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Signup failed: $e')),
-                          );
-                        }
-                      },
+                          try {
+                            // Calling the signUpWithEmailAndPassword method
+                            await _authenticator.signUpWithEmailAndPassword(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                              context: context,
+                            );
+                            // provider = "Email/Password";
+                          } catch (e) {
+                            // Handle other exceptions
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Signup failed: $e')),
+                            );
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: colorDarkBlue,
                             foregroundColor: colorLightYellow,
@@ -187,21 +199,22 @@ class _SignupPageState extends State<SignupPage> {
                     children: [
                       Expanded(
                           child: Divider(
-                            thickness: 2,
-                            color: colorLightYellow,
-                          )),
+                        thickness: 2,
+                        color: colorLightYellow,
+                      )),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
                           'OR',
-                          style: TextStyle(color: colorLightYellow, fontSize: 16),
+                          style:
+                              TextStyle(color: colorLightYellow, fontSize: 16),
                         ),
                       ),
                       Expanded(
                           child: Divider(
-                            thickness: 2,
-                            color: colorLightYellow,
-                          )),
+                        thickness: 2,
+                        color: colorLightYellow,
+                      )),
                     ],
                   ),
                   SizedBox(height: 3.h),
@@ -213,8 +226,9 @@ class _SignupPageState extends State<SignupPage> {
                             borderRadius: BorderRadius.circular(50),
                             color: colorLightYellow),
                         child: IconButton(
-                            onPressed: ()async {
-                              User? user = await _authenticator.signInWithGoogle();
+                            onPressed: () async {
+                              User? user =
+                                  await _authenticator.signInWithGoogle();
                               if (user != null) {
                                 print('User signed in: ${user.displayName}');
                               } else {
@@ -249,7 +263,8 @@ class _SignupPageState extends State<SignupPage> {
                             color: colorLightYellow),
                         child: IconButton(
                             onPressed: () async {
-                              User? user = await _authenticator.signInWithFacebook();
+                              User? user =
+                                  await _authenticator.signInWithFacebook();
                               if (user != null) {
                                 print('User signed in: ${user.displayName}');
                               } else {

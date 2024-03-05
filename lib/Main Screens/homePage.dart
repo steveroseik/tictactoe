@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         Spacer(),
                                         Text(
-                                          'Daily Tournament!', // add your text here
+                                          'Daily Tournament!',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 25,
@@ -226,17 +226,22 @@ class _HomePageState extends State<HomePage> {
                           ]),
                         )),
                     SizedBox(height: 1.h),
-                    GameButton2(
+                    GameButton(
                         onPressed: () {
                           print('tapped');
                         },
+                        enableShimmer: false,
                         borderRadius: BorderRadius.circular(10),
-                        aspectRatio: 6 / 3,
-                        width: 80.w,
+                        aspectRatio: 4 / 1,
+                        width: 70.w,
                         baseDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colorDarkBlue,
-                        ),
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                              Colors.lightGreen.shade600,
+                              Colors.lightGreen.shade900,
+                            ])),
                         topDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             gradient: const LinearGradient(
@@ -263,7 +268,7 @@ class _HomePageState extends State<HomePage> {
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                               colors: [
-                                            Colors.deepPurple,
+                                            Colors.orange,
                                             Colors.orange.shade800,
                                           ])),
                                       child: NeoPopShimmer(
@@ -273,27 +278,29 @@ class _HomePageState extends State<HomePage> {
                                             const Duration(milliseconds: 1500),
                                         delay:
                                             const Duration(milliseconds: 2000),
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              10, 2, 10, 2),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                'Challenges', // add your text here
-                                                style: TextStyle(
-                                                  color: Colors.white,
+                                        child: const Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 2, 10, 2),
+                                          child: Expanded(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'Challenges', // add your text here
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                  textAlign: TextAlign.start,
                                                 ),
-                                                textAlign: TextAlign.start,
-                                              ),
-                                              Spacer(),
-                                              Text(
-                                                '2/5 Complete!', // add your text here
-                                                style: TextStyle(
-                                                  color: Colors.yellow,
-                                                ),
-                                                textAlign: TextAlign.end,
-                                              )
-                                            ],
+                                                Spacer(),
+                                                Text(
+                                                  '2/5 Complete!', // add your text here
+                                                  style: TextStyle(
+                                                    color: Colors.yellow,
+                                                  ),
+                                                  textAlign: TextAlign.end,
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -310,8 +317,8 @@ class _HomePageState extends State<HomePage> {
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                           colors: [
-                                            colorDarkBlue,
-                                            colorPurple,
+                                        Colors.yellow.shade600,
+                                        Colors.yellow.shade800,
                                       ])),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -339,11 +346,92 @@ class _HomePageState extends State<HomePage> {
                                       //       fontSize: 20),
                                       //   textAlign: TextAlign.start,
                                       // ),
-                                      LinearPercentIndicator(
-                                        percent: 3/5,
-                                        trailing: Text('3 of 5', style: TextStyle(color: Colors.white),),
-                                        lineHeight: 10,
-                                        barRadius: Radius.circular(20),
+                                      Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        decoration: BoxDecoration(
+                                            color: Colors.orange.shade800,
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              height: 5.h,
+                                              padding: EdgeInsets.all(3.w),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: Sprites
+                                                        .coinOf[Coins.bronze],
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
+                                                  Text(
+                                                    '50',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              height: 5.h,
+                                              padding: EdgeInsets.all(3.w),
+                                              child: Row(
+                                                children: [
+                                                  AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: Sprites
+                                                        .coinOf[Coins.silver],
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
+                                                  Text(
+                                                    '25',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              height: 5.h,
+                                              padding: EdgeInsets.all(3.w),
+                                              child: Row(
+                                                children: [
+                                                  AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: Sprites
+                                                        .coinOf[Coins.gold],
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
+                                                  Text(
+                                                    '10',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       Row(
                                         mainAxisAlignment:
@@ -474,38 +562,82 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        Container(
-                          width: 12.w,
-                          height: 12.w,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black,
-                                  gradient: LinearGradient(colors: [
-                                    Colors.deepPurple.shade900,
-                                    colorPurple
-                                  ]),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: colorDarkBlue.withOpacity(0.3),
-                                        offset: Offset(3, 3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3)
-                                  ],
-                                ),
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(Routes.friendsPage);
+                            },
+                            child: Container(
+                              width: 12.w,
+                              height: 12.w,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.black,
+                                      gradient: LinearGradient(colors: [
+                                        Colors.deepPurple.shade900,
+                                        colorPurple
+                                      ]),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color:
+                                                colorDarkBlue.withOpacity(0.3),
+                                            offset: Offset(3, 3),
+                                            spreadRadius: 1,
+                                            blurRadius: 3)
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: -13,
+                                      child: SizedBox(
+                                          height: 12.w,
+                                          child: Image.asset(
+                                              'assets/friends.png'))),
+                                ],
                               ),
-                              Positioned(
-                                  top: -13,
-                                  child: SizedBox(
-                                      height: 12.w,
-                                      child:
-                                          Image.asset('assets/friends.png'))),
-                            ],
-                          ),
-                        ),
+                            )),
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(Routes.notificationsPage);
+                            },
+                            child: Container(
+                              width: 12.w,
+                              height: 12.w,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.black,
+                                      gradient: LinearGradient(colors: [
+                                        Colors.deepPurple.shade900,
+                                        colorPurple
+                                      ]),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color:
+                                                colorDarkBlue.withOpacity(0.3),
+                                            offset: Offset(3, 3),
+                                            spreadRadius: 1,
+                                            blurRadius: 3)
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: -13,
+                                      child: SizedBox(
+                                          height: 12.w,
+                                          child:
+                                              Image.asset('assets/top.png'))),
+                                ],
+                              ),
+                            )),
                         InkWell(
                           onTap: () {
                             Navigator.of(context).pushNamed(Routes.storeHome);

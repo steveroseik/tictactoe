@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe/ClassicGame/classicGameMain.dart';
+import 'package:tictactoe/Friends/friendsPage.dart';
+import 'package:tictactoe/Friends/hostTournamentPage.dart';
 import 'package:tictactoe/LogIn/loginPage.dart';
 import 'package:tictactoe/Main%20Screens/multiplayerSingleSelectPage.dart';
+import 'package:tictactoe/Notifications/notificationsPage.dart';
 import 'package:tictactoe/PowersGame/Characters/core.dart';
 import 'package:tictactoe/PowersGame/Pages/characterSelectPage.dart';
 import 'package:tictactoe/PowersGame/powersGameMain.dart';
@@ -66,6 +69,10 @@ class Routes {
   static const powersCharacterSelect = '/powersCharacterSelect';
   static const coinToss = '/coinToss';
   static const storeHome = '/storeHome';
+  static const friendsPage = '/friendsPage';
+  static const hostTournamentPage = '/hostTournamentPage';
+  static const notificationsPage = '/notifcationsPage';
+
 }
 
 class RoutesGen {
@@ -95,11 +102,12 @@ class RoutesGen {
         return GamePageRoute(builder: (_) => MultiplayerSingleSelectPage());
       case Routes.ninesGameMain:
         if (args != null && args is Map<String, dynamic>) {
-          return GamePageRoute(builder: (_) => NineGameMain(
-            inTournament: args['inTournament']?? false,
-            roomInfo: args['roomInfo']!,
-            uid: args['uid']!,
-        ));
+          return GamePageRoute(
+              builder: (_) => NineGameMain(
+                    inTournament: args['inTournament'] ?? false,
+                    roomInfo: args['roomInfo']!,
+                    uid: args['uid']!,
+                  ));
         }
         return GamePageRoute(builder: (_) => NineGameMain());
       case Routes.powersGameMain:
@@ -126,10 +134,14 @@ class RoutesGen {
       case Routes.powersTournamentSelection:
         return GamePageRoute(builder: (_) => PowersTournamentSelection());
       case Routes.powersTournamentRoom:
-        if (args is Character) return GamePageRoute(builder: (_) => PowersTournamentRoom(myCharacter: args));
+        if (args is Character)
+          return GamePageRoute(
+              builder: (_) => PowersTournamentRoom(myCharacter: args));
         return _errorRoute();
       case Routes.powersCharacterSelect:
-        if (args is bool ) return GamePageRoute(builder: (_) => PowersCharacterSelectPage(tournament: args));
+        if (args is bool)
+          return GamePageRoute(
+              builder: (_) => PowersCharacterSelectPage(tournament: args));
         return GamePageRoute(builder: (_) => PowersCharacterSelectPage());
       case '/characters':
         return GamePageRoute(builder: (_) => CharactersPage());
@@ -140,6 +152,19 @@ class RoutesGen {
                 ));
       case Routes.storeHome:
         return GamePageRoute(builder: (_) => storeHome());
+
+      case Routes.friendsPage:
+        return GamePageRoute(
+            builder: (_) => FriendsPage(friendNames: ['shahd', 'steven']));
+
+      case Routes.hostTournamentPage:
+        if (args is String)
+          return GamePageRoute(
+              builder: (_) => HostTournamentPage(friendId: args));
+        return _errorRoute();
+
+      case Routes.notificationsPage:
+        return GamePageRoute(builder: (_) => const NotificationsPage());
       default:
         return _errorRoute();
     }

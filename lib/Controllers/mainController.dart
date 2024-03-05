@@ -5,27 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe/Authentication/authentication.dart';
+import 'package:tictactoe/BackendMethods/backend.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 
-
-
-class MainController extends ChangeNotifier{
-
+class MainController extends ChangeNotifier {
   bool _hasData = false;
   bool _isGuest = false;
   bool _isLoading = true;
 
+  final Backend backend = Backend();
 
   late StreamController<UserSession> authController;
   get isSignedIn => (_isGuest || _hasData);
   get isLoading => _isLoading;
 
   MainController() {
-
     authController = StreamController<UserSession>.broadcast();
   }
 
-  setGuest() async{
+  setGuest() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool(hasGuest, true);
     _isGuest = true;
@@ -33,9 +31,9 @@ class MainController extends ChangeNotifier{
     notifyListeners();
   }
 
-  signOut() async{
+  signOut() async {
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(hasGuest)){
+    if (prefs.containsKey(hasGuest)) {
       prefs.remove(hasGuest);
     }
     _isGuest = false;
@@ -44,34 +42,26 @@ class MainController extends ChangeNotifier{
     notifyListeners();
   }
 
-
-  updateSession(UserSession session){
+  updateSession(UserSession session) {
     authController.add(session);
   }
 
-
-  updateFirebaseAuth({
-    required User? userData}) async{
+  updateFirebaseAuth({required User? userData}) async {
     final lastSession = authController.stream.last;
-    if (userData != null){
-      if (Authentication.isEmailVerified(userData)){
-        /// change to isUserinDb()
+    if (userData != null) {
+      if (Authentication.isEmailVerified(userData)) {
         authController.add(UserSession.loading);
-        if (true){
+        if (await backend.isUserInDB()) {
           authController.add(UserSession.completeUser);
-        }else{
+        } else {
           authController.add(UserSession.incompleteUser);
         }
-      }else{
+      } else {
         authController.add(UserSession.unverifiedUser);
       }
-    }else{
+    } else {
       authController.add(UserSession.noUser);
     }
     // notifyListeners();
-
   }
-
-
 }
-

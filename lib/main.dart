@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Configurations/constants.dart';
-import 'package:tictactoe/Providers/socketProvider.dart';
 import 'package:tictactoe/SignUp/signupCompletion.dart';
 import 'package:tictactoe/SignUp/verification.dart';
 import 'package:tictactoe/Controllers/mainController.dart';
@@ -60,8 +59,6 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initFirebaseStream();
     });
-
-    initSocketSingleton();
     super.initState();
   }
 

@@ -5,6 +5,7 @@ import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/mainController.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
+import '../BackendMethods/backend.dart';
 import '../UIUX/themesAndStyles.dart';
 
 void main() {
@@ -30,6 +31,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  final Backend backend = Backend();
 
   // Define two instances of your pattern image
   Widget leftPattern = Image.asset('assets/patternXO.png',
@@ -78,7 +80,8 @@ class _LoginPageState extends State<LoginPage>
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Consumer<MainController>(
-          builder: (BuildContext context, MainController engine, Widget? child) {
+          builder:
+              (BuildContext context, MainController engine, Widget? child) {
             return Stack(
               children: [
                 Container(
@@ -179,7 +182,7 @@ class _LoginPageState extends State<LoginPage>
                         height: 6.h,
                         child: ElevatedButton(
                             onPressed: () {
-                              emailSignIn();
+                              signIn();
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.deepPurple.shade900,
@@ -222,7 +225,6 @@ class _LoginPageState extends State<LoginPage>
                           )),
                         ],
                       ),
-
                       SizedBox(
                         height: 5.h,
                       ),
@@ -245,12 +247,41 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  emailSignIn() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailField.text, password: passField.text);
-    } on FirebaseAuthException catch (e) {
-      print(e.message);
+  // emailSignIn() async {
+  //   try {
+
+  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //         email: emailField.text, password: passField.text);
+  //   } on FirebaseAuthException catch (e) {
+  //     print(e.message);
+  //   }
+  // }
+
+  signIn() async {
+  // Validate email format
+  final input = emailField.text.trim();
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  try {
+    String finalEmail;
+    if (!emailRegex.hasMatch(input)) {
+      // Input is not in email format, fetch email from backend
+     
+      finalEmail = await backend.getEmail(username: input);
+      print("hena "+finalEmail);
+    } else {
+      finalEmail = input;
+      print("hena2 "+finalEmail);
     }
+
+    // Attempt sign in
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: finalEmail,
+      password: passField.text,
+    );
+
+  } on FirebaseAuthException catch (e) {
+    print(e.message);
   }
+}
+
 }
