@@ -70,10 +70,10 @@ class SessionProvider extends ChangeNotifier{
 
   updateFirebaseAuth({
     required User? userData}) async{
+
     if (userData != null){
       if (Authentication.isEmailVerified(userData)){
         updateSession(UserSession.loading);
-
         final user = await apiLib.user();
         if (user != null){
           currentUser = user;
@@ -85,6 +85,7 @@ class SessionProvider extends ChangeNotifier{
         updateSession(UserSession.unverifiedUser);
       }
     }else{
+      currentUser = null;
       updateSession(UserSession.noUser);
     }
   }

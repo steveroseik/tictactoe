@@ -1,24 +1,23 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
-class VerificationPage extends StatefulWidget {
+class VerificationPage extends ConsumerStatefulWidget {
   const VerificationPage({Key? key}) : super(key: key);
 
   @override
-  State<VerificationPage> createState() => _VerificationPageState();
+  ConsumerState<VerificationPage> createState() => _VerificationPageState();
 }
 
-class _VerificationPageState extends State<VerificationPage> {
+class _VerificationPageState extends ConsumerState<VerificationPage> {
   bool isEmailVerified = false;
   Timer? timer;
   int elapsedTime = 0;
-
-  late SessionProvider mainController;
 
   @override
   void initState() {
@@ -47,7 +46,7 @@ class _VerificationPageState extends State<VerificationPage> {
       });
       if (isEmailVerified) {
         timer?.cancel();
-        mainController.updateSession(UserSession.incompleteUser);
+        ref.read(sessionProvider).updateSession(UserSession.incompleteUser);
       }
     } catch (e) {
       print(e);
@@ -68,7 +67,6 @@ class _VerificationPageState extends State<VerificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    mainController = context.watch<SessionProvider>();
     return SafeArea(
       child: Scaffold(
         body: Stack(

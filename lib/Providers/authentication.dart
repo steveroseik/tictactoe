@@ -17,10 +17,10 @@ import 'package:tictactoe/Providers/sessionProvider.dart';
 
 final authProvider = Provider<Authentication>((ref) => Authentication(ref));
 
+
 class Authentication {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  String? facebookToken;
   ProviderRef<Authentication> ref;
 
 
@@ -44,9 +44,8 @@ class Authentication {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The email address is badly formatted.')));
       } else if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The account already exists for that email.')));
-      } else {
-        throw Exception(e.code);
       }
+      return null;
     } catch (err) {
       print("An error occurred: $err");
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unknown error')));
@@ -74,9 +73,8 @@ class Authentication {
     } catch (e) {
       print("Error in email verification: $e");
       // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("An error occurred while verifying the email")));
-    } finally {
-      return isEmailVerified;
     }
+    return isEmailVerified;
   }
 
 
@@ -183,14 +181,14 @@ class Authentication {
 
       final loginResult = await getFacebookLoginResult();
 
-
       final OAuthCredential facebookAuthCredential =
       FacebookAuthProvider.credential(loginResult!.accessToken!.token);
 
 
       await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
 
-      print("facebook sign in successful");
+      print("facebook sign in successfull");
+
       // Return the current user
       return _firebaseAuth.currentUser;
 

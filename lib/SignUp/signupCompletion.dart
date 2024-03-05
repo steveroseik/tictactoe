@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tictactoe/Providers/apiLibrary.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
+import 'package:tictactoe/UIUX/customWidgets.dart';
 
-import 'package:tictactoe/Providers/sessionProvider.dart';
+import '../Providers/apiLibrary.dart';
+import '../Providers/sessionProvider.dart';
 
 class SignupCompletionPage extends ConsumerStatefulWidget {
   const SignupCompletionPage({Key? key}) : super(key: key);
@@ -13,22 +16,25 @@ class SignupCompletionPage extends ConsumerStatefulWidget {
 }
 
 class _SignupCompletionPageState extends ConsumerState<SignupCompletionPage> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
 
-  bool _isMale = false;
-  // DateTime? _birthdate;
+  String _gender = '';
+  DateTime? _birthdate;
+  String _country = '';
+  String _city = '';
 
   @override
   void initState() {
     super.initState();
-    // Populate fields with current user data if available
-    User? currentUser = FirebaseAuth.instance.currentUser;
+    User? currentUser = _firebaseAuth.currentUser;
     if (currentUser != null) {
       _emailController.text = currentUser.email ?? '';
-      // do the same for the rest 
+      _country = ''; // Fetch country from user profile if available
+      _city = ''; // Fetch city from user profile if available
     }
   }
 
@@ -43,54 +49,101 @@ class _SignupCompletionPageState extends ConsumerState<SignupCompletionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up Completion'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.deepOrange,
+                    Colors.deepOrange,
+                    Colors.deepPurple.shade800
+                  ],
+                ),
               ),
-              TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'Username'),
+            ),
+            const BackgroundScroller(),
+            AppBar(
+              excludeHeaderSemantics: true,
+              backgroundColor: Colors.transparent,
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                  ),
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration:
+                    const InputDecoration(labelText: 'Username'),
+                  ),
+                  TextFormField(
+                    controller: _countryController,
+                    decoration: const InputDecoration(labelText: 'Country'),
+                  ),
+                  TextFormField(
+                    controller: _cityController,
+                    decoration: const InputDecoration(labelText: 'City'),
+                  ),
+                  CheckboxListTile(
+                    title: const Text('Gender'),
+                    value: _gender == 'Male',
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _gender = value ? 'Male' : 'Female';
+                        });
+                      }
+                    },
+                  ),
+                  // Add birthdate picker
+                  ElevatedButton(
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now(),
+                      );
+                      if (pickedDate != null && pickedDate != _birthdate) {
+                        setState(() {
+                          _birthdate = pickedDate;
+                        });
+                      }
+                    },
+                    child: const Text('Select Birthdate'),
+                  ),
+                  const SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Create User
+                      _completeSignUp();
+                    },
+                    child: const Text('Complete Sign Up'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      print('signed out');
+                      FirebaseAuth.instance.signOut();
+                    },
+                    child: const Text('Sign out'),
+                  ),
+                ],
               ),
-              CheckboxListTile(
-                title: const Text('Gender'),
-                value: _isMale,
-                onChanged: (value) {
-                  setState(() {
-                    _isMale = value ?? false;
-                  });
-                },
-              ),
-              // Add the rest of attributes fields 
-
-              const SizedBox(height: 16.0),
-
-              ElevatedButton(
-                onPressed: () {
-                  // Create user b2a
-                  _completeSignUp();
-                },
-                child: const Text('Complete Sign Up'),
-              ),
-
-              ElevatedButton(
-                onPressed: () {
-                  print('signed out');
-                  FirebaseAuth.instance.signOut();
-                },
-                child: const Text('Sign out'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -98,14 +151,21 @@ class _SignupCompletionPageState extends ConsumerState<SignupCompletionPage> {
 
   void _completeSignUp() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
+
     if (currentUser != null) {
+      String? fbId;
+      if (currentUser.providerData[0].providerId == 'facebook.com'){
+        fbId = currentUser.providerData[0].uid;
+      }
       try{
         final resp = await ref.read(apiLibrary).createNewUser(
             email: _emailController.text,
             // TODO:: separate username from name fields
             username: _usernameController.text,
             name: _usernameController.text,
-            isMale: _isMale,
+            //TODO:: add facebookId
+            // facebookId: fbId,
+            isMale: _gender == 'male' ? true: false,
             //TODO:: add birthdate ui
             birthdate: DateTime.parse('1997-11-11')
         );

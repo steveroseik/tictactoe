@@ -6,22 +6,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/Providers/socketProvider.dart';
-import 'package:tictactoe/coinToss.dart';
-import 'package:tictactoe/objects/classicObjects.dart';
 import 'package:tictactoe/ClassicGame/classicGameModule.dart';
-import 'package:tictactoe/spritesConfigurations.dart';
-
-import '../Configurations/constants.dart';
 import '../UIUX/customWidgets.dart';
-import '../UIUX/themesAndStyles.dart';
 import '../objects/powerRoomObject.dart';
 
 class ClassicGameMain extends ConsumerStatefulWidget {

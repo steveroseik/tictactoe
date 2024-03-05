@@ -9,18 +9,6 @@ import 'package:tictactoe/UIUX/customWidgets.dart';
 
 import '../UIUX/themesAndStyles.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SignInPage(),
-    );
-  }
-}
 
 class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({super.key});

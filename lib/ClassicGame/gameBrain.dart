@@ -26,11 +26,17 @@ class GameTransaction{
 class GameFees {
   int experienceFee;
   int scoreFee;
-  int coinsFee;
+  int bronzeFee;
+  int silverFee;
+  int goldFee;
+  int expFee;
 
   GameFees({this.experienceFee = 0,
     this.scoreFee = 0,
-    this.coinsFee = 0
+    this.bronzeFee = 0,
+    this.silverFee = 0,
+    this.goldFee = 0,
+    this.expFee = 0
   });
 }
 
@@ -41,136 +47,136 @@ GameFees calculateGameFees(GameTransaction transaction){
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.classicSingleTieredEntranceFees * 2);
+              bronzeFee: Const.classicSingleTieredEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.classicSingleTieredEntranceFees);
+            bronzeFee: -Const.classicSingleTieredEntranceFees);
       }
     case GameType.classicSingleRandom:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.classicSingleRandomEntranceFees * 2);
+              bronzeFee: Const.classicSingleRandomEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.classicSingleRandomEntranceFees);
+            bronzeFee: -Const.classicSingleRandomEntranceFees);
       }
     case GameType.classicDailyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.classicTournamentDailyEntranceFees * 2);
+              bronzeFee: Const.classicTournamentDailyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.classicTournamentDailyEntranceFees);
+            bronzeFee: -Const.classicTournamentDailyEntranceFees);
       }
     case GameType.classicWeeklyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.classicTournamentWeeklyEntranceFees * 2);
+              bronzeFee: Const.classicTournamentWeeklyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.classicTournamentWeeklyEntranceFees);
+            bronzeFee: -Const.classicTournamentWeeklyEntranceFees);
       }
     case GameType.classicMonthlyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.classicTournamentMonthlyEntranceFees * 2);
+              bronzeFee: Const.classicTournamentMonthlyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.classicTournamentMonthlyEntranceFees);
+            bronzeFee: -Const.classicTournamentMonthlyEntranceFees);
       }
     case GameType.nineSingleTiered:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.nineSingleTieredEntranceFees * 2);
+              bronzeFee: Const.nineSingleTieredEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.nineSingleTieredEntranceFees);
+            bronzeFee: -Const.nineSingleTieredEntranceFees);
       }
     case GameType.nineSingleRandom:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.nineSingleRandomEntranceFees * 2);
+              bronzeFee: Const.nineSingleRandomEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.nineSingleRandomEntranceFees);
+            bronzeFee: -Const.nineSingleRandomEntranceFees);
       }
     case GameType.nineDailyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.nineTournamentDailyEntranceFees * 2);
+              bronzeFee: Const.nineTournamentDailyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.nineTournamentDailyEntranceFees);
+            bronzeFee: -Const.nineTournamentDailyEntranceFees);
       }
     case GameType.nineWeeklyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.nineTournamentWeeklyEntranceFees * 2);
+              bronzeFee: Const.nineTournamentWeeklyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.nineTournamentWeeklyEntranceFees);
+            bronzeFee: -Const.nineTournamentWeeklyEntranceFees);
       }
     case GameType.nineMonthlyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.nineTournamentMonthlyEntranceFees * 2);
+              bronzeFee: Const.nineTournamentMonthlyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.nineTournamentMonthlyEntranceFees);
+            bronzeFee: -Const.nineTournamentMonthlyEntranceFees);
       }
     case GameType.powersSingleTiered:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.powersSingleTieredEntranceFees * 2);
+              bronzeFee: Const.powersSingleTieredEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.powersSingleTieredEntranceFees);
+            bronzeFee: -Const.powersSingleTieredEntranceFees);
       }
     case GameType.powersSingleRandom:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.powersSingleRandomEntranceFees * 2);
+              bronzeFee: Const.powersSingleRandomEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.powersSingleRandomEntranceFees);
+            bronzeFee: -Const.powersSingleRandomEntranceFees);
       }
     case GameType.powersDailyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.powersTournamentDailyEntranceFees * 2);
+              bronzeFee: Const.powersTournamentDailyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.powersTournamentDailyEntranceFees);
+            bronzeFee: -Const.powersTournamentDailyEntranceFees);
       }
     case GameType.powersWeeklyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.powersTournamentWeeklyEntranceFees * 2);
+              bronzeFee: Const.powersTournamentWeeklyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.powersTournamentWeeklyEntranceFees);
+            bronzeFee: -Const.powersTournamentWeeklyEntranceFees);
       }
     case GameType.powersMonthlyTournament:
       {
         if (transaction.iWon) {
           return GameFees(
-              coinsFee: Const.powersTournamentMonthlyEntranceFees * 2);
+              bronzeFee: Const.powersTournamentMonthlyEntranceFees * 2);
         }
         return GameFees(
-            coinsFee: -Const.powersTournamentMonthlyEntranceFees);
+            bronzeFee: -Const.powersTournamentMonthlyEntranceFees);
       }
   }
 }

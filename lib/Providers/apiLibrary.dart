@@ -15,6 +15,8 @@ import 'sessionProvider.dart';
 
 final apiLibrary = Provider<ApiLibrary>(
         (ref) => ApiLibrary(ref));
+
+
 class ApiLibrary{
 
 
@@ -60,9 +62,12 @@ class ApiLibrary{
   }
 
   Future<UserObject?> user() async{
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) return null;
-    final query = '''
+
+    try{
+
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null) return null;
+      final query = '''
     query a{
       user(id: "$uid"){
        id,
@@ -106,18 +111,15 @@ class ApiLibrary{
         lastModified
       }
 }''';
-    final resp = await sendGraphql(query);
-    if (resp != null){
-      return UserObject.fromJson(resp['user']);
-    }
 
-    try{
+      final resp = await sendGraphql(query);
+      if (resp != null){
+        return UserObject.fromJson(resp['user']);
+      }
 
     }catch(e) {
       print('getUserError: $e');
-      return null;
     }
-
   }
 
   Future<String> getEmail({required String username}) async {
@@ -146,21 +148,27 @@ class ApiLibrary{
     }
   }
 
-  Future<void> addFriendByUsername({required String username}) async {
+  //TODO:: check for guide mmkn
+  Future<bool> sendRequestByUsername({required String username}) async {
     try {
+      final uid = session.currentUser?.id;
+      if (uid == null) return false;
       final query = '''
       mutation {
-        createRequest(createRequestInput: {
-          requestType: friendRequest,
-          senderId: "${FirebaseAuth.instance.currentUser!.uid}",
-          receiverId: "$username",
-        }) 
+        createRequestWithUsername(input: {
+          senderId: "$uid",
+          receiverUsername: "$username",
+          requestType: friendRequest
+        })
       }
       ''';
       var res = await sendGraphql(query);
-      print(res);
+      if (res != null && res['createRequestWithUsername'] == true) return true;
+
+      return false;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
@@ -175,8 +183,7 @@ class ApiLibrary{
       if (auth.isFbAuthenticated()) {
         var accessToken = await auth.getFacebookAccessToken();
         if (accessToken != null) {
-          var facebookFriends =
-          await auth.getFacebookFriends(token: accessToken.token);
+          var facebookFriends = await auth.getFacebookFriends(token: accessToken.token);
           var allFriends = combineFriends(gameFriends, facebookFriends);
           return allFriends;
         } else {
