@@ -233,7 +233,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         },
                         enableShimmer: false,
                         borderRadius: BorderRadius.circular(10),
-                        aspectRatio: 4 / 1,
+                        aspectRatio: 2 / 1,
                         width: 70.w,
                         baseDecoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -340,13 +340,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                                             ]),
                                         textAlign: TextAlign.center,
                                       ),
-                                      // Text(
-                                      //   'Reward:',
-                                      //   style: TextStyle(
-                                      //       color: Colors.white,
-                                      //       fontSize: 20),
-                                      //   textAlign: TextAlign.start,
-                                      // ),
                                       Container(
                                         margin: EdgeInsets.symmetric(
                                             horizontal: 20),
