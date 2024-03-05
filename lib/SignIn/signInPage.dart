@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/Authentication/authentication.dart';
-import 'package:tictactoe/Authentication/sessionProvider.dart';
+import 'package:tictactoe/Providers/authentication.dart';
+import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
 import '../UIUX/themesAndStyles.dart';
@@ -17,19 +17,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: SignInPage(),
     );
   }
 }
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class SignInPage extends ConsumerStatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  ConsumerState<SignInPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage>
+class _LoginPageState extends ConsumerState<SignInPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 

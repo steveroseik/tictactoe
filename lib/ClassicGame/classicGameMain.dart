@@ -12,7 +12,7 @@ import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
-import 'package:tictactoe/Authentication/sessionProvider.dart';
+import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/Providers/socketProvider.dart';
 import 'package:tictactoe/coinToss.dart';
 import 'package:tictactoe/objects/classicObjects.dart';

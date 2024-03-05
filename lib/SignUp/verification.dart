@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/Configurations/constants.dart';
-import 'package:tictactoe/Authentication/sessionProvider.dart';
+import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
 class VerificationPage extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/BackendMethods/apiLibrary.dart';
+import 'package:tictactoe/Providers/apiLibrary.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import '../UIUX/themesAndStyles.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/Authentication/authentication.dart';
+import 'package:tictactoe/Providers/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../UIUX/customWidgets.dart';

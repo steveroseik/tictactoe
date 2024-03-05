@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart'; 
 import 'dart:async';
 
-import 'package:tictactoe/Authentication/sessionProvider.dart';
+import 'package:tictactoe/Providers/sessionProvider.dart';
 
 
 

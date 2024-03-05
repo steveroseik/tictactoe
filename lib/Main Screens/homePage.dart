@@ -7,7 +7,7 @@ import 'package:neopop/neopop.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/Authentication/sessionProvider.dart';
+import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/routesGenerator.dart';

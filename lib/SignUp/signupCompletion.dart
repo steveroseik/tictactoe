@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tictactoe/BackendMethods/apiLibrary.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:tictactoe/Providers/apiLibrary.dart';
 
-import 'package:tictactoe/Configurations/constants.dart';
-import 'package:tictactoe/Authentication/sessionProvider.dart';
-import 'package:tictactoe/Providers/socketProvider.dart';
+import 'package:tictactoe/Providers/sessionProvider.dart';
 
 class SignupCompletionPage extends ConsumerStatefulWidget {
   const SignupCompletionPage({Key? key}) : super(key: key);

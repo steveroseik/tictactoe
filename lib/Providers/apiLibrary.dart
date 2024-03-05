@@ -8,8 +8,8 @@ import 'package:tictactoe/Providers/getIt.dart';
 import 'package:tictactoe/objects/userObject.dart';
 import 'package:http/http.dart' as http;
 
-import '../Authentication/authentication.dart';
-import '../Authentication/sessionProvider.dart';
+import 'authentication.dart';
+import 'sessionProvider.dart';
 
 
 

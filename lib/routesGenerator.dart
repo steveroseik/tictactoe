@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:tictactoe/ClassicGame/classicGameMain.dart';
 import 'package:tictactoe/Friends/friendsPage.dart';
 import 'package:tictactoe/Friends/hostTournamentPage.dart';
-import 'package:tictactoe/LogIn/loginPage.dart';
 import 'package:tictactoe/Main%20Screens/multiplayerSingleSelectPage.dart';
 import 'package:tictactoe/Notifications/notificationsPage.dart';
 import 'package:tictactoe/PowersGame/Characters/core.dart';
 import 'package:tictactoe/PowersGame/Pages/characterSelectPage.dart';
 import 'package:tictactoe/PowersGame/powersGameMain.dart';
+import 'package:tictactoe/SignIn/signInPage.dart';
 import 'package:tictactoe/SignUp/signup.dart';
 import 'package:tictactoe/Store/storeHome.dart';
 import 'package:tictactoe/Tournaments/classicTRoom.dart';
@@ -81,7 +81,7 @@ class RoutesGen {
 
     switch (settings.name) {
       case Routes.gameRoot:
-        return GamePageRoute(builder: (_) => LoginPage());
+        return GamePageRoute(builder: (_) => SignInPage());
       case '/signup':
         return GamePageRoute(builder: (_) => SignupPage());
 

@@ -9,7 +9,7 @@ import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/ClassicGame/classicWidgets.dart';
 import 'package:tictactoe/Configurations/constants.dart';
-import 'package:tictactoe/Authentication/sessionProvider.dart';
+import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/spritesConfigurations.dart';

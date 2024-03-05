@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
-import 'package:tictactoe/Authentication/authentication.dart';
-import 'package:tictactoe/BackendMethods/apiLibrary.dart';
+import 'package:tictactoe/Providers/authentication.dart';
+import 'package:tictactoe/Providers/apiLibrary.dart';
 
 // final getIt = GetIt.instance;
 //

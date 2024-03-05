@@ -6,7 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
 
-import '../Authentication/sessionProvider.dart';
+import '../Providers/sessionProvider.dart';
 import '../UIUX/themesAndStyles.dart';
 
 class storeHome extends StatefulWidget {

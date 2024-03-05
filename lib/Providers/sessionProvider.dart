@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tictactoe/Authentication/authentication.dart';
-import 'package:tictactoe/BackendMethods/apiLibrary.dart';
+import 'package:tictactoe/Providers/authentication.dart';
+import 'package:tictactoe/Providers/apiLibrary.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/objects/userObject.dart';
 
