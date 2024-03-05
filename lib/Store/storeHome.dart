@@ -6,7 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
 
-import '../Controllers/mainController.dart';
+import '../Authentication/sessionProvider.dart';
 import '../UIUX/themesAndStyles.dart';
 
 class storeHome extends StatefulWidget {
@@ -17,11 +17,11 @@ class storeHome extends StatefulWidget {
 }
 
 class _storeHomeState extends State<storeHome> {
-  late MainController dataEngine;
+  late SessionProvider dataEngine;
 
   @override
   Widget build(BuildContext context) {
-    dataEngine = context.watch<MainController>();
+    dataEngine = context.watch<SessionProvider>();
     return Scaffold(
       body: Stack(
         children: [

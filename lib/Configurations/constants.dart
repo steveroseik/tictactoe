@@ -7,7 +7,11 @@ class Const{
   /// quantum state cell
   static const qCell = 2;
 
-  static const gameServerUrl = 'ws://192.168.1.3:3000';
+  static const baseUrl = 'http://192.168.1.10:3002';
+
+  static const graphqlUrl = '$baseUrl/graphql';
+
+  static const gameServerUrl = 'ws://192.168.1.10:3000';
 
   static const int speedRoundDuration = 3;
 
@@ -22,6 +26,32 @@ class Const{
   static const Duration nineGameDuration = Duration(seconds: nineRoundDuration * (81));
 
   static const Duration powersGameDuration = Duration(seconds: powersRoundDuration * (49));
+
+
+  static const int classicSingleTieredEntranceFees = 100;
+  static const int classicSingleRandomEntranceFees = 100;
+
+  static const int classicTournamentDailyEntranceFees = 100;
+  static const int classicTournamentWeeklyEntranceFees = 100;
+  static const int classicTournamentMonthlyEntranceFees = 100;
+
+
+
+  static const int nineSingleTieredEntranceFees = 100;
+  static const int nineSingleRandomEntranceFees = 100;
+
+  static const int nineTournamentDailyEntranceFees = 100;
+  static const int nineTournamentWeeklyEntranceFees = 100;
+  static const int nineTournamentMonthlyEntranceFees = 100;
+
+
+
+  static const int powersSingleTieredEntranceFees = 100;
+  static const int powersSingleRandomEntranceFees = 100;
+
+  static const int powersTournamentDailyEntranceFees = 100;
+  static const int powersTournamentWeeklyEntranceFees = 100;
+  static const int powersTournamentMonthlyEntranceFees = 100;
 }
 
 
@@ -39,11 +69,44 @@ enum GameWinner {o, x, draw, none}
 /// Game Connection enum
 enum GameConn {online, offline}
 
-enum GameMode { classicSingle, nineSingle, powersSingle, classicTournament, nineTournament, powersTournament}
+enum GameMode {
+  classicSingle,
+  nineSingle,
+  powersSingle,
+  classicTournament,
+  nineTournament,
+  powersTournament
+}
+
+enum GameType {
+  classicSingleTiered,
+  classicSingleRandom,
+  classicDailyTournament,
+  classicWeeklyTournament,
+  classicMonthlyTournament,
+  nineSingleTiered,
+  nineSingleRandom,
+  nineDailyTournament,
+  nineWeeklyTournament,
+  nineMonthlyTournament,
+  powersSingleTiered,
+  powersSingleRandom,
+  powersDailyTournament,
+  powersWeeklyTournament,
+  powersMonthlyTournament
+}
 
 /// User Session enum
 enum UserSession {guest, completeUser, unverifiedUser, incompleteUser, noUser, loading, restrictedUser}
 
 const publicTournamentCapacity = 4;
+
+
+enum RequestStatus {
+ pending,
+ accepted,
+ rejected
+}
+
 
 

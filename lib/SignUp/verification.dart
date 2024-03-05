@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/Configurations/constants.dart';
-import 'package:tictactoe/Controllers/mainController.dart';
+import 'package:tictactoe/Authentication/sessionProvider.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
 class VerificationPage extends StatefulWidget {
@@ -18,7 +18,7 @@ class _VerificationPageState extends State<VerificationPage> {
   Timer? timer;
   int elapsedTime = 0;
 
-  late MainController mainController;
+  late SessionProvider mainController;
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class _VerificationPageState extends State<VerificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    mainController = context.watch<MainController>();
+    mainController = context.watch<SessionProvider>();
     return SafeArea(
       child: Scaffold(
         body: Stack(

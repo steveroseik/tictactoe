@@ -1,24 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/BackendMethods/backend.dart';
+import 'package:tictactoe/BackendMethods/apiLibrary.dart';
+import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import '../UIUX/themesAndStyles.dart';
 
-class NotificationsPage extends StatefulWidget {
+class NotificationsPage extends ConsumerStatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
 
   @override
-  State<NotificationsPage> createState() => _NotificationsPageState();
+  ConsumerState<NotificationsPage> createState() => _NotificationsPageState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage> {
-  final Backend _backend = Backend(); // Create an instance of Backend
+class _NotificationsPageState extends ConsumerState<NotificationsPage> {
   late final Future<List<Map<String, dynamic>>> _friendRequestsFuture; 
 @override
   void initState() {
     super.initState();
-    _friendRequestsFuture = _backend.getPendingRequests(); // Initialize _friendRequestsFuture in initState
   }
 
   @override
@@ -138,7 +138,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 // Add Accept and Reject buttons here
                 TextButton(
                   onPressed: () {
-                    _backend.updateRequest(status: RequestStatus.accepted,id: request['id']);
+                    ref.read(apiLibrary).updateRequest(status: RequestStatus.accepted,id: request['id']);
                     
                   },
                   child: Text(
@@ -148,7 +148,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    _backend.updateRequest(status: RequestStatus.rejected,id: request['id']);
+                    ref.read(apiLibrary).updateRequest(status: RequestStatus.rejected,id: request['id']);
                   },
                   child: Text(
                     'Reject',

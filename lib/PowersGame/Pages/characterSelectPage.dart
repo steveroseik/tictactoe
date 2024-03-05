@@ -68,10 +68,10 @@ class _PowersCharacterSelectPageState extends State<PowersCharacterSelectPage> {
                       onTap: () {
                         print(widget.tournament);
                         if (!widget.tournament){
-                          Navigator.of(context).pushNamed(Routes.powersGameMain,
+                          Navigator.of(context).popAndPushNamed(Routes.powersGameMain,
                               arguments: character);
                         }else{
-                          Navigator.of(context).pushNamed(Routes.powersTournamentRoom,
+                          Navigator.of(context).popAndPushNamed(Routes.powersTournamentRoom,
                               arguments: character);
                         }
 

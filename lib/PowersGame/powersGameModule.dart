@@ -804,6 +804,11 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
 
     timeoutTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
 
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
       if (gameController.state == GameState.ended) {
         timer.cancel();
         return;
@@ -811,8 +816,8 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
       if (gameController.state == GameState.paused){
         return;
       }
-      if (gameController.timeout == null && _progress.value != 0) {
-        _progress.value = 0;
+      if (gameController.timeout == null) {
+        if (_progress.value != 0) _progress.value = 0;
       }else{
         final now = DateTime.now();
         if (gameController.timeout!.isAfter(now)){

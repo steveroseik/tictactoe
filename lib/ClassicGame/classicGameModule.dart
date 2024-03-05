@@ -9,7 +9,7 @@ import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/ClassicGame/classicWidgets.dart';
 import 'package:tictactoe/Configurations/constants.dart';
-import 'package:tictactoe/Controllers/mainController.dart';
+import 'package:tictactoe/Authentication/sessionProvider.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/spritesConfigurations.dart';
@@ -44,7 +44,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
 
   late Animation _animation;
 
-  late MainController mainController;
+  late SessionProvider mainController;
 
   List<Widget> lines = [];
 
@@ -98,7 +98,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
   @override
   Widget build(BuildContext context) {
 
-    mainController = context.watch<MainController>();
+    mainController = context.watch<SessionProvider>();
     if (widget.isNine) gameControl = context.watch<ClassicGameController>();
     return (widget.isNine) ?
     Container(
@@ -452,11 +452,14 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
     // setState(() {});
     if (widget.isNine) return;
 
-    if (widget.controller.state == GameState.coinToss) {
-      timeoutTimer?.cancel();
-      return;
-    }
     timeoutTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+
+      if (widget.controller.state == GameState.coinToss) {
+        timer.cancel();
+        return;
+      }
+
+      print('${_progress} :: ${controller.isMyTurn}');
 
       if (controller.state == GameState.ended) {
         timer.cancel();
@@ -467,10 +470,12 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
         controller.addExtraTime(500);
         return;
       }
-      if (controller.timeout == null && _progress != 0) {
-        setState(() {
-          _progress = 0;
-        });
+      if (controller.timeout == null) {
+        if ( _progress != 0){
+          setState(() {
+            _progress = 0;
+          });
+        }
       }else{
         final now = DateTime.now();
         if (controller.timeout?.isAfter(now)?? false){
@@ -482,6 +487,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
           });
         }else{
           if (controller.isMyTurn){
+            print('played Random @ ${DateTime.now().toIso8601String()}');
             final req = controller.playRandom();
             if (req != null){
               widget.socket.emitWithAck('gameListener', req, ack: (data){

@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/BackendMethods/backend.dart';
+import 'package:tictactoe/BackendMethods/apiLibrary.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
-import 'package:tictactoe/routesGenerator.dart';
 
-class FriendsPage extends StatefulWidget {
+class FriendsPage extends ConsumerStatefulWidget {
   final List<String> friendNames;
 
   const FriendsPage({Key? key, required this.friendNames}) : super(key: key);
 
   @override
-  State<FriendsPage> createState() => _FriendsPageState(friendNames: friendNames);
+  ConsumerState<FriendsPage> createState() => _FriendsPageState(friendNames: friendNames);
 }
 
-class _FriendsPageState extends State<FriendsPage> {
-  Backend backend = Backend();
+class _FriendsPageState extends ConsumerState<FriendsPage> {
   final List<String> friendNames;
   final LinearGradient rowGradient = LinearGradient(
     begin: Alignment.topLeft,
@@ -157,7 +156,7 @@ class _FriendsPageState extends State<FriendsPage> {
           ElevatedButton(
             onPressed: () async {
               String username = _usernameController.text;
-              await backend.addFriendByUsername(username: username);
+              await ref.read(apiLibrary).addFriendByUsername(username: username);
               Navigator.of(context).pop();
             },
             child: Text('Add Friend'),

@@ -42,8 +42,6 @@ class _NineTournamentRoomState extends State<NineTournamentRoom> with TickerProv
 
   late Timer gameTimer;
 
-  ClassicGameController? gameController;
-
   late Widget nineGamesWidget;
 
   bool oppConnected = true;
@@ -200,21 +198,20 @@ class _NineTournamentRoomState extends State<NineTournamentRoom> with TickerProv
       }else if (data['type'] == 'tournamentEnded'){
         if (data['code'] == 'you_won'){
           wonTournament = true;
-          gameController?.setState(GameState.ended);
           tourState.value = GameState.ended;
         }
       }
     }));
 
-    subscriptions.add(socketProvider.onDisconnect.stream.listen((_){
-      print("Disconnected");
-      // currentState.value = GameState.paused;
-      if (mounted){
-        gotDisconnected = true;
-        if (gameController != null &&
-            gameController!.hasListeners) gameController!.gotOffline();
-      }
-    }));
+    // subscriptions.add(socketProvider.onDisconnect.stream.listen((_){
+    //   print("Disconnected");
+    //   // currentState.value = GameState.paused;
+    //   if (mounted){
+    //     gotDisconnected = true;
+    //     if (gameController != null &&
+    //         gameController!.hasListeners) gameController!.gotOffline();
+    //   }
+    // }));
 
     int errorCounter = 0;
    subscriptions.add((socketProvider.onConnectionError.stream.listen((err) {
@@ -292,7 +289,7 @@ class _NineTournamentRoomState extends State<NineTournamentRoom> with TickerProv
 
   sendTournamentUpdate(Map<String, dynamic> data){
     print('sending tournament update');
-    gameController?.setState(GameState.waiting);
+
 
     socket.emitWithAck('tournamentListener', data, ack: (response){
       print(response);

@@ -135,7 +135,6 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
         controller: gameController,
         inTournament: widget.inTournament,
         gameStartsIn: gameStartsIn,
-        socket: socket,
       ) : GestureDetector(
         onTap: (){
           setState(() {

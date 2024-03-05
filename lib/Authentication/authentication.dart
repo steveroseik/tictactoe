@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -10,30 +11,31 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart'; 
 import 'dart:async';
 
+import 'package:tictactoe/Authentication/sessionProvider.dart';
+
+
+
+final authProvider = Provider<Authentication>((ref) => Authentication(ref));
 
 class Authentication {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  String? facebookToken;
+  ProviderRef<Authentication> ref;
+
+
+  SessionProvider get session => ref.read(sessionProvider);
+
+  Authentication(this.ref);
 
   // Normal sign up method
   Future<User?> signUpWithEmailAndPassword({required String email, required String password,required BuildContext context}) async {
     try {
-      // Check for email if in db return error 
 
-      UserCredential credential = await _firebaseAuth.createUserWithEmailAndPassword(
+      await _firebaseAuth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
-
-      // If a user is successfully created send email verification
-      // if (credential != null) {
-      //   User? user = credential.user;
-      //   if (user != null) {
-      //     await user.sendEmailVerification();
-      //   }
-      // }
-
-      // Return the current user
       return _firebaseAuth.currentUser;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -43,11 +45,12 @@ class Authentication {
       } else if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The account already exists for that email.')));
       } else {
-        throw Exception(e.code ?? ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unknown error'))));
+        throw Exception(e.code);
       }
     } catch (err) {
       print("An error occurred: $err");
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unknown error')));
+      return null;
     }
   }
 
@@ -79,16 +82,17 @@ class Authentication {
 
   // Normal sign in method
   Future<User?> signInWithEmailAndPassword(String email, String password) async {
-  try {
-    UserCredential credential = await _firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-  } on FirebaseAuthException catch (e) {
-    // Handle sign-in errors
-    throw Exception(e.message ?? 'An error occurred during sign-in.');
-  }
-  return null;
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      ref.read(sessionProvider).updateFirebaseAuth(userData: _firebaseAuth.currentUser);
+    } on FirebaseAuthException catch (e) {
+      // Handle sign-in errors
+      throw Exception(e.message ?? 'An error occurred during sign-in.');
+    }
+    return null;
   }
   // Normal signout
 
@@ -257,15 +261,26 @@ class Authentication {
     }
   }
 
-static bool isEmailVerified(User userData){
-    if (userData.providerData.isNotEmpty){
-      if (userData.providerData[0].providerId == 'facebook.com') return true;
-      return userData.emailVerified;
-    }
+  bool isFbAuthenticated(){
+    if (_firebaseAuth
+        .currentUser?.providerData[0]
+        .providerId == 'facebook') return true;
+
+    if (session.currentUser?.facebookId != null) return true;
+
     return false;
+  }
+
+  static bool isEmailVerified(User userData){
+      if (userData.providerData.isNotEmpty){
+        if (userData.providerData[0].providerId == 'facebook.com') return true;
+        return userData.emailVerified;
+      }
+      return false;
+  }
+
 }
 
 
-}
 
 

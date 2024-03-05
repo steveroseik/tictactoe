@@ -2,11 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neopop/neopop.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:tictactoe/Controllers/mainController.dart';
+import 'package:tictactoe/Authentication/sessionProvider.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/routesGenerator.dart';
@@ -14,11 +15,11 @@ import 'package:tictactoe/spritesConfigurations.dart';
 
 import '../Configurations/constants.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
 List<(String, String)> routes = [
@@ -28,12 +29,12 @@ List<(String, String)> routes = [
   (Routes.experimentalGameMain3, 'FOURTH DIMENSION')
 ];
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   late SpriteAnimation spriteAnimation;
   late SpriteAnimationComponent planetA;
   late SpriteAnimationTicker ticker;
 
-  late MainController dataEngine;
+  late SessionProvider session;
 
   CarouselController gameModesController = CarouselController();
   int currentModePage = 0;
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    dataEngine = context.watch<MainController>();
+    session = ref.watch(sessionProvider);
     return Scaffold(
       body: Stack(
         children: [
@@ -676,7 +677,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         GameButton(
-                          onPressed: () => dataEngine.signOut(),
+                          onPressed: () => session.signOut(),
                           width: 12.w,
                           aspectRatio: 1,
                           borderRadius: BorderRadius.circular(10),
@@ -901,7 +902,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> gameCoinList() {
-    return List.from(Coins.values.map((e) => coinWidget(coin: e, scale: 1.2)));
+    return List.from(Coins.values.map((e) => coinWidget(coin: e, scale: 1)));
   }
 
   Widget coinWidget({
@@ -913,13 +914,12 @@ class _HomePageState extends State<HomePage> {
       child: SizedBox(
         width: 20.w,
         child: AspectRatio(
-          aspectRatio: 3 / 1,
+          aspectRatio: 4 / 1,
           child: Stack(
             clipBehavior: Clip.none,
             fit: StackFit.passthrough,
             children: [
               Container(
-                width: 20.w,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                         colors: [Colors.black, Colors.deepPurple.shade900]),
@@ -934,11 +934,11 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(left: 20),
                 child: Center(
                   child: Text(
-                    '100',
+                    '0',
                     style: TextStyle(
                       color: Colors.white,
                     ),
-                    textAlign: TextAlign.start,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
@@ -946,7 +946,7 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.centerLeft,
                 child: Transform(
                   alignment: Alignment.center,
-                  transform: Matrix4.identity()..scale(1.5),
+                  transform: Matrix4.identity()..scale(1.1),
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: Image.asset(Sprites.staticCoinOf[coin]!),

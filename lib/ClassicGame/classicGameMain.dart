@@ -2,14 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
+import 'package:tictactoe/Authentication/sessionProvider.dart';
 import 'package:tictactoe/Providers/socketProvider.dart';
 import 'package:tictactoe/coinToss.dart';
 import 'package:tictactoe/objects/classicObjects.dart';
@@ -21,8 +24,7 @@ import '../UIUX/customWidgets.dart';
 import '../UIUX/themesAndStyles.dart';
 import '../objects/powerRoomObject.dart';
 
-class ClassicGameMain extends StatefulWidget {
-  final Socket? socket;
+class ClassicGameMain extends ConsumerStatefulWidget {
   final ClassicGameController? controller;
   final Function(GameWinner, bool)? gameStateChange;
   final Function(Map<String, dynamic> data)? sendTournamentUpdate;
@@ -33,7 +35,6 @@ class ClassicGameMain extends StatefulWidget {
 
 
   const ClassicGameMain({super.key,
-    this.socket,
     this.gameStateChange,
     this.onTournamentRoundEnd,
     this.sendTournamentUpdate,
@@ -44,10 +45,10 @@ class ClassicGameMain extends StatefulWidget {
   });
 
   @override
-  State<ClassicGameMain> createState() => _ClassicGameMainState();
+  ConsumerState<ClassicGameMain> createState() => _ClassicGameMainState();
 }
 
-class _ClassicGameMainState extends State<ClassicGameMain> {
+class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
 
 
   late Socket socket;
@@ -59,8 +60,6 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
   int gameStartsIn = 0;
 
   DateTime? gameStartTime;
-
-  String uid = '';
 
   late Timer gameTimer;
 
@@ -98,7 +97,6 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
   @override
   void dispose() {
     print('getting off speed');
-    super.dispose();
     gameTimer.cancel();
     if (!widget.inTournament) {
       getIt.get<SocketProvider>().disconnect();
@@ -107,6 +105,8 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
     for ( var sub in subscriptions){
       sub.cancel();
     }
+
+    super.dispose();
   }
 
   @override
@@ -170,11 +170,12 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
                   ],
                 ),
               ),
-              if (value != GameState.starting) SafeArea(
+              SafeArea(
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: ElevatedButton(
                     onPressed: (){
+                      print('POPPING BTN');
                       Navigator.of(context).pop();
                     },
                     child: Text('Leave'),
@@ -204,7 +205,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
   initSocket(){
     final socketProvider = getIt.get<SocketProvider>();
-    if (widget.socket != null) {
+    if (widget.inTournament || widget.controller != null) {
       socket = socketProvider.socket!;
     }else{
       socket = socketProvider.connect();
@@ -286,6 +287,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
         }catch (e){
           print(e);
         }
+        print('POPPING CONNECTION ERROR');
         if (!widget.inTournament) Navigator.of(context).pop();
       }else{
         errorCounter++;
@@ -356,7 +358,8 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
 
   onCoinTossEnd(){
     final resp = gameController?.didIWin(theLuckyWinner, tournament: widget.inTournament);
-    if (resp != null && widget.inTournament){
+    if (widget.inTournament){
+      print('POPPING COIN TOSS END');
       Navigator.of(context).pop(resp);
     }
   }
@@ -390,7 +393,8 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
       gameController = ClassicGameController(
           roomInfo: roomInfo!,
           speedMatch: speedMatch,
-          currentState: currentState, uid: uid);
+          currentState: currentState,
+          uid: ref.read(sessionProvider).currentUser!.id);
       currentState.value = gameController!.setState(GameState.started);
       timer.cancel();});
   }
@@ -427,9 +431,11 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
           });
         }
       }else if (widget.inTournament){
-        Navigator.of(context)
-            .pop((gameController?.iWon??false) ?
-        gameController?.winRequest : null);
+        if (mounted) {
+          Navigator.of(context)
+            .pop(gameController?.winRequest);
+          print('POPPING AFTER CHECK ${gameController?.iWon}');
+        }
       }
     }
   }
@@ -458,7 +464,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
     final resp = gameController!.endGameDueConnection(data, tournament: widget.inTournament);
     if (resp.$1) {
       if (resp.$2 != null){
-
+        print('POPPING DISCONNECT');
         Navigator.of(context).pop(resp.$2);
         // if (widget.sendTournamentUpdate != null) widget.sendTournamentUpdate!(resp.$2);
       }
@@ -468,7 +474,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
   }
 
   requestJoin(){
-    uid = 'user${Random().nextInt(1000)}';
+    final uid = ref.read(sessionProvider).currentUser!.id;
     final characterId = Random().nextInt(45);
     socket.emitWithAck('joinClassic',  {
       'token': 'classic.1.$uid.$characterId'
@@ -477,6 +483,7 @@ class _ClassicGameMainState extends State<ClassicGameMain> {
         if (currentState.value == GameState.connecting) currentState.value = GameState.waiting;
       }else{
         print('failed');
+        print('POPPING FAILED TO JOIN');
         Navigator.of(context).pop();
       }
     });

@@ -73,14 +73,20 @@ class PowersGameController extends ChangeNotifier{
   Power get oppFirst => oppCharacter.firstPower;
   Power get oppSecond => oppCharacter.secondPower;
 
+  Map<String, dynamic>? get winRequest => (_iWon) ? _tournamentWinRequest() : null;
+
   PowersGameController({required this.roomInfo,
     required ValueNotifier<GameState> currentState,
     required this.uid}){
 
     for (var i in roomInfo.users){
+      print(i.toJson());
+      print('$uid :: ${i.userId}');
       if (i.userId == uid){
+        print('MY $uid :: ${i.userId}');
         myCharacter = i.character!;
       }else{
+        print('OP $uid :: ${i.userId}');
         opponent = i;
         oppCharacter = i.character!;
       }

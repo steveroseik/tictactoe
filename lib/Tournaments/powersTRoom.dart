@@ -8,6 +8,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Controllers/powersGameController.dart';
 import 'package:tictactoe/PowersGame/powersGameModule.dart';
+import 'package:tictactoe/Providers/socketProvider.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
 import 'package:tictactoe/objects/tournamentObject.dart';
 
@@ -21,6 +22,7 @@ import '../UIUX/customWidgets.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../objects/powerRoomObject.dart';
+import '../routesGenerator.dart';
 
 class PowersTournamentRoom extends StatefulWidget {
   final Character myCharacter;
@@ -60,6 +62,7 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
   bool gotDisconnected = false;
   bool canLeave = true;
   bool wonTournament = false;
+  bool waitingForRound = false;
 
   int theLuckyWinner = -1;
 
@@ -67,19 +70,26 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
 
   int speedCount = 0;
 
+  List<StreamSubscription> subscriptions = [];
+
   @override
   void initState() {
     mySelectedCharacter = widget.myCharacter;
     initSocket();
-
-    initGameTimer();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
-    socket.disconnect();
+
+    print('disconnecting from powers');
+    getIt.get<SocketProvider>().disconnect();
+
+    for (var sub in subscriptions){
+      sub.cancel();
+    }
+
   }
 
   @override
@@ -87,12 +97,7 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
-      child: speedMatch ? ClassicGameMain(
-        speedMatch: true,
-        controller: extraController,
-        inTournament: true,
-        socket: socket,
-      ) :  Scaffold(
+      child: Scaffold(
         body: ValueListenableBuilder<GameState>(
             valueListenable: tourState,
             builder: (context, tourValue, child) {
@@ -117,18 +122,6 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
                               (gameController?.state == GameState.started || gameController?.state == GameState.paused)) ? 0 : 1,
                           duration: const Duration(milliseconds: 300),
                           child: const BackgroundScroller(),),
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
-                          child:(speedMatch &&
-                              (gameController?.state == GameState.started || gameController?.state == GameState.paused)) ?
-                          SafeArea(
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset('assets/speed_match.png', width: 80.w,),
-                            ),
-                          ) : Container(),
-                        ),
                         Positioned.fill(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -136,8 +129,8 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
                             children: [
                               AnimatedSwitcher(
                                   duration: const Duration(milliseconds: 300),
-                                  child: tourValue == GameState.started || tourValue == GameState.ended ?
-                                  mainMiddleWidget(gameValue, tourValue)
+                                  child: tourValue == GameState.ended ?
+                                  gameEndDialog(tourValue)
                                       : tourValue == GameState.starting &&
                                       tournamentInfo?.users != null ?
                                   participantsWidget() : Column(
@@ -147,7 +140,9 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       tourValue == GameState.connecting ? const Text("Connecting...")
-                                          : tourValue == GameState.waiting ? const Text("Finding a tournament...")
+                                          : tourValue == GameState.waiting ?
+                                      waitingForRound ? const Text("Waiting for next round...")
+                                          : const Text("Finding a tournament...")
                                           : Text("Game Starting in $gameStartsIn..."),
                                       SizedBox(height: 30),
                                       SizedBox(
@@ -158,7 +153,7 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
                             ],
                           ),
                         ),
-                        if (gameValue != GameState.starting) SafeArea(
+                        SafeArea(
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: ElevatedButton(
@@ -180,16 +175,13 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
   }
 
   initSocket(){
-    socket = io(Const.gameServerUrl,
-        OptionBuilder()
-            .setTransports(['websocket'])
-            .disableAutoConnect()
-            .enableForceNewConnection()
-            .build());
 
-    socket.connect();
+    final socketProvider = getIt.get<SocketProvider>();
 
-    socket.onConnect((_) async{
+    socket = socketProvider.connect();
+
+
+    subscriptions.add(socketProvider.onConnect.stream.listen((_) async{
       print("Connection established : ${socket.id}");
       if (gotDisconnected){
         gotDisconnected = false;
@@ -209,9 +201,9 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
       }else{
         requestJoin();
       }
-    });
+    }));
 
-    socket.on('gameConnection', (data) {
+    subscriptions.add(socketProvider.onGameConnection.stream.listen((data) {
       if (data['type'] == 'disconnect'){
         setState(() {
           oppConnected = false;
@@ -224,37 +216,23 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
         });
         if (gameController?.hasListeners?? false) gameController!.setOppConnection(GameConn.online, clientId: data['clientId']);
       }
-    });
+    }));
 
 
-    socket.on('gameListener', (data) {
+    subscriptions.add(socketProvider.onGameListener.stream.listen((data) {
 
       print('got data: ${jsonEncode(data)}');
 
       switch(data['type']){
 
         case 'gameInit': gameInitAction(data);
-        break;
-        case 'powersMove': gameMoveAction(data);
-        break;
-        case 'powersMoveValidation': gameMoveValidation(data);
-        break;
-        case 'powersSpell': gameSpellAction(data);
-        break;
-        case 'powersSpellValidation': gameSpellValidation(data);
-        break;
-        case 'powersEndRound': myRoundStarted(data);
-        break;
-        case 'switchToSpeed': startSpeedMatch(data);
-        break;
-        case 'gameConnectionOff': gameEndedWithDisconnect(data);
-        break;
+
         default: print('lel asaf ${jsonEncode(data)}');
       }
 
-    });
+    }));
 
-    socket.on('tournamentListener', (data){
+    subscriptions.add(socketProvider.onTournamentListener.stream.listen((data){
       print('tournament: $data');
       if (data['type'] == 'participantsUpdate'){
         if (tournamentInfo == null){
@@ -271,9 +249,9 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
           tourState.value = GameState.ended;
         }
       }
-    });
+    }));
 
-    socket.onDisconnect((_){
+    subscriptions.add(socketProvider.onDisconnect.stream.listen((_){
       print("Disconnected");
       currentState.value = GameState.connecting;
       if (mounted){
@@ -281,10 +259,10 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
         if (gameController != null &&
             gameController!.hasListeners) gameController!.gotOffline();
       }
-    });
+    }));
 
     int errorCounter = 0;
-    socket.onConnectError((err) {
+    subscriptions.add(socketProvider.onConnectionError.stream.listen((err) {
       if (errorCounter == 4){
         try{
           socket.disconnect();
@@ -295,159 +273,35 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
       }else{
         errorCounter++;
       }
-    });
+    }));
 
-    socket.onError((err)=>print('Socket Error: $err'));
+    subscriptions.add(socketProvider.onError.stream.listen((err)=>print('Socket Error: $err')));
   }
 
   calculateGameStartTime(DateTime endTime){
     return endTime.subtract(Const.powersGameDuration);
   }
 
-  myRoundStarted(Map<String, dynamic> data){
-    if (!gameController!.isMyTurn){
-      final req = gameController!.setMyRound(data, tournament: true);
-      if (req != null) sendTournamentUpdate(req);
-      checkWin();
-    }else{
-      print('invalid request to end round');
-    }
-  }
-
-  gameInitAction(Map<String, dynamic> data, {bool speedMatch = false}){
-
-    setState(() {
-      canLeave = false;
-    });
-
-    this.speedMatch = speedMatch;
-
-    if (!speedMatch){
-      roomInfo = GameRoom.fromResponse(data['roomInfo']);
-      gameStartTime = calculateGameStartTime(roomInfo!.sessionEnd);
-    }else{
-      extraController = ClassicGameController(
-          roomInfo: roomInfo!,
-          speedMatch: true,
-          currentState: currentState,
-          uid: uid
-      );
-      roomInfo!.sessionEnd = DateTime.now().add(const Duration(seconds: 3 + (Const.speedRoundDuration * 9)));
-      gameStartTime = DateTime.now().add(const Duration(seconds: 3));
-
-    }
-
-    gameStartsIn = gameStartTime!.difference(DateTime.now()).inSeconds;
-
-
+  gameInitAction(Map<String, dynamic> data){
+    roomInfo = GameRoom.fromResponse(data['roomInfo']);
     tourState.value = GameState.started;
-    currentState.value = GameState.starting;
 
-    print(roomInfo!.lastHash);
-    setState(() {});
-    Timer.periodic(gameStartTime!.difference(DateTime.now()), (timer){
-      gameController = PowersGameController(
-          roomInfo: roomInfo!,
-          currentState: currentState, uid: uid);
-      currentState.value = gameController!.setState(GameState.started);
-      timer.cancel();});
-    initGameTimer();
-  }
-
-  initGameTimer(){
-    gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (gameStartsIn <= 0){
-        if (roomInfo != null && roomInfo!.sessionEnd.isAfter(DateTime.now())){
-          timer.cancel();
+    Navigator.of(context).pushNamed(Routes.powersGameMain,
+        arguments: {
+          "inTournament": true,
+          "roomInfo": roomInfo!,
+          "character": mySelectedCharacter,
+          "uid": uid,
         }
+    ).then((value) {
+      print('POPPED: $value');
+      if (value is Map<String, dynamic>){
+        sendTournamentUpdate(value);
       }else{
-        setState(() {
-          gameStartsIn--;
-        });
+        tourState.value = GameState.ended;
+        getIt.get<SocketProvider>().disconnect();
       }
     });
-  }
-
-  gameMoveValidation(data){
-    if (data['success'] != true){
-      print('YOU ARE CHEATING!!');
-      Navigator.of(context).pop();
-    }else{
-      final resp = gameController!.moveValidated(data: data);
-      if (resp != null){
-        socket.emitWithAck('gameListener', resp, ack: (data){
-
-          checkWin();
-          final req = gameController!.endMyRound(tournament: true);
-          if (req != null) sendTournamentUpdate(req);
-        });
-      }
-    }
-  }
-
-  gameMoveAction(Map<String, dynamic> data){
-    int? move = data['move'];
-    String? hash = data['hash'];
-
-    if (move != null && hash != null){
-      dynamic resp = gameController!.validateMove(move, hash);
-      socket.emitWithAck('gameListener', resp, ack: (d){
-        resp = gameController!.moveValidated(data: data);
-        if (resp != null){
-          socket.emitWithAck('gameListener', resp, ack: (data){
-            checkWin();
-            final req = gameController!.endMyRound(tournament: true);
-            if (req != null) sendTournamentUpdate(req);
-          });
-        }
-      });
-
-    }
-  }
-
-  gameSpellValidation(Map<String, dynamic> data){
-    if (data['success'] != true){
-      print('YOU ARE CHEATING!!');
-      Navigator.of(context).pop();
-    }else{
-      final resp = gameController!.moveValidated(data: data);
-      if (resp != null){
-        socket.emitWithAck('gameListener', resp, ack: (data){
-          checkWin();
-          final req = gameController!.endMyRound(tournament: true);
-          if (req != null) sendTournamentUpdate(req);
-        });
-      }
-
-    }
-  }
-
-  gameSpellAction(Map<String, dynamic> data){
-
-    Map<String, dynamic>? spells = data['spells'];
-    bool? firstPower = data['firstPower'];
-    String? hash = data['hash'];
-    if (spells != null && hash != null && firstPower != null){
-      final map = spells.map((key, value) => MapEntry(int.parse(key), Spell.fromJson(value)));
-      final resp = gameController!.validateSpell(map, firstPower, hash);
-      print('validation: ${resp['hash']}');
-      socket.emitWithAck('gameListener', resp, ack: (data){
-
-      });
-
-    }
-  }
-
-  gameEndedWithDisconnect(Map<String, dynamic> data ){
-
-    final resp = gameController!.endGameDueConnection(data, tournament: true);
-    if (resp.$1) {
-      // gameController!.setState(GameState.waiting);
-      sendTournamentUpdate(resp.$2);
-    }else{
-      print('Not the same');
-
-    }
   }
 
   requestJoin(){
@@ -478,58 +332,6 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
     });
   }
 
-  checkWin(){
-    print('checkking WINNNN: ${gameController?.state} :: ${currentState.value}');
-    if (gameController?.state == GameState.ended){
-      if (gameController?.winner == GameWinner.draw){
-        if (!gameController?.isMyTurn?? false){
-          print('BA3ATOO');
-          socket.emitWithAck('gameListener', {
-            'type': "switchToSpeed",
-            'roomId': gameController?.roomInfo.id,
-            'hash': gameController?.roomInfo.lastHash,
-          }, ack: (response){
-            if (response['success'] == true){
-              print('STARTING SPEED');
-              startSpeedMatch({
-                'hash': gameController?.roomInfo.lastHash,
-                'coinWinner': response['coinWinner']
-              });
-            }
-          });
-        }
-      }else{
-        if (gameController?.winner != GameWinner.none){
-          // cause if winner might need to join next tournament
-          if (!gameController?.iWon){
-            tourState.value = GameState.ended;
-          }
-
-        }
-      }
-    }
-  }
-
-  Widget mainMiddleWidget(GameState gValue, GameState tValue){
-    return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child,),
-        child: gameWidget(gValue, tValue)
-    );
-  }
-
-  Widget gameWidget(GameState gValue, GameState tValue){
-    return gValue != GameState.started && gValue != GameState.paused ?
-    viewMiddleWidget(gValue, tValue)
-        : PowersGameModule(
-      key: UniqueKey(),
-      roomInfo: roomInfo!,
-      gameController: gameController!,
-      socket: socket,
-      checkWin: checkWin,
-      sendTournamentUpdate: sendTournamentUpdate,
-      );
-  }
 
   Widget viewMiddleWidget(GameState value, GameState tValue){
     switch (value){
@@ -557,9 +359,6 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
         }
       case GameState.ended:
         return gameEndDialog(tValue);
-
-      case GameState.coinToss:
-        return CoinToss(onEnd: onCoinTossEnd);
 
       default: return Text('1Should not appear');
     }
@@ -650,14 +449,14 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
-            tValue == GameState.ended ? 'Tournament Ended' : "Game Ended",
+            'Tournament Ended',
             style: const TextStyle(
               color: Colors.white,
             ),
           ),
           SizedBox(height: 1.h),
           Text(
-            gameController?.iWon || wonTournament ? "You Won !" : "You Lost !",
+            wonTournament ? "You Won !" : "You Lost !",
             style: const TextStyle(
                 color: Colors.white,
                 fontSize: 35.0,
@@ -669,7 +468,7 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
             height: 6.h,
             baseDecoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: gameController?.iWon ?
+                colors: wonTournament ?
                 [colorDeepOrange, colorDeepOrange] :
                 [Colors.red, Colors.red.shade900],
               ),
@@ -679,7 +478,7 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
               gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
-                colors:  !gameController?.iWon ?
+                colors:  !wonTournament ?
                 [colorDeepOrange, colorDeepOrange] :
                 [colorLightYellow, colorDeepOrange],
               ),
@@ -690,40 +489,12 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
             enableShimmer: false,
             borderRadius: BorderRadius.circular(10),
             child: Center(
-                child: Text(gameController?.iWon && wonTournament ? 'Claim Reward' : 'Back To Home',
+                child: Text(wonTournament ? 'Claim Reward' : 'Back To Home',
                   style: TextStyle(color: Colors.black),)),
           )
         ],
       ),
     );
-  }
-
-  startSpeedMatch(Map<String, dynamic> data){
-    if (gameController?.winner != GameWinner.draw) return;
-    final hash = data['hash'];
-    final coinWinner = data['coinWinner'];
-    if (hash != null
-        && hash == gameController?.roomInfo.lastHash
-        && coinWinner != null){
-      theLuckyWinner = coinWinner ? 1 : 0;
-      if (speedMatch){
-        /// control speedMatch count
-        if (speedCount > 0){
-          speedCount++;
-          gameInitAction(data, speedMatch: true);
-          initGameTimer();
-        }else{
-          print('LEHH? ${speedCount}');
-          initCoinToss();
-        }
-      }else{
-        gameInitAction(data, speedMatch: true);
-        initGameTimer();
-      }
-
-    }else{
-      print('error, wrong hash');
-    }
   }
 
   sendTournamentUpdate(Map<String, dynamic> data){
@@ -734,10 +505,10 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
       if (response['success'] == true){
         if (response['code'] == 'you_won'){
           wonTournament = true;
-          gameController?.setState(GameState.ended);
           tourState.value = GameState.ended;
         }else if (response['code'] == 'waiting_for_next_round'){
-          gameController?.setState(GameState.waiting);
+          waitingForRound = true;
+          tourState.value = GameState.waiting;
         }
 
       }
@@ -824,14 +595,6 @@ class _PowersTournamentRoomState extends State<PowersTournamentRoom> {
         ),
       ],
     );
-  }
-
-  initCoinToss(){
-    extraController?.setState(GameState.coinToss);
-  }
-
-  onCoinTossEnd(){
-    extraController?.didIWin(theLuckyWinner, tournament: true);
   }
 
 }

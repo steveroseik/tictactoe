@@ -111,8 +111,16 @@ class RoutesGen {
         }
         return GamePageRoute(builder: (_) => NineGameMain());
       case Routes.powersGameMain:
-        if (args is Character)
+        if (args is Character) {
           return GamePageRoute(builder: (_) => PowersGameMain(character: args));
+        }
+        if (args is Map<String, dynamic>) {
+          return GamePageRoute(builder: (_) => PowersGameMain(
+              uid: args['uid']!,
+              roomInfo: args['roomInfo']!,
+              inTournament: args['inTournament']!,
+              character: args['character']!));
+        }
         return _errorRoute();
       // case Routes.experimentalGameMain2 : return GamePageRoute(builder: (_) => PowersGameModule());
       case Routes.experimentalGameMain3:

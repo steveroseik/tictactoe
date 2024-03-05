@@ -12,6 +12,8 @@ import '../objects/powerRoomObject.dart';
 
 class ClassicGameController extends ChangeNotifier{
 
+  bool _disposed = false;
+
   late int gridLength;
 
   List<List<int>> grid = [];
@@ -59,6 +61,8 @@ class ClassicGameController extends ChangeNotifier{
 
   get isNine => gridLength == 9;
 
+  Map<String, dynamic>? get winRequest => (_iWon) ? _tournamentWinRequest() : null;
+
   ClientObject get opponent => roomInfo.users.firstWhere((e) => e.userId != uid);
   ClientObject get me => roomInfo.users.firstWhere((e) => e.userId == uid);
   
@@ -78,6 +82,7 @@ class ClassicGameController extends ChangeNotifier{
     isNine ? Const.nineRoundDuration :
     speedMatch ? Const.speedRoundDuration : Const.classicRoundDuration));
 
+    print('first player should play @ ${_roundTimeout!.toIso8601String()}');
     if (roomInfo.userTurn == opponent.userId){
       _myIndex = Const.oCell;
       _myTurn = false;
@@ -611,9 +616,6 @@ class ClassicGameController extends ChangeNotifier{
     return (false, !tournament ? null : _tournamentWinRequest());
   }
 
-
-  Map<String, dynamic>? get winRequest => (_iWon) ? _tournamentWinRequest() : null;
-
   Map<String, dynamic> _tournamentWinRequest(){
     final opp = opponent;
     return {
@@ -658,8 +660,11 @@ class ClassicGameController extends ChangeNotifier{
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+    if (!_disposed){
+      _disposed = true;
+      super.dispose();
+    }
+
   }
 
 }

@@ -45,7 +45,8 @@ class SocketProvider extends ChangeNotifier{
   }
 
   disconnect(){
-    socket?.disconnect();
+    socket?.offAny();
+    socket?.close();
     socket = null;
   }
 

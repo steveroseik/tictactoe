@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
 import 'package:tictactoe/Authentication/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,15 +8,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../UIUX/customWidgets.dart';
 import '../UIUX/themesAndStyles.dart';
 
-class SignupPage extends StatefulWidget {
+
+class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  ConsumerState<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
-  final Authentication _authenticator = Authentication();
+class _SignupPageState extends ConsumerState<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _reenterPasswordController =
@@ -170,7 +171,7 @@ class _SignupPageState extends State<SignupPage> {
 
                           try {
                             // Calling the signUpWithEmailAndPassword method
-                            await _authenticator.signUpWithEmailAndPassword(
+                            await ref.read(authProvider).signUpWithEmailAndPassword(
                               email: _emailController.text,
                               password: _passwordController.text,
                               context: context,
@@ -228,7 +229,7 @@ class _SignupPageState extends State<SignupPage> {
                         child: IconButton(
                             onPressed: () async {
                               User? user =
-                                  await _authenticator.signInWithGoogle();
+                                  await ref.read(authProvider).signInWithGoogle();
                               if (user != null) {
                                 print('User signed in: ${user.displayName}');
                               } else {
@@ -264,7 +265,7 @@ class _SignupPageState extends State<SignupPage> {
                         child: IconButton(
                             onPressed: () async {
                               User? user =
-                                  await _authenticator.signInWithFacebook();
+                                  await ref.read(authProvider).signInWithFacebook();
                               if (user != null) {
                                 print('User signed in: ${user.displayName}');
                               } else {
