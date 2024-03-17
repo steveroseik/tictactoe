@@ -117,7 +117,7 @@ class _CoinTossState extends State<CoinToss> with TickerProviderStateMixin {
                       ),
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: Sprites.characterOf[characters.chameleon]!,),
+                        child: Sprites.characterOf[CharacterType.chameleon]!,),
                     ),
                   ) :
                   Container(
@@ -141,7 +141,7 @@ class _CoinTossState extends State<CoinToss> with TickerProviderStateMixin {
                     ),
                     child: AspectRatio(
                       aspectRatio: 1,
-                      child: Sprites.characterOf[characters.pirate]!,),
+                      child: Sprites.characterOf[CharacterType.pirate]!,),
                   )
               ),
             );
@@ -172,7 +172,7 @@ class _CoinTossState extends State<CoinToss> with TickerProviderStateMixin {
               ),
               child: AspectRatio(
                 aspectRatio: 1,
-                child: Sprites.characterOf[characters.chameleon]!,),
+                child: Sprites.characterOf[CharacterType.chameleon]!,),
             ),
           ),
         ),

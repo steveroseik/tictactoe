@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tictactoe/Configurations/extensions.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 
 import '../Providers/apiLibrary.dart';
@@ -158,7 +159,7 @@ class _SignupCompletionPageState extends ConsumerState<SignupCompletionPage> {
         fbId = currentUser.providerData[0].uid;
       }
       try{
-        final resp = await ref.read(apiLibrary).createNewUser(
+        final resp = await ref.read(apiProvider).createNewUser(
             email: _emailController.text,
             // TODO:: separate username from name fields
             username: _usernameController.text,

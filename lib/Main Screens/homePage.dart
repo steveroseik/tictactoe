@@ -7,6 +7,7 @@ import 'package:neopop/neopop.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:tictactoe/Providers/apiLibrary.dart';
 import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/UIUX/customWidgets.dart';
 import 'package:tictactoe/UIUX/themesAndStyles.dart';
@@ -480,230 +481,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ],
             ),
           ),
-          SafeArea(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [...gameCoinList()],
-                    ),
-                    SizedBox(height: 3.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GameButton(
-                          onPressed: () {},
-                          width: 12.w,
-                          aspectRatio: 1,
-                          borderRadius: BorderRadius.circular(10),
-                          baseDecoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                Colors.indigo.shade700,
-                                Colors.indigo.shade900
-                              ])),
-                          topDecoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                Colors.indigo,
-                                Colors.indigo.shade400
-                              ])),
-                          enableShimmer: false,
-                          child: Icon(
-                            Icons.settings,
-                            color: Colors.white,
-                          ),
-                        ),
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(Routes.leaderboardPage);
-                            },
-                            child: Container(
-                              width: 12.w,
-                              height: 12.w,
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.black,
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.deepPurple.shade900,
-                                          colorPurple
-                                        ],
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color:
-                                                colorDarkBlue.withOpacity(0.3),
-                                            offset: Offset(3, 3),
-                                            spreadRadius: 1,
-                                            blurRadius: 3)
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      top: -15,
-                                      child: SizedBox(
-                                          height: 14.w,
-                                          child: Image.asset(
-                                              'assets/trophy.png'))),
-                                ],
-                              ),
-                            )),
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(Routes.friendsPage);
-                            },
-                            child: Container(
-                              width: 12.w,
-                              height: 12.w,
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.black,
-                                      gradient: LinearGradient(colors: [
-                                        Colors.deepPurple.shade900,
-                                        colorPurple
-                                      ]),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color:
-                                                colorDarkBlue.withOpacity(0.3),
-                                            offset: Offset(3, 3),
-                                            spreadRadius: 1,
-                                            blurRadius: 3)
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      top: -13,
-                                      child: SizedBox(
-                                          height: 12.w,
-                                          child: Image.asset(
-                                              'assets/friends.png'))),
-                                ],
-                              ),
-                            )),
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(Routes.notificationsPage);
-                            },
-                            child: Container(
-                              width: 12.w,
-                              height: 12.w,
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.black,
-                                      gradient: LinearGradient(colors: [
-                                        Colors.deepPurple.shade900,
-                                        colorPurple
-                                      ]),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color:
-                                                colorDarkBlue.withOpacity(0.3),
-                                            offset: Offset(3, 3),
-                                            spreadRadius: 1,
-                                            blurRadius: 3)
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      top: -13,
-                                      child: SizedBox(
-                                          height: 12.w,
-                                          child:
-                                              Image.asset('assets/top.png'))),
-                                ],
-                              ),
-                            )),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(Routes.storeHome);
-                          },
-                          child: Container(
-                            width: 12.w,
-                            height: 12.w,
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.black,
-                                    gradient: LinearGradient(colors: [
-                                      Colors.deepPurple.shade900,
-                                      colorPurple
-                                    ]),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: colorDarkBlue.withOpacity(0.3),
-                                          offset: Offset(3, 3),
-                                          spreadRadius: 1,
-                                          blurRadius: 3)
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                    top: -10,
-                                    child: SizedBox(
-                                        height: 12.w,
-                                        child: Image.asset(
-                                            'assets/shop-bag.png'))),
-                              ],
-                            ),
-                          ),
-                        ),
-                        GameButton(
-                          onPressed: () => session.signOut(),
-                          width: 12.w,
-                          aspectRatio: 1,
-                          borderRadius: BorderRadius.circular(10),
-                          baseDecoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [Colors.black, Colors.black])),
-                          topDecoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [Colors.red, Colors.black])),
-                          enableShimmer: false,
-                          child: Icon(
-                            Icons.logout,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          homeBar()
         ],
       ),
     );
@@ -952,6 +730,228 @@ class _HomePageState extends ConsumerState<HomePage> {
                     child: Image.asset(Sprites.staticCoinOf[coin]!),
                   ),
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget homeBar(){
+    return SafeArea(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [...gameCoinList()],
+              ),
+              SizedBox(height: 3.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GameButton(
+                    onPressed: () async{
+
+                    },
+                    width: 12.w,
+                    aspectRatio: 1,
+                    borderRadius: BorderRadius.circular(10),
+                    baseDecoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.indigo.shade700,
+                              Colors.indigo.shade900
+                            ])),
+                    topDecoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.indigo,
+                              Colors.indigo.shade400
+                            ])),
+                    enableShimmer: false,
+                    child: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Container(
+                    width: 12.w,
+                    height: 12.w,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.black,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.deepPurple.shade900,
+                                colorPurple
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: colorDarkBlue.withOpacity(0.3),
+                                  offset: Offset(3, 3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3)
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                            top: -15,
+                            child: SizedBox(
+                                height: 14.w,
+                                child: Image.asset('assets/trophy.png'))),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(Routes.friendsPage);
+                      },
+                      child: Container(
+                        width: 12.w,
+                        height: 12.w,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black,
+                                gradient: LinearGradient(colors: [
+                                  Colors.deepPurple.shade900,
+                                  colorPurple
+                                ]),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color:
+                                      colorDarkBlue.withOpacity(0.3),
+                                      offset: Offset(3, 3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3)
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                                top: -13,
+                                child: SizedBox(
+                                    height: 12.w,
+                                    child: Image.asset(
+                                        'assets/friends.png'))),
+                          ],
+                        ),
+                      )),
+                  InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(Routes.notificationsPage);
+                      },
+                      child: Container(
+                        width: 12.w,
+                        height: 12.w,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black,
+                                gradient: LinearGradient(colors: [
+                                  Colors.deepPurple.shade900,
+                                  colorPurple
+                                ]),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color:
+                                      colorDarkBlue.withOpacity(0.3),
+                                      offset: Offset(3, 3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3)
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                                top: -13,
+                                child: SizedBox(
+                                    height: 12.w,
+                                    child:
+                                    Image.asset('assets/top.png'))),
+                          ],
+                        ),
+                      )),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Routes.storeHome);
+                    },
+                    child: Container(
+                      width: 12.w,
+                      height: 12.w,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.black,
+                              gradient: LinearGradient(colors: [
+                                Colors.deepPurple.shade900,
+                                colorPurple
+                              ]),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: colorDarkBlue.withOpacity(0.3),
+                                    offset: Offset(3, 3),
+                                    spreadRadius: 1,
+                                    blurRadius: 3)
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                              top: -10,
+                              child: SizedBox(
+                                  height: 12.w,
+                                  child: Image.asset(
+                                      'assets/shop-bag.png'))),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GameButton(
+                    onPressed: () => session.signOut(),
+                    width: 12.w,
+                    aspectRatio: 1,
+                    borderRadius: BorderRadius.circular(10),
+                    baseDecoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Colors.black, Colors.black])),
+                    topDecoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Colors.red, Colors.black])),
+                    enableShimmer: false,
+                    child: Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

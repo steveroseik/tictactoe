@@ -1,6 +1,9 @@
 
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+import 'package:tictactoe/Configurations/constants.dart';
+
 List<UserObject> userFromJson(String str) => List<UserObject>.from(json.decode(str).map((x) => UserObject.fromJson(x)));
 
 String userToJson(List<UserObject> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -45,6 +48,30 @@ class UserObject {
     required this.createdAt,
     required this.lastModified,
   });
+
+  Map<String, dynamic>? updateTournament(GameType type){
+    switch(type){
+      case GameType.classicDailyTournament:
+        return classicScore!.updateTournament('daily', 1);
+      case GameType.classicWeeklyTournament:
+        return classicScore!.updateTournament('weekly', 1);
+      case GameType.classicMonthlyTournament:
+        return classicScore!.updateTournament('monthly', 1);
+      case GameType.nineDailyTournament:
+        return nineScore!.updateTournament('daily', 1);
+      case GameType.nineWeeklyTournament:
+        return nineScore!.updateTournament('weekly', 1);
+      case GameType.nineMonthlyTournament:
+        return nineScore!.updateTournament('monthly', 1);
+      case GameType.powersDailyTournament:
+        return powersScore!.updateTournament('daily', 1);
+      case GameType.powersWeeklyTournament:
+        return powersScore!.updateTournament('weekly', 1);
+      case GameType.powersMonthlyTournament:
+        return powersScore!.updateTournament('monthly', 1);
+      default: return null;
+    }
+  }
 
   factory UserObject.fromJson(Map<String, dynamic> json) => UserObject(
     id: json["id"],
@@ -105,6 +132,24 @@ class Score {
     required this.createdAt,
     required this.lastModified,
   });
+
+  Map<String, dynamic> updateTournament(String name, int value){
+
+    if (tournamentWins == null) {
+      tournamentWins = {
+        name: value
+      };
+      return tournamentWins!;
+    }else{
+      final toChange = tournamentWins!.keys.firstWhereOrNull((e) => e == name);
+      if (toChange == null){
+        tournamentWins![name] = value;
+      }else{
+        tournamentWins![name] = tournamentWins![name]! + value;
+      }
+      return tournamentWins!;
+    }
+  }
 
   factory Score.fromJson(Map<String, dynamic> json) => Score(
     score: json["score"],

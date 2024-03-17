@@ -15,10 +15,12 @@ class NotificationsPage extends ConsumerStatefulWidget {
 }
 
 class _NotificationsPageState extends ConsumerState<NotificationsPage> {
-  late final Future<List<Map<String, dynamic>>> _friendRequestsFuture; 
+  late final Future<List<Map<String, dynamic>>> _friendRequestsFuture;
 @override
   void initState() {
-    super.initState();
+
+  _friendRequestsFuture = ref.read(apiProvider).getPendingRequests();
+  super.initState();
   }
 
   @override
@@ -138,7 +140,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                 // Add Accept and Reject buttons here
                 TextButton(
                   onPressed: () {
-                    ref.read(apiLibrary).updateRequest(status: RequestStatus.accepted,id: request['id']);
+                    ref.read(apiProvider).updateRequest(status: RequestStatus.accepted,id: request['id']);
                     
                   },
                   child: Text(
@@ -148,7 +150,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    ref.read(apiLibrary).updateRequest(status: RequestStatus.rejected,id: request['id']);
+                    ref.read(apiProvider).updateRequest(status: RequestStatus.rejected,id: request['id']);
                   },
                   child: Text(
                     'Reject',

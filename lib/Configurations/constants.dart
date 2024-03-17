@@ -1,13 +1,21 @@
 
 
+import 'package:collection/collection.dart';
+import 'package:tictactoe/PowersGame/Characters/core.dart';
+import 'package:tictactoe/spritesConfigurations.dart';
+
 class Const{
+
+  static const storage = 'tictac_data_storage';
+  static const challengesStorage = 'challenges_storage';
+
   static const nullCell = -1;
   static const xCell = 1;
   static const oCell = 0;
   /// quantum state cell
   static const qCell = 2;
 
-  static const baseUrl = 'http://192.168.1.12:3002';
+  static const baseUrl = 'http://172.20.10.4:3002';
 
   static const graphqlUrl = '$baseUrl/graphql';
 
@@ -52,6 +60,28 @@ class Const{
   static const int powersTournamentDailyEntranceFees = 100;
   static const int powersTournamentWeeklyEntranceFees = 100;
   static const int powersTournamentMonthlyEntranceFees = 100;
+
+  static const powersSingleTieredExperienceReward = 500;
+  // static const powersSingleRandomExperienceReward = 200;
+
+  static const int powersTournamentDailyExperienceReward = 1000;
+  static const int powersTournamentWeeklyExperienceReward = 1500;
+  static const int powersTournamentMonthlyExperienceReward = 3000;
+
+  static const singleTieredScoreReward = 100;
+  static const singleTieredScorePenalty = 50;
+
+  static const tournamentDailyReward = 1000;
+  // static const singleTournamentDailyPenalty = 100;
+
+  static const tournamentWeeklyReward = 1000;
+  // static const singleTournamentWeeklyPenalty = 100;
+
+  static const tournamentMonthlyReward = 1000;
+  // static const singleTournamentMonthlyPenalty = 200;
+
+
+
 }
 
 
@@ -66,6 +96,9 @@ enum GameState { connecting, waiting, starting, started, coinToss, paused, ended
 /// Game Winner enum
 enum GameWinner {o, x, draw, none}
 
+/// Game Result
+enum GameResult {win, lose, draw}
+
 /// Game Connection enum
 enum GameConn {online, offline}
 
@@ -79,6 +112,7 @@ enum GameMode {
 }
 
 enum GameType {
+  noType,
   classicSingleTiered,
   classicSingleRandom,
   classicDailyTournament,
@@ -93,8 +127,13 @@ enum GameType {
   powersSingleRandom,
   powersDailyTournament,
   powersWeeklyTournament,
-  powersMonthlyTournament
+  powersMonthlyTournament,
+  friendlySingleMatch,
+  friendlyTournament
 }
+
+/// Coin types
+enum CoinType { bronze, silver, gold}
 
 enum Game{
   classic,
@@ -114,5 +153,82 @@ enum RequestStatus {
  rejected
 }
 
+enum ResetType{
+  daily,
+  match,
+}
+
+enum CountType{
+  play,
+  win,
+  score,
+  experience,
+  powerPlay,
+  ///firstPower
+  ///secondPower
+  noPowers,
+  dailyChallenge,
+  tournamentSemi,
+  tournamentFinal,
+  invitation,
+  counter,
+}
+
+enum ChallengePayloadType{
+  game,
+  challenge,
+  invitation,
+}
+
+CoinType? getCoinType(dynamic value) {
+  try {
+    return CoinType.values.firstWhereOrNull(
+          (e) => e.toString().contains(value),
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+GameType? getGameType(dynamic value) {
+  try {
+    return GameType.values.firstWhereOrNull(
+          (e) => e.toString().contains(value),
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+
+CharacterType? getCharacterType(dynamic value) {
+  try {
+    return CharacterType.values.firstWhereOrNull(
+          (e) => e.toString().contains(value),
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+CountType? getCountType(dynamic value) {
+  try {
+    return CountType.values.firstWhereOrNull(
+          (e) => e.toString().contains(value),
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+ResetType? getResetType(dynamic value) {
+  try {
+    return ResetType.values.firstWhereOrNull(
+          (e) => e.toString().contains(value),
+    );
+  } catch (e) {
+    return null;
+  }
+}
 
 

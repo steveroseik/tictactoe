@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -16,7 +17,7 @@ import 'package:tictactoe/spritesConfigurations.dart';
 
 import '../UIUX/customWidgets.dart';
 
-class ClassicGameModule extends StatefulWidget {
+class ClassicGameModule extends rp.ConsumerStatefulWidget {
   final ClassicGameController controller;
   final Function(GameWinner, bool)? gameStateChanged;
   final Socket socket;
@@ -33,18 +34,16 @@ class ClassicGameModule extends StatefulWidget {
     });
 
   @override
-  State<ClassicGameModule> createState() => _ClassicGameModuleState();
+  rp.ConsumerState<ClassicGameModule> createState() => _ClassicGameModuleState();
 }
 
-class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProviderStateMixin {
+class _ClassicGameModuleState extends rp.ConsumerState<ClassicGameModule> with TickerProviderStateMixin {
 
   late AnimationController _animationController;
 
   late ClassicGameController controller;
 
   late Animation _animation;
-
-  late SessionProvider mainController;
 
   List<Widget> lines = [];
 
@@ -65,8 +64,8 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
     controller = widget.controller;
 
     if (controller.opponent.characterId != null){
-      opponentCharacter = classicOppViewAvatar(Sprites.characterOf[characters.values[controller.opponent.characterId!]]!, controller.sameAvatar);
-      myCharacter = Sprites.characterOf[characters.values[controller.me.characterId!]]!;
+      opponentCharacter = classicOppViewAvatar(Sprites.characterOf[CharacterType.values[controller.opponent.characterId!]]!, controller.sameAvatar);
+      myCharacter = Sprites.characterOf[CharacterType.values[controller.me.characterId!]]!;
     }else{
       opponentCharacter = controller.opponent.character!.avatar;
       myCharacter = controller.me.character!.avatar;
@@ -98,8 +97,9 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
   @override
   Widget build(BuildContext context) {
 
-    mainController = context.watch<SessionProvider>();
+    final session = ref.watch(sessionProvider);
     if (widget.isNine) gameControl = context.watch<ClassicGameController>();
+    final oppData = session.getOppData(controller.opponent.userId);
     return (widget.isNine) ?
     Container(
       padding: EdgeInsets.all(5),
@@ -281,7 +281,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
                                   const Spacer(),
                                   Expanded(
                                     child: Text(
-                                      controller.opponent.userId,
+                                      oppData?.username?? 'opponent',
                                       style: TextStyle(
                                           color: colorLightYellow,
                                           fontWeight: FontWeight.w500),
@@ -423,7 +423,7 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
                               aspectRatio: 1,
                               child: IconButton(
                                   onPressed: () {
-                                    mainController.signOut();
+                                    session.signOut();
                                   },
                                   style: IconButton.styleFrom(
                                       backgroundColor:
@@ -458,8 +458,6 @@ class _ClassicGameModuleState extends State<ClassicGameModule> with TickerProvid
         timer.cancel();
         return;
       }
-
-      print('${_progress} :: ${controller.isMyTurn}');
 
       if (controller.state == GameState.ended) {
         timer.cancel();

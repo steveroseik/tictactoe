@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe/Providers/authentication.dart';
 import 'package:tictactoe/Providers/apiLibrary.dart';
 import 'package:tictactoe/Configurations/constants.dart';
+import 'package:tictactoe/Providers/gameBrain.dart';
+import 'package:tictactoe/objects/powerRoomObject.dart';
 import 'package:tictactoe/objects/userObject.dart';
+
+import 'Challenges/challengeManager.dart';
 
 
 final sessionProvider = ChangeNotifierProvider<SessionProvider>(
@@ -21,6 +26,7 @@ class SessionProvider extends ChangeNotifier{
   bool _isLoading = false;
   UserSession? lastSession;
   UserObject? currentUser;
+  GameManager gameManager = GameManager();
   ChangeNotifierProviderRef<SessionProvider> ref;
 
 
@@ -30,11 +36,13 @@ class SessionProvider extends ChangeNotifier{
   get isLoading => _isLoading;
 
   Authentication get auth => ref.read(authProvider);
-  ApiLibrary get apiLib => ref.read(apiLibrary);
+  ApiLibrary get apiLib => ref.read(apiProvider);
+  ChallengeManager get challengeManager => ref.read(challengeProvider);
 
 
   SessionProvider(this.ref) {
     authController = StreamController<UserSession>.broadcast();
+
   }
 
 
@@ -74,7 +82,7 @@ class SessionProvider extends ChangeNotifier{
     if (userData != null){
       if (Authentication.isEmailVerified(userData)){
         updateSession(UserSession.loading);
-        final user = await apiLib.user();
+        final user = await apiLib.getUser();
         if (user != null){
           currentUser = user;
           updateSession(UserSession.completeUser);
@@ -88,6 +96,44 @@ class SessionProvider extends ChangeNotifier{
       currentUser = null;
       updateSession(UserSession.noUser);
     }
+  }
+
+  Future<UserObject?> fetchOpponent(GameRoom roomInfo) async{
+    final opponent = roomInfo.users
+        .firstWhereOrNull((e) => e.userId != currentUser?.id);
+    if (opponent == null) return null;
+
+    return apiLib.getUser(id: opponent.userId);
+  }
+
+
+  ///TODO: FIX METFAGARAAA
+  UserObject? getOppData(String id){
+    return null;
+    // return await apiLib.getUser(id: id);
+  }
+
+  bool initiateNewGame({required GameType mode}){
+
+    if (currentUser == null) return false;
+    return gameManager.newGame(mode: mode, user: currentUser!);
+
+  }
+
+  bool startGame(){
+    if (gameManager.currentState != GameState.waiting) return false;
+    gameManager.currentState = GameState.started;
+    return true;
+  }
+
+  Future<bool> endGame(GameResult result) async{
+
+    if (gameManager.currentState != GameState.started
+    || currentUser == null) return false;
+    final transaction = gameManager.exportTransaction(currentUser!, result);
+    apiLib.updateUserGameTransaction(transaction);
+    //TODO:: continue
+    return false;
   }
 
 }

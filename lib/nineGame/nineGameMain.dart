@@ -674,8 +674,8 @@ class _NineGameMainState extends State<NineGameMain> with TickerProviderStateMix
     print('length:: ${roomInfo?.users.length}');
     final oppChId = roomInfo!.users.firstWhere((element) => element.userId != uid).characterId!;
     final myChId = roomInfo!.users.firstWhere((element) => element.userId == uid).characterId!;
-    opponentCharacter = Sprites.characterOf[characters.values[oppChId]]!;
-    myCharacter = Sprites.characterOf[characters.values[myChId]]!;
+    opponentCharacter = Sprites.characterOf[CharacterType.values[oppChId]]!;
+    myCharacter = Sprites.characterOf[CharacterType.values[myChId]]!;
   }
 
   startSpeedMatch(Map<String, dynamic> data){

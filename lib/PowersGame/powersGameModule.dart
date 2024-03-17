@@ -87,10 +87,10 @@ class _PowersGameModuleState extends State<PowersGameModule> with TickerProvider
   List<int> cells = [];
   List<int> spells = [];
 
-  Widget enemy = Sprites.characterOf[characters.reaper1]!;
-  Widget myself = Sprites.characterOf[characters.maskDude]!;
+  Widget enemy = Sprites.characterOf[CharacterType.reaper1]!;
+  Widget myself = Sprites.characterOf[CharacterType.maskDude]!;
 
-  ValueNotifier<characters> en = ValueNotifier(characters.reaper1);
+  ValueNotifier<CharacterType> en = ValueNotifier(CharacterType.reaper1);
 
   StreamController<int> gridTaps = StreamController<int>();
 

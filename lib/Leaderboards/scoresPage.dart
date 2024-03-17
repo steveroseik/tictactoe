@@ -15,7 +15,7 @@ class ScoresPage extends ConsumerStatefulWidget {
 }
 
 class _ScoresPageState extends ConsumerState<ScoresPage> {
-  ApiLibrary get apiLib => ref.read(apiLibrary);
+  ApiLibrary get apiLib => ref.read(apiProvider);
 
   List<LeaderboardObject>? leaderboardData;
   bool isGlobal = true;

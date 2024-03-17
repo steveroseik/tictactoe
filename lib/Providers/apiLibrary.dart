@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 import 'package:tictactoe/Configurations/constants.dart';
+import 'package:tictactoe/Providers/gameBrain.dart';
+import 'package:tictactoe/objects/compoundChallengesObject.dart';
 import 'package:tictactoe/Providers/getIt.dart';
 import 'package:tictactoe/objects/leaderboardObjects.dart';
 import 'package:tictactoe/objects/userObject.dart';
@@ -12,23 +13,26 @@ import 'package:http/http.dart' as http;
 import 'authentication.dart';
 import 'sessionProvider.dart';
 
-final apiLibrary = Provider<ApiLibrary>((ref) => ApiLibrary(ref));
+final apiProvider = Provider<ApiLibrary>((ref) => ApiLibrary(ref));
 
 class ApiLibrary {
+
+
   ProviderRef<ApiLibrary> ref;
 
-  Authentication get auth => ref.read(authProvider);
-  SessionProvider get session => ref.read(sessionProvider);
+  Authentication get _auth => ref.read(authProvider);
+
+  SessionProvider get _session => ref.read(sessionProvider);
+
   ApiLibrary(this.ref);
 
   // User Service Methods:
   // Method to create user
-  Future<bool> createNewUser(
-      {required String email,
-      required String username,
-      required String name,
-      required DateTime birthdate,
-      required bool isMale}) async {
+  Future<bool> createNewUser({required String email,
+    required String username,
+    required String name,
+    required DateTime birthdate,
+    required bool isMale}) async {
     final query = '''
           mutation q{
                   createUser(createUserInput: {
@@ -36,7 +40,8 @@ class ApiLibrary {
                       email: "$email",
                       name: "$name",
                       username: "$username",
-                      provider: "${FirebaseAuth.instance.currentUser!.providerData[0].providerId}"
+                      provider: "${FirebaseAuth.instance.currentUser!
+        .providerData[0].providerId}"
                       isMale: $isMale,
                       birthdate: "${birthdate.toIso8601String()}",
                   })
@@ -55,13 +60,15 @@ class ApiLibrary {
   }
 
   // Method that returns user data given id
-  Future<UserObject?> user() async {
+  Future<UserObject?> getUser({String? id, String? username, withScore = false}) async {
     try {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
-      if (uid == null) return null;
+      final uid = id??FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null && username == null) return null;
       final query = '''
     query a{
-      user(id: "$uid"){
+      user(
+      ${uid != null ? 'id: "$uid"' : ''}
+      ${username != null ? 'username: "$username"' : ''}){
        id,
         name,
         birthdate,
@@ -75,6 +82,7 @@ class ApiLibrary {
         email,
         username,
         facebookId,
+        ${withScore? '''
         classicScore{
           score,
           wins,
@@ -99,6 +107,7 @@ class ApiLibrary {
           createdAt,
           lastModified
         },
+        ''' : ''}
         createdAt,
         lastModified
       }
@@ -108,8 +117,10 @@ class ApiLibrary {
       if (resp != null) {
         return UserObject.fromJson(resp['user']);
       }
+      return null;
     } catch (e) {
       print('getUserError: $e');
+      return null;
     }
   }
 
@@ -124,7 +135,9 @@ class ApiLibrary {
           }
         }
       ''',
-        variables: {'username': username},
+        variables: {
+          'username': username,
+        },
       );
 
       if (res != null) {
@@ -145,7 +158,7 @@ class ApiLibrary {
   // Method that send friend request given username
   Future<bool> sendRequestByUsername({required String username}) async {
     try {
-      final uid = session.currentUser?.id;
+      final uid = _session.currentUser?.id;
       if (uid == null) return false;
       final query = '''
       mutation {
@@ -157,7 +170,8 @@ class ApiLibrary {
       }
       ''';
       var res = await sendGraphql(query);
-      if (res != null && res['createRequestWithUsername'] == true) return true;
+      if (res != null && res['createRequestWithUsername'] == true)
+        return true;
 
       return false;
     } catch (e) {
@@ -172,13 +186,14 @@ class ApiLibrary {
     try {
       final gameFriends = await getUserFriends();
 
+
       if (gameFriends == null) return null;
       // Check if the provider is Facebook
-      if (auth.isFbAuthenticated()) {
-        var accessToken = await auth.getFacebookAccessToken();
+      if (_auth.isFbAuthenticated()) {
+        var accessToken = await _auth.getFacebookAccessToken();
         if (accessToken != null) {
-          var facebookFriends =
-              await auth.getFacebookFriends(token: accessToken.token);
+          var facebookFriends = await _auth.getFacebookFriends(
+              token: accessToken.token);
           var allFriends = combineFriends(gameFriends, facebookFriends);
           return allFriends;
         } else {
@@ -193,6 +208,7 @@ class ApiLibrary {
       throw e;
     }
   }
+
 
   // TODO:: return full user details and object
   Future<List<dynamic>?> getUserFriends() async {
@@ -220,8 +236,8 @@ class ApiLibrary {
     }
   }
 
-  List<dynamic> combineFriends(
-      List<dynamic> gameFriends, List<dynamic> facebookFriends) {
+  List<dynamic> combineFriends(List<dynamic> gameFriends,
+      List<dynamic> facebookFriends) {
     // Combine the friends from both sources
     var allFriends = [...gameFriends, ...facebookFriends];
 
@@ -242,7 +258,9 @@ class ApiLibrary {
       }
     ''');
 
-      if (res != null && res['findPendingFriendRequests'] != null) {
+
+      if (res != null &&
+          res['findPendingFriendRequests'] != null) {
         List<Map<String, dynamic>> pendingRequests = [];
         for (var request in res['findPendingFriendRequests']) {
           pendingRequests.add({
@@ -291,11 +309,83 @@ class ApiLibrary {
     }
   }
 
+  Future<bool> updateUserGameTransaction(GameTransaction transaction) async {
+    if (_session.currentUser == null) return false;
+
+    print(jsonEncode(transaction.toJson(_session.currentUser!.id)));
+
+    return true;
+  }
+
+  Future<CompoundChallenges?> getChallengesOfTheDay() async {
+    const query = '''query findAllDayChallenges{
+  findAllDayChallenges{
+    sequenceChallenges{
+      id
+      startDate
+      endDate
+      coinType
+      coinReward
+      expReward
+      characterType
+      createdAt
+      lastModified
+      challenges{
+        id
+        startDate
+        endDate
+        description
+        gameTypes
+        resetType
+        sequenceId
+        challengeAtDay
+        childChallengeId
+        checklist
+        characterType
+        count
+        coinType
+        countType
+        expReward
+        coinReward
+        description
+        createdAt
+        lastModified
+      }
+    }
+    singleChallenges{
+      id
+      startDate
+      endDate
+      gameTypes
+      resetType
+      sequenceId
+      challengeAtDay
+      childChallengeId
+      checklist
+      characterType
+      count
+      coinType
+      countType
+      expReward
+      coinReward
+      description
+      createdAt
+      lastModified
+    }
+  }
+}''';
+
+    final response = await sendGraphql(query);
+    if (response != null)
+      return CompoundChallenges.fromJson(response['findAllDayChallenges']);
+    return null;
+  }
+
   // Leaderboards
   Future<List<LeaderboardObject>?> getLeaderboards(
-    {required bool isGlobal, required GameType gameType}) async {
-  try {
-    var query = '''
+      {required bool isGlobal, required GameType gameType}) async {
+    try {
+      var query = '''
       query {
         findLeaderboard(
           userId: "1Mrahq9dR5MClcSxYe2l3M6ZpuH3",
@@ -310,18 +400,46 @@ class ApiLibrary {
         }
       }
     ''';
-    var res = await sendGraphql(query);
-    if (res != null && res['findLeaderboard'] != null) {
-      List<dynamic> leaderboardList = res['findLeaderboard'];
-      List<LeaderboardObject> leaderboardObjects = leaderboardList.map((item) => LeaderboardObject.fromJson(item)).toList();
-      return leaderboardObjects;
+      var res = await sendGraphql(query);
+      if (res != null && res['findLeaderboard'] != null) {
+        List<dynamic> leaderboardList = res['findLeaderboard'];
+        List<LeaderboardObject> leaderboardObjects = leaderboardList.map((
+            item) => LeaderboardObject.fromJson(item)).toList();
+        return leaderboardObjects;
+      }
+    } catch (e) {
+      print(e);
     }
-  } catch (e) {
-    print(e);
+    return null;
   }
-  return null;
-}
 
+  Future<Map<String, dynamic>?> sendGraphql(String query,
+      {Map<String, dynamic>? variables}) async {
+    try {
+      final response = await http.post(
+        Uri.parse(Const.graphqlUrl),
+        body: jsonEncode({
+          'query': query,
+          'variables': variables
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body)['data'];
+        // Success
+        if (data != null) return data;
+      }
+      throw Exception(response.body);
+    } catch (e) {
+      print('gqlRequestError: $e');
+      return null;
+    }
+  }
 
   // Helper function
   String mapGameTypeToString(GameType gameType) {
@@ -356,31 +474,12 @@ class ApiLibrary {
         return 'nineMonthlyTournament';
       case GameType.powersMonthlyTournament:
         return 'powersMonthlyTournament';
-    }
-  }
-
-  Future<Map<String, dynamic>?> sendGraphql(String query,
-      {Map<String, dynamic>? variables}) async {
-    try {
-      final response = await http.post(
-        Uri.parse(Const.graphqlUrl),
-        body: jsonEncode({'query': query}),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
-
-      print(response.body);
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
-        // Success
-        if (data != null) return data;
-      }
-      throw Exception(response.body);
-    } catch (e) {
-      print('gqlRequestError: $e');
-      return null;
+      case GameType.noType:
+        return 'noType';
+      case GameType.friendlySingleMatch:
+        return 'friendlySingleMatch';
+      case GameType.friendlyTournament:
+        return 'friendlyTournament';
     }
   }
 }

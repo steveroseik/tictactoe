@@ -2,7 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/widgets.dart';
 
 
-enum characters
+enum CharacterType
 {
   angryPig,
   angryShark,
@@ -94,218 +94,218 @@ enum Coins{
 }
 
 class Sprites{
-  static Map<characters, SpriteAnimationWidget> characterOf = {
-    characters.angryPig : SpriteAnimationWidget.asset(
+  static Map<CharacterType, SpriteAnimationWidget> characterOf = {
+    CharacterType.angryPig : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/angryPig.png', data: SpriteAnimationData.sequenced(
       amount: 9,
       textureSize: Vector2(36,30),
       stepTime: 0.1,
     )),
-    characters.angryShark : SpriteAnimationWidget.asset(
+    CharacterType.angryShark : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/angryShark.png', data: SpriteAnimationData.sequenced(
       amount: 8,
       textureSize: Vector2(34,32),
       stepTime: 0.1,
     )),
-    characters.skull : SpriteAnimationWidget.asset(
+    CharacterType.skull : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/skull.png', data: SpriteAnimationData.sequenced(
       amount: 8,
       textureSize: Vector2(52,54),
       stepTime: 0.1,
     )),
-    characters.angrySkull : SpriteAnimationWidget.asset(
+    CharacterType.angrySkull : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/angrySkull.png', data: SpriteAnimationData.sequenced(
       amount: 8,
       textureSize: Vector2(52,52),
       stepTime: 0.1,
     )),
-    characters.bee : SpriteAnimationWidget.asset(
+    CharacterType.bee : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/bee.png', data: SpriteAnimationData.sequenced(
       amount: 6,
       textureSize: Vector2(36,34),
       stepTime: 0.1,
     )),
-    characters.blueBird : SpriteAnimationWidget.asset(
+    CharacterType.blueBird : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/blueBird.png', data: SpriteAnimationData.sequenced(
       amount: 9,
       textureSize: Vector2(32,32),
       stepTime: 0.1,
     )),
-    characters.bunny : SpriteAnimationWidget.asset(
+    CharacterType.bunny : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/bunny.png', data: SpriteAnimationData.sequenced(
       amount: 8,
       textureSize: Vector2(34,44),
       stepTime: 0.1,
     )),
-    characters.chameleon : SpriteAnimationWidget.asset(
+    CharacterType.chameleon : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/chameleon.png', data: SpriteAnimationData.sequenced(
       amount: 13,
       textureSize: Vector2(42,38),
       stepTime: 0.1,
     )),
-    characters.chicken : SpriteAnimationWidget.asset(
+    CharacterType.chicken : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/chicken.png', data: SpriteAnimationData.sequenced(
       amount: 13,
       textureSize: Vector2(32,33),
       stepTime: 0.1,
     )),
-    characters.crabby : SpriteAnimationWidget.asset(
+    CharacterType.crabby : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/crabby.png', data: SpriteAnimationData.sequenced(
       amount: 9,
       textureSize: Vector2(42,30),
       stepTime: 0.1,
     )),
-    characters.duck : SpriteAnimationWidget.asset(
+    CharacterType.duck : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/duck.png', data: SpriteAnimationData.sequenced(
       amount: 10,
       textureSize: Vector2(36,36),
       stepTime: 0.1,
     )),
-    characters.fatBird : SpriteAnimationWidget.asset(
+    CharacterType.fatBird : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/fatBird.png', data: SpriteAnimationData.sequenced(
       amount: 8,
       textureSize: Vector2(40,48),
       stepTime: 0.1,
     )),
-    characters.ghost : SpriteAnimationWidget.asset(
+    CharacterType.ghost : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/ghost.png', data: SpriteAnimationData.sequenced(
       amount: 10,
       textureSize: Vector2(44,30),
       stepTime: 0.1,
     )),
-    characters.mushroom: SpriteAnimationWidget.asset(
+    CharacterType.mushroom: SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/mushroom.png', data: SpriteAnimationData.sequenced(
       amount: 16,
       textureSize: Vector2(32,32),
       stepTime: 0.1,
     )),
-    characters.maskDude : SpriteAnimationWidget.asset(
+    CharacterType.maskDude : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/maskDude.png', data: SpriteAnimationData.sequenced(
       amount: 11,
       textureSize: Vector2(32,32),
       stepTime: 0.1,
     )),
-    characters.ninjaFrog : SpriteAnimationWidget.asset(
+    CharacterType.ninjaFrog : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/ninjaFrog.png', data: SpriteAnimationData.sequenced(
       amount: 11,
       textureSize: Vector2(32,32),
       stepTime: 0.1,
     )),
-    characters.pinkMan : SpriteAnimationWidget.asset(
+    CharacterType.pinkMan : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/pinkMan.png', data: SpriteAnimationData.sequenced(
       amount: 11,
       textureSize: Vector2(32,32),
       stepTime: 0.1,
     )),
-    characters.pinkStar : SpriteAnimationWidget.asset(
+    CharacterType.pinkStar : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/pinkStar.png', data: SpriteAnimationData.sequenced(
       amount: 8,
       textureSize: Vector2(34,32),
       stepTime: 0.1,
     )),
-    characters.pirate : SpriteAnimationWidget.asset(
+    CharacterType.pirate : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/pirate.png', data: SpriteAnimationData.sequenced(
       amount: 5,
       textureSize: Vector2(28,36),
       stepTime: 0.1,
     )),
-    characters.pirateSword : SpriteAnimationWidget.asset(
+    CharacterType.pirateSword : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/pirateSword.png', data: SpriteAnimationData.sequenced(
       amount: 5,
       textureSize: Vector2(41,36),
       stepTime: 0.1,
     )),
-    characters.plant : SpriteAnimationWidget.asset(
+    CharacterType.plant : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/plant.png', data: SpriteAnimationData.sequenced(
       amount: 11,
       textureSize: Vector2(44,42),
       stepTime: 0.1,
     )),
-    characters.radish : SpriteAnimationWidget.asset(
+    CharacterType.radish : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/radish.png', data: SpriteAnimationData.sequenced(
       amount: 9,
       textureSize: Vector2(30,38),
       stepTime: 0.1,
     )),
-    characters.rhino : SpriteAnimationWidget.asset(
+    CharacterType.rhino : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/rino.png', data: SpriteAnimationData.sequenced(
       amount: 11,
       textureSize: Vector2(52,34),
       stepTime: 0.1,
     )),
-    characters.rock  : SpriteAnimationWidget.asset(
+    CharacterType.rock  : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/rock.png', data: SpriteAnimationData.sequenced(
       amount: 14,
       textureSize: Vector2(38,34),
       stepTime: 0.1,
     )),
-    characters.slime : SpriteAnimationWidget.asset(
+    CharacterType.slime : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/slime.png', data: SpriteAnimationData.sequenced(
       amount: 10,
       textureSize: Vector2(44,30),
       stepTime: 0.1,
     )),
-    characters.snail : SpriteAnimationWidget.asset(
+    CharacterType.snail : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/snail.png', data: SpriteAnimationData.sequenced(
       amount: 6,
       textureSize: Vector2(38,24),
       stepTime: 0.1,
     )),
-    characters.spike : SpriteAnimationWidget.asset(
+    CharacterType.spike : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/spike.png', data: SpriteAnimationData.sequenced(
       amount: 14,
       textureSize: Vector2(44,26),
       stepTime: 0.1,
     )),
-    characters.spikePro : SpriteAnimationWidget.asset(
+    CharacterType.spikePro : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/spikePro.png', data: SpriteAnimationData.sequenced(
       amount: 14,
       textureSize: Vector2(44,26),
       stepTime: 0.1,
     )),
-    characters.trunk : SpriteAnimationWidget.asset(
+    CharacterType.trunk : SpriteAnimationWidget.asset(
       anchor: Anchor.center,
         path: 'pixels/trunk.png', data: SpriteAnimationData.sequenced(
       amount: 18,
       textureSize: Vector2(64,33),
       stepTime: 0.1,
     )),
-    characters.virtualGuy : SpriteAnimationWidget.asset(
+    CharacterType.virtualGuy : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/virtualGuy.png', data: SpriteAnimationData.sequenced(
       amount: 11,
       textureSize: Vector2(32,33),
       stepTime: 0.1,
     )),
-    characters.minotaur1 : SpriteAnimationWidget.asset(
+    CharacterType.minotaur1 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/minotaur1.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -313,7 +313,7 @@ class Sprites{
       textureSize: Vector2(210,256),
       stepTime: 0.08,
     )),
-    characters.minotaur2 : SpriteAnimationWidget.asset(
+    CharacterType.minotaur2 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/minotaur2.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -321,7 +321,7 @@ class Sprites{
       textureSize: Vector2(224,280),
       stepTime: 0.08,
     )),
-    characters.minotaur3 : SpriteAnimationWidget.asset(
+    CharacterType.minotaur3 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/minotaur3.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -329,7 +329,7 @@ class Sprites{
       textureSize: Vector2(210,261),
       stepTime: 0.08,
     )),
-    characters.goblin : SpriteAnimationWidget.asset(
+    CharacterType.goblin : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/goblin.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -337,7 +337,7 @@ class Sprites{
       textureSize: Vector2(196,270),
       stepTime: 0.08,
     )),
-    characters.ogre : SpriteAnimationWidget.asset(
+    CharacterType.ogre : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/ogre.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -345,7 +345,7 @@ class Sprites{
       textureSize: Vector2(195,279),
       stepTime: 0.08,
     )),
-    characters.orc : SpriteAnimationWidget.asset(
+    CharacterType.orc : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/orc.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -353,7 +353,7 @@ class Sprites{
       textureSize: Vector2(196,306),
       stepTime: 0.08,
     )),
-    characters.golem1 : SpriteAnimationWidget.asset(
+    CharacterType.golem1 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/golem1.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -361,7 +361,7 @@ class Sprites{
       textureSize: Vector2(204,280),
       stepTime: 0.08,
     )),
-    characters.golem2 : SpriteAnimationWidget.asset(
+    CharacterType.golem2 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/golem2.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -369,7 +369,7 @@ class Sprites{
       textureSize: Vector2(210,294),
       stepTime: 0.08,
     )),
-    characters.golem3 : SpriteAnimationWidget.asset(
+    CharacterType.golem3 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/golem3.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -377,28 +377,28 @@ class Sprites{
       textureSize: Vector2(200,266),
       stepTime: 0.08,
     )),
-    characters.wraith1 : SpriteAnimationWidget.asset(
+    CharacterType.wraith1 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/wraith1.png', data: SpriteAnimationData.sequenced(
       amount: 12,
       textureSize: Vector2(99,152),
       stepTime: 0.1,
     )),
-    characters.wraith2 : SpriteAnimationWidget.asset(
+    CharacterType.wraith2 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/wraith2.png', data: SpriteAnimationData.sequenced(
       amount: 12,
       textureSize: Vector2(107,152),
       stepTime: 0.1,
     )),
-    characters.wraith3 : SpriteAnimationWidget.asset(
+    CharacterType.wraith3 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/wraith3.png', data: SpriteAnimationData.sequenced(
       amount: 12,
       textureSize: Vector2(109,160),
       stepTime: 0.1,
     )),
-    characters.reaper1 : SpriteAnimationWidget.asset(
+    CharacterType.reaper1 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/reaper1.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -406,7 +406,7 @@ class Sprites{
       textureSize: Vector2(240,300),
       stepTime: 0.1,
     )),
-    characters.reaper2 : SpriteAnimationWidget.asset(
+    CharacterType.reaper2 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/reaper2.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -414,7 +414,7 @@ class Sprites{
       textureSize: Vector2(240,300),
       stepTime: 0.1,
     )),
-    characters.reaper3 : SpriteAnimationWidget.asset(
+    CharacterType.reaper3 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/reaper3.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -422,7 +422,7 @@ class Sprites{
       textureSize: Vector2(240,297),
       stepTime: 0.1,
     )),
-    characters.fallenAngel1 : SpriteAnimationWidget.asset(
+    CharacterType.fallenAngel1 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/fallenAngel1.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -430,7 +430,7 @@ class Sprites{
       textureSize: Vector2(220,297),
       stepTime: 0.1,
     )),
-    characters.fallenAngel2 : SpriteAnimationWidget.asset(
+    CharacterType.fallenAngel2 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/fallenAngel2.png', data: SpriteAnimationData.sequenced(
       amount: 18,
@@ -438,7 +438,7 @@ class Sprites{
       textureSize: Vector2(238,294),
       stepTime: 0.1,
     )),
-    characters.fallenAngel3 : SpriteAnimationWidget.asset(
+    CharacterType.fallenAngel3 : SpriteAnimationWidget.asset(
         anchor: Anchor.center,
         path: 'pixels/fallenAngel3.png', data: SpriteAnimationData.sequenced(
       amount: 18,

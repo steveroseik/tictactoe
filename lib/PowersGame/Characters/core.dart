@@ -119,9 +119,9 @@ class Minotaur extends Character{
     int avatarLevel = min(power1Level, power2Level);
 
     switch(avatarLevel){
-      case 3: avatar = Sprites.characterOf[characters.minotaur2]!;
-      case 2: avatar = Sprites.characterOf[characters.minotaur1]!;
-      default: avatar = Sprites.characterOf[characters.minotaur3]!;
+      case 3: avatar = Sprites.characterOf[CharacterType.minotaur2]!;
+      case 2: avatar = Sprites.characterOf[CharacterType.minotaur1]!;
+      default: avatar = Sprites.characterOf[CharacterType.minotaur3]!;
     }
   }
 }
@@ -183,9 +183,9 @@ class Golem extends Character{
     }
 
     switch(avatarLevel){
-      case 3: avatar = Sprites.characterOf[characters.golem3]!;
-      case 2: avatar = Sprites.characterOf[characters.golem1]!;
-      default: avatar = Sprites.characterOf[characters.golem2]!;
+      case 3: avatar = Sprites.characterOf[CharacterType.golem3]!;
+      case 2: avatar = Sprites.characterOf[CharacterType.golem1]!;
+      default: avatar = Sprites.characterOf[CharacterType.golem2]!;
     }
   }
 }
@@ -241,9 +241,9 @@ class Wraith extends Character{
     int avatarLevel = min(power1Level, power2Level);
 
     switch(avatarLevel){
-      case 3: avatar = Sprites.characterOf[characters.wraith3]!;
-      case 2: avatar = Sprites.characterOf[characters.wraith1]!;
-      default: avatar = Sprites.characterOf[characters.wraith2]!;
+      case 3: avatar = Sprites.characterOf[CharacterType.wraith3]!;
+      case 2: avatar = Sprites.characterOf[CharacterType.wraith1]!;
+      default: avatar = Sprites.characterOf[CharacterType.wraith2]!;
     }
   }
 }
@@ -299,9 +299,9 @@ class Orc extends Character{
     int avatarLevel = min(power1Level, power2Level);
 
     switch(avatarLevel){
-      case 3: avatar = Sprites.characterOf[characters.orc]!;
-      case 2: avatar = Sprites.characterOf[characters.ogre]!;
-      default: avatar = Sprites.characterOf[characters.goblin]!;
+      case 3: avatar = Sprites.characterOf[CharacterType.orc]!;
+      case 2: avatar = Sprites.characterOf[CharacterType.ogre]!;
+      default: avatar = Sprites.characterOf[CharacterType.goblin]!;
     }
   }
 }

@@ -391,8 +391,8 @@ class _CubeState extends State<Cube> with SingleTickerProviderStateMixin {
     }
   }
 
-  final reaper = Sprites.characterOf[characters.reaper1]!;
-  final notReaper =  Sprites.characterOf[characters.virtualGuy]!;
+  final reaper = Sprites.characterOf[CharacterType.reaper1]!;
+  final notReaper =  Sprites.characterOf[CharacterType.virtualGuy]!;
 
 
 

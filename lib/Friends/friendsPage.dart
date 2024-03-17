@@ -156,7 +156,7 @@ class _FriendsPageState extends ConsumerState<FriendsPage> {
           ElevatedButton(
             onPressed: () async {
               String username = _usernameController.text;
-              await ref.read(apiLibrary).sendRequestByUsername(username: username);
+              await ref.read(apiProvider).sendRequestByUsername(username: username);
               Navigator.of(context).pop();
             },
             child: Text('Add Friend'),

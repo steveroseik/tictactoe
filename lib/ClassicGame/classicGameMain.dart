@@ -10,6 +10,7 @@ import 'package:sizer/sizer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tictactoe/Configurations/constants.dart';
 import 'package:tictactoe/Controllers/classicGameController.dart';
+import 'package:tictactoe/Providers/apiLibrary.dart';
 import 'package:tictactoe/Providers/sessionProvider.dart';
 import 'package:tictactoe/Providers/socketProvider.dart';
 import 'package:tictactoe/ClassicGame/classicGameModule.dart';
@@ -71,7 +72,6 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
 
   @override
   void initState() {
-    print('speed data lehhhhhhh: ${widget.controller?.roomInfo.toJson()}');
     speedMatch = widget.speedMatch;
     if (widget.controller != null) {
       gameController = widget.controller;
@@ -88,7 +88,6 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
 
   @override
   void dispose() {
-    print('getting off speed');
     gameTimer.cancel();
     if (!widget.inTournament) {
       getIt.get<SocketProvider>().disconnect();
@@ -167,7 +166,6 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
                   alignment: Alignment.topLeft,
                   child: ElevatedButton(
                     onPressed: (){
-                      print('POPPING BTN');
                       Navigator.of(context).pop();
                     },
                     child: Text('Leave'),
@@ -206,7 +204,7 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
 
     subscriptions.add(socketProvider.onGameListener.stream.listen((data) {
 
-      print('got data: ${jsonEncode(data)}');
+
 
       switch(data['type']){
 
@@ -279,7 +277,7 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
         }catch (e){
           print(e);
         }
-        print('POPPING CONNECTION ERROR');
+
         if (!widget.inTournament) Navigator.of(context).pop();
       }else{
         errorCounter++;
@@ -293,7 +291,7 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
   initGameListener(){
     socket.on('gameListener', (data) {
 
-      print('got data: ${jsonEncode(data)}');
+      // print('got data: ${jsonEncode(data)}');
 
       switch(data['type']){
 
@@ -351,12 +349,11 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
   onCoinTossEnd(){
     final resp = gameController?.didIWin(theLuckyWinner, tournament: widget.inTournament);
     if (widget.inTournament){
-      print('POPPING COIN TOSS END');
       Navigator.of(context).pop(resp);
     }
   }
 
-  gameInitAction(Map<String, dynamic> data, {bool speedMatch = false}){
+  gameInitAction(Map<String, dynamic> data, {bool speedMatch = false}) async{
 
     setState(() {
       canLeave = false;
@@ -366,21 +363,18 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
 
     if (!speedMatch){
       roomInfo = GameRoom.fromResponse(data['roomInfo']);
+      await ref.read(sessionProvider).fetchOpponent(roomInfo!);
       gameStartTime = calculateGameStartTime(roomInfo!.sessionEnd);
     }else{
       roomInfo!.sessionEnd = DateTime.now().add(const Duration(seconds: 3 + (Const.speedRoundDuration * 9)));
       gameStartTime = DateTime.now().add(const Duration(seconds: 3));
     }
-
-
-    print(gameStartTime);
     gameStartsIn = gameStartTime!.difference(DateTime.now()).inSeconds;
 
-    print(gameStartsIn);
+    print('game starts inn $gameStartsIn');
 
     currentState.value = GameState.starting;
 
-    print(roomInfo!.lastHash);
     Timer.periodic(gameStartTime!.difference(DateTime.now()), (timer){
       gameController = ClassicGameController(
           roomInfo: roomInfo!,
@@ -398,14 +392,12 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
       print('YOU ARE CHEATING!!');
       Navigator.of(context).pop();
     }else{
-      print('running from classic');
       gameController?.moveValidated(data: data);
       checkWin();
     }
   }
 
   checkWin(){
-    print('CHECKIINGG WINNN!!: ${gameController?.state} :: ${gameController?.iWon}');
     if (gameController?.state == GameState.ended){
       if (gameController?.winner == GameWinner.draw){
         if (gameController?.isMyTurn){
@@ -426,7 +418,6 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
         if (mounted) {
           Navigator.of(context)
             .pop(gameController?.winRequest);
-          print('POPPING AFTER CHECK ${gameController?.iWon}');
         }
       }
     }
@@ -439,10 +430,8 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
     if (move != null && hash != null){
       final resp = gameController?.validateMove(move, hash);
       socket.emitWithAck('gameListener', resp, ack: (data){
-        print('running from classic');
         final update = gameController?.moveValidated(tournament: widget.inTournament);
         if (update != null) {
-          print('sending from classic!!!!: ${update}');
           if (widget.sendTournamentUpdate != null) widget.sendTournamentUpdate!(update);
         }
         checkWin();
@@ -456,7 +445,6 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
     final resp = gameController!.endGameDueConnection(data, tournament: widget.inTournament);
     if (resp.$1) {
       if (resp.$2 != null){
-        print('POPPING DISCONNECT');
         Navigator.of(context).pop(resp.$2);
         // if (widget.sendTournamentUpdate != null) widget.sendTournamentUpdate!(resp.$2);
       }
@@ -474,8 +462,6 @@ class _ClassicGameMainState extends ConsumerState<ClassicGameMain> {
       if (response['success'] == true){
         if (currentState.value == GameState.connecting) currentState.value = GameState.waiting;
       }else{
-        print('failed');
-        print('POPPING FAILED TO JOIN');
         Navigator.of(context).pop();
       }
     });

@@ -22,7 +22,7 @@ class _CharactersPageState extends State<CharactersPage> {
               fontSize: 20.sp),),
               GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-                itemCount: characters.values.length - 18,
+                itemCount: CharacterType.values.length - 18,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index){
@@ -40,7 +40,7 @@ class _CharactersPageState extends State<CharactersPage> {
                               children: [
                                 AspectRatio(
                                     aspectRatio: 1,
-                                    child: Sprites.characterOf[characters.values[index]])
+                                    child: Sprites.characterOf[CharacterType.values[index]])
                               ])),
                     ),
                   );
@@ -54,7 +54,7 @@ class _CharactersPageState extends State<CharactersPage> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index){
-                    final diff = characters.values.length - 18;
+                    final diff = CharacterType.values.length - 18;
                     return Center(
                       child: SizedBox(
                         width: 7.h,
@@ -69,7 +69,7 @@ class _CharactersPageState extends State<CharactersPage> {
                                 children: [
                                   AspectRatio(
                                       aspectRatio: 1,
-                                      child: Sprites.characterOf[characters.values[index+diff]])
+                                      child: Sprites.characterOf[CharacterType.values[index+diff]])
                                 ])),
                       ),
                     );
