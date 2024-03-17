@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tictactoe/ClassicGame/classicGameMain.dart';
 import 'package:tictactoe/Friends/friendsPage.dart';
 import 'package:tictactoe/Friends/hostTournamentPage.dart';
+import 'package:tictactoe/Leaderboards/leaderboardPage.dart';
+import 'package:tictactoe/Leaderboards/scoresPage.dart';
 import 'package:tictactoe/Main%20Screens/multiplayerSingleSelectPage.dart';
 import 'package:tictactoe/Notifications/notificationsPage.dart';
 import 'package:tictactoe/PowersGame/Characters/core.dart';
@@ -72,6 +74,10 @@ class Routes {
   static const friendsPage = '/friendsPage';
   static const hostTournamentPage = '/hostTournamentPage';
   static const notificationsPage = '/notifcationsPage';
+  static const leaderboardPage = '/leaderboardPage';
+  static const scoresPage = '/scoresPage';
+
+
 
 }
 
@@ -173,6 +179,14 @@ class RoutesGen {
 
       case Routes.notificationsPage:
         return GamePageRoute(builder: (_) => const NotificationsPage());
+        
+        case Routes.leaderboardPage:
+        return GamePageRoute(builder: (_) => const LeaderboardPage());
+
+        case Routes.scoresPage:
+        return GamePageRoute(builder: (_) => const ScoresPage());
+
+        
       default:
         return _errorRoute();
     }

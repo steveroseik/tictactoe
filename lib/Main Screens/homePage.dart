@@ -523,39 +523,46 @@ class _HomePageState extends ConsumerState<HomePage> {
                             color: Colors.white,
                           ),
                         ),
-                        Container(
-                          width: 12.w,
-                          height: 12.w,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.deepPurple.shade900,
-                                      colorPurple
-                                    ],
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(Routes.leaderboardPage);
+                            },
+                            child: Container(
+                              width: 12.w,
+                              height: 12.w,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.black,
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.deepPurple.shade900,
+                                          colorPurple
+                                        ],
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color:
+                                                colorDarkBlue.withOpacity(0.3),
+                                            offset: Offset(3, 3),
+                                            spreadRadius: 1,
+                                            blurRadius: 3)
+                                      ],
+                                    ),
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: colorDarkBlue.withOpacity(0.3),
-                                        offset: Offset(3, 3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3)
-                                  ],
-                                ),
+                                  Positioned(
+                                      top: -15,
+                                      child: SizedBox(
+                                          height: 14.w,
+                                          child: Image.asset(
+                                              'assets/trophy.png'))),
+                                ],
                               ),
-                              Positioned(
-                                  top: -15,
-                                  child: SizedBox(
-                                      height: 14.w,
-                                      child: Image.asset('assets/trophy.png'))),
-                            ],
-                          ),
-                        ),
+                            )),
                         InkWell(
                             onTap: () {
                               Navigator.of(context)

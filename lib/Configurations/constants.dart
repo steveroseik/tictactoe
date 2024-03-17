@@ -7,7 +7,7 @@ class Const{
   /// quantum state cell
   static const qCell = 2;
 
-  static const baseUrl = 'http://192.168.1.10:3002';
+  static const baseUrl = 'http://192.168.1.12:3002';
 
   static const graphqlUrl = '$baseUrl/graphql';
 
@@ -94,6 +94,12 @@ enum GameType {
   powersDailyTournament,
   powersWeeklyTournament,
   powersMonthlyTournament
+}
+
+enum Game{
+  classic,
+  nine,
+  powers
 }
 
 /// User Session enum
